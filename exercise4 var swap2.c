@@ -52,7 +52,7 @@ int main ()
 // We don't return anything here - use void, also no creating of new variables so we have to use the "global" address of the integers
 void computeSwap(int *a, int *b) 
 {
-    // Tricky for sure, nowhere near as intuitive as the other one. NO ONE DOES THIS IN A PROFESSIONAL SETTING.
+    // Tricky for sure, nowhere near as intuitive as the other one.
     // Brief example of whats going on: 
     // Where A = 1     B = 
     // a = 1 + 2 = 3

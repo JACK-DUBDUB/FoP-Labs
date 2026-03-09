@@ -12,7 +12,8 @@
 #include <stdio.h> 
 
 // Declared functions
-float computeDiv(int a, int b);
+float computeFloatDiv(int a, int b);
+int computeIntDiv(int a, int b);
 
 #pragma region MAIN 
 int main () 
@@ -33,12 +34,17 @@ int main ()
 
     // computes the division of the 2 vars [a, b]
     // Displays the result
-    result = computeDiv(a, b);
-    printf("The division of values [%d by %d] \nResult: %f\n", a, b, result);
+    result = computeFloatDiv(a, b);
+    printf("The division of values [%d by %d] \nResult: %f\n\n", a, b, result);
 
-    // Ideally I would make an If else statement -> in case theres a divide by zero error...
+    // <- Ideally I would make an If else statement in case theres a divide by zero error...
 
-    // Halts program so it doesn't autoclose immediately
+    // Exercise 3 part B: The extension.
+    int resultint = computeIntDiv(a, b);  
+    int resultmod = a - (b * resultint);            // I can't use modulus for this exercise - Just why?
+    printf("The division of values [%d by %d] \nDivision result: %d\nRemainder: %d\n\n", a, b, resultint, resultmod);
+
+    // Halts program so it doesn't auto-close immediately
     printf("Press any key to exit program: "); 
     getchar();
     getchar();
@@ -48,8 +54,13 @@ int main ()
 }
 #pragma endregion
 
-float computeDiv(int a, int b)
+float computeFloatDiv(int a, int b)
 {
     //float c = (a * 1.0) / (b * 1.0); <- force a float
     return (float) a / b;
+}
+
+int computeIntDiv(int a, int b)
+{
+    return a / b;
 }
