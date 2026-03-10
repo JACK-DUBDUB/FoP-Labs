@@ -1,11 +1,9 @@
 /**
- * 4/03/2026 
+ * 10/03/2026 
  * Jack du boulay - 32712899 
- * Exercise 6 -> Program Testing
- * Input comparison algorithm, values must be a signed int (min = 32768, max = 32768) -> Can't i use a short for this? 
- * Program reads two integer numbers: X, Y
- * Compare values if they are == or !=
- * Compare values again and report which one is larger
+ * Exercise 7 -> Interest
+ * This program calculates the montly payments for interest loans, to do so, calculate total interest, then divide by (months * years)
+ * Program requires 3 inputs: Loan amount, Interest PA, Loan duration
  * 
  * to compile -> gcc 'filename.c' -o 'filename'
  * to run -> .\filename
@@ -18,25 +16,26 @@
 #define months 12
 
 // Functions
-float calcPayments(int loan, float interest, int years);
+float calcPayments(int loan, float interest, int duration);
 
 #pragma region MAIN 
 int main () 
 {
     /// Variables ///
     float interest, monthlyPayments;
-    int loan, years;
+    int loan,duration;
 
     printf("Loan value: ");
-    scanf("%d", &loan);
+    scanf("%d", &loan);        
 
     printf("Interest per annum: ");
     scanf("%f", &interest);
 
     printf("Loan duration: ");
-    scanf("%d*c", &years);
+    scanf("%d*c", &duration);
 
-    monthlyPayments = calcPayments(loan, interest, years);
+    monthlyPayments = calcPayments(loan, interest,duration);
+    printf("Monthly payments: %f\n\n", monthlyPayments);
 
     // Exits program safely
     return 0;
@@ -44,25 +43,27 @@ int main ()
 #pragma endregion
 
 
-float calcPayments(int loan, float interest, int years)
+float calcPayments(int loan, float interest, int duration)
 {
-    
-    float x;
+    interest = interest / 100;    // actual decimal value
     // simple interest
-    x = loan * (interest/100) * years; // P x R x T 
-    printf("simple Interest: %f\n\n", x);
-    x = x / (months * years);
-    printf("Monthly payments: %f\n\n", x);
+    float x = loan * interest *duration; // P x R x T 
+    printf("\nTotal interest: %f\n", x);
+    printf("Total amount due: %f\n", x + loan );
+    x = (x + loan) / (months * duration);
+   
 
-    float 
+    /* /// COMPOUND INTEREST ///
+    float total = loan;
     // this is compound interest me thinks
-    for (int i = 0; i < years; i++)
+    for (int i = 0; i <duration; i++)
     {
-        loan * (interest/100);
+        total = total * interest;
     }
-    printf("compound interest: %")
-    x = (loan / (years * months));
-    printf("compound Interest monthly payments: %f\n\n", x);
+    printf("compound interest: %f", total);
 
+    x = (loan / duration * months);
+    printf("compound Interest monthly payments: %f\n\n", x);
+    */
     return x;
 }
