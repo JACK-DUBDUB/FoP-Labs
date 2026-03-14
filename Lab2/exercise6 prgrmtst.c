@@ -37,9 +37,12 @@ int main ()
         // If first value larger than second value -> print message
         printf("\nFirst value is larger than second value\n%d > %d\n\n", uInputX, uInputY);
     }
-    else{
+    else if(uInputX < uInputY){
         //second value larger than first value -> print message
              printf("\nSecond value is larger than first value\n%d < %d\n\n", uInputX, uInputY);
+    }
+    else{
+        printf("\nUser did not enter a valid value\n\n");
     }
 
     // Exits program safely

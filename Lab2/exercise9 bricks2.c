@@ -23,10 +23,10 @@ int main ()
     float brickLength, rowLength;
 
     /// Inputs ///
-    printf("Brick length: ");
+    printf("Brick length(cm): ");
     scanf("%f", &brickLength);
 
-    printf("Row length: ");
+    printf("Row length(m): ");
     scanf("%f", &rowLength);
 
     // Calculate

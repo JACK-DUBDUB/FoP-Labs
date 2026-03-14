@@ -108,6 +108,6 @@ void printMessage(float *xprs_wo_prnths, float *xprs_w_prnths, int *ex_count)
     }
     
     // Increment the counter.
-    *ex_count += 1; //Can't increment with ex_count++ for some reason -> SOULUTION: you can use (*ex_count++); and that works.
+    *ex_count += 1; //Can't increment with ex_count++ for some reason -> SOLUTION: you can use (*ex_count++); and that works.
     return;
 }
