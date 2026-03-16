@@ -30,7 +30,7 @@ int main(){
     int userInput;
 
     printf("Where: Monday = 1 <-> Sunday = 7\n");
-    printf("Please enter a number between 1 - 7 to display the corresponding day: ");
+    printf("Please enter a number between (1 - 7) to display the corresponding day: ");
 
     // Get the user int
     if (scanf("%d", &userInput) != 1) 
