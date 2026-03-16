@@ -85,7 +85,7 @@ void displayEvenOdd(int input)
 int getSelection()
 {
     char charSelection;
-    getchar();          // consume carriage
+    getchar(); // consumes leftover \n
 
     printf("\n\nDo you want to continue and test another number? (Y/N) ");
     if (scanf("%c", &charSelection) != 1) 
@@ -104,7 +104,7 @@ int getSelection()
     }
     else
     {
-        printf("\nUser entered an invalid value.\nQuitting program...");
+        printf("\nUser entered an invalid value.\nQuitting program..."); // Quit but because of user stupidity
         return 0;
     }
 }
