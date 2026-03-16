@@ -47,7 +47,7 @@ int main(){
     }
     else
     {
-        printf("User entered: %d which is not a valid integer for this program\n\n", userInput);
+        printf("User entered: %d which is not a valid integer for this program.\n\n", userInput);
     }
     
     pauseExitProgram();
