@@ -61,8 +61,7 @@ int main()
         // Prompt user to try again
         selection = getSelection();
 
-    }
-    while(selection);   // while selection == 1
+    } while(selection);   // while selection == 1
 
     printf("\nUser quit program.\n\n");
     return 0;

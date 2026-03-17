@@ -51,8 +51,7 @@ int main()
         {
             printf("\n*** Error - User entered a negative value ***\nPlease input a positive value.\n\n");
         }
-    }
-    while (userInput <= 0);
+    } while (userInput <= 0);
 
     displayOddNum(userInput);
 

@@ -1,7 +1,18 @@
+/**
+ * /// DATE ///
+ * 16/03/2026
+ * 
+ * /// AUTHOR ///
+ * Name: Jack du boulay 
+ * Student ID: 32712899 
+*/
+
+// Libraries
 #include <stdio.h>
+
 int main()
 {
-    char colour = 'B';
+    char colour = 'Y';
 
     switch (colour)
     {

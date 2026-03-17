@@ -12,10 +12,7 @@
  * 
  * 
  * /// ALGORITHM ///
- * Get user input of data type 'char'
- *      convert char value to int value
- *      if char is alphabetical, swap upper and lower cases +- 32
- *      display char ascii and int value 
+ * 
  * 
  * /// HOW TO COMPILE AND RUN ///
  * To compile: gcc '.\filename.c' -o 'filename'
@@ -23,12 +20,15 @@
 */
 
 
-
+// Libraries
 #include <stdio.h>
 #include <limits.h>
 
-#define LIMIT 10  
+// Defined constants
+#define LIMIT 100  
 
+// Declared functions
+void calculations();
 int calcSum(int numbers[], int counter);
 int calcMax(int numbers[], int counter);
 int calcMin(int numbers[], int counter);
@@ -39,6 +39,8 @@ int main()
     int numbers[LIMIT];
     int counter;
 
+
+    // ITS POSSIBLE THEY JUST WANT A WHILE LOOP FOR THIS...
     // program should terminate when the user enters the value 0?
     printf("\nThis program requires multiple numerical inputs from the user.\nTo stop inserting numbers, type in any non-numerical character or type 0, then hit enter.\n\nPlease provide a number: ");
     for(counter = 0; counter < LIMIT; counter++)
