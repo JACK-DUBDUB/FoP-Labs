@@ -33,23 +33,22 @@ int main(){
     printf("Please enter a number between (1 - 7) to display the corresponding day: ");
 
     // Get the user int
-    if (scanf("%d", &userInput) != 1) 
+    if (scanf("%d", &userInput) == 1) 
     {
-        printf("\nYou entered an invalid value. Please enter a valid integer.\n");
-        pauseExitProgram();
-        getchar();
-        return 1;
-    }
-
-    if (userInput >= 1 && userInput <= 7)
-    {
-        printDay(userInput, daysOfTheWeek);
+        if (userInput >= 1 && userInput <= 7)
+        {
+            printDay(userInput, daysOfTheWeek);
+        }
+        else
+        {
+            printf("\nUser entered: %d which is not a valid integer for this program.\n\n", userInput);
+        }
     }
     else
     {
-        printf("User entered: %d which is not a valid integer for this program.\n\n", userInput);
+        printf("\nYou entered an invalid value. Please enter a valid integer.\n");
     }
-    
+
     pauseExitProgram();
     return 0;
 }
@@ -64,8 +63,8 @@ void printDay(int input, char *dotw[])
 
 void pauseExitProgram()
 {
+    while(getchar() != '\n');
     printf("Press enter to quit...");
-    getchar();
     getchar();
 }
 #pragma endregion

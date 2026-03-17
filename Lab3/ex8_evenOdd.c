@@ -37,8 +37,9 @@
 #include <stdio.h>
 
 // Declared functions
+int getUserSelection();
 void displayEvenOdd(int input);
-int getSelection();
+void pauseExitProgram();
 
 int main()
 {
@@ -51,59 +52,72 @@ int main()
         printf("Program displays if the number you have chosen is even or odd.\nPlease insert a positive value integer: ");
         if (scanf("%d", &userInput) != 1) 
         {
-            printf("\nUser entered an invalid value. Please enter a valid positive integer.\nQuitting program...\n");
+            printf("\nUser entered an invalid value. Please enter a valid positive integer.\nQuitting program...\n\n");
             return 1;   // Exit program code 1
+        }
+
+        if(getchar() != '\n')
+        {
+            printf("\nUser entered an invalid value. Please enter a valid positive integer.\nQuitting program...\n\n");
+            return 2;   // Exit program code 2
         }
 
         // Display message even or odd
         displayEvenOdd(userInput);
 
         // Prompt user to try again
-        selection = getSelection();
+        selection = getUserSelection();
 
     } while(selection);   // while selection == 1
 
-    printf("\nUser quit program.\n\n");
+    pauseExitProgram();
     return 0;
+}
+
+#pragma region Functions
+int getUserSelection()
+{
+    char charSelection;
+
+    printf("\n\nDo you want to continue and test another number? (Y/N) ");
+    scanf("%c", &charSelection);
+
+    if(getchar() != '\n')
+    {
+        printf("User entered an invalid value.\n"); // Quit but because of user stupidity
+        while(getchar() != '\n');                   // Clear input buffer - user added additional chars...
+        return 0;                                   // User quits - undesirable
+    }
+    else if(charSelection == 'Y' || charSelection == 'y')
+    {
+        printf("\n");
+        return 1;                                   // User tries again
+    }
+    else if(charSelection == 'N' || charSelection == 'n')
+    {
+        printf("User chose to quit program.\n");    // Quit because the user selected to
+        return 0;                                   // User quits - desirable
+    }
+    else
+    {
+        printf("User entered an invalid value.\n"); // Quit but because of user stupidity
+        return 0;                                   // User quits - undesirable
+    }
 }
 
 void displayEvenOdd(int input)
 {
     if((input % 2) == 0)
-    {
-        printf("\nNumber is even");
-    }
-    else if((input % 2) != 0)
-    {
-        printf("\nNumber is odd");
-    }
+        printf("Number is even");
+    else
+        printf("Number is odd");
 
     return;
 }
 
-int getSelection()
+void pauseExitProgram()
 {
-    char charSelection;
-    getchar(); // consumes leftover \n
-
-    printf("\n\nDo you want to continue and test another number? (Y/N) ");
-    if (scanf("%c", &charSelection) != 1) 
-    {
-        printf("\nUser entered an invalid value.\n");
-    }
-
-    if(charSelection == 'Y' || charSelection == 'y')
-    {
-        printf("\n");
-        return 1;   // Try again
-    }
-    else if(charSelection == 'N' || charSelection == 'n')
-    {
-        return 0;   // Quit
-    }
-    else
-    {
-        printf("\nUser entered an invalid value.\nQuitting program..."); // Quit but because of user stupidity
-        return 0;
-    }
+    printf("\nPress enter to quit...");
+    getchar();
 }
+#pragma endregion

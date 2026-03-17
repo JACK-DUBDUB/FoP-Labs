@@ -10,7 +10,7 @@
  * Exercise 7 - Part B
  * Program gets a user input of data type 'char'
  * Program displays the char's int value and it's ascii value
- * Program swaps upper and lower cases with each other. 
+ * Program swaps upper and lower case letters with each other. 
  * 
  * /// ALGORITHM ///
  * Get user input of data type 'char'
@@ -28,7 +28,6 @@
 
 // Declared functions
 void pauseExitProgram();
-void displayOddNum(int input);
 
 int main()
 {
@@ -39,16 +38,29 @@ int main()
     if (scanf("%c", &userInput) != 1) 
     {
         printf("\nUser entered an invalid value. Please enter a valid character.\n");
+        pauseExitProgram();
         return 1;   // Exit program code 1
     }
 
-    if(userInput >= 65 && userInput <= 90)          // Swap upper case letters to lower case letters
+    // Swap upper case letters to lower case letters
+    if(userInput >= 65 && userInput <= 90)          
         userInput += 32;
-        
-    else if(userInput >= 97 && userInput <= 122)    // Swap lower case letters to upper case letters
+
+     // Swap lower case letters to upper case letters
+    else if(userInput >= 97 && userInput <= 122)   
         userInput -= 32;
 
     printf("User input: %c\nASCII value: %d", userInput, (int)userInput);
 
+    pauseExitProgram();
     return 0;
 }
+
+#pragma region Functions
+void pauseExitProgram()
+{
+    printf("\n\nPress enter to quit...");
+    while(getchar() != '\n');
+    getchar();
+}
+#pragma endregion

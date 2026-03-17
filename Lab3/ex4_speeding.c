@@ -55,12 +55,11 @@ int main()
     int userInput;
 
     // Get user input
-    printf("Please insert an integer to apply a speeding fine: ");
+    printf("Please insert an integer to validate a speeding fine: ");
     if (scanf("%d", &userInput) != 1) 
     {
         printf("\nUser entered an invalid value. Please enter a valid positive integer.\n");
         pauseExitProgram();
-        getchar();
         return 1;   // Exit program code 1
     }
 
@@ -71,7 +70,7 @@ int main()
     }
     else if (userInput <= speedLevel0)  // Less than or equal to 60
     {
-        printf("\nNot speeding\n");
+        printf("\nNot speeding\nNo fine\n");
     }
     else if (userInput <= speedLevel1)  // Less than or equal to 65
     {
@@ -97,6 +96,6 @@ int main()
 void pauseExitProgram()
 {
     printf("\nPress enter to quit...");
-    getchar();
+    while(getchar() != '\n');
     getchar();
 }

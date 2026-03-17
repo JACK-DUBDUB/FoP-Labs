@@ -35,20 +35,25 @@ int main()
     int userInput;
 
     // Get user input
-    printf("Program displays all odd values between and the number you have chosen.\nPlease insert a positive value integer: ");
+    printf("Program displays all odd values between 0 and the number you have chosen.\nPlease insert a positive value integer: ");
     if (scanf("%d", &userInput) != 1) 
     {
         printf("\nUser entered an invalid value. Please enter a valid positive integer.\n");
         pauseExitProgram();
-        getchar();
         return 1;   // Exit program code 1
     }
 
     if (userInput < 0)
     {
-        printf("\nUser entered a negative value. Please input a positive value.\n");
+        printf("\n*** Error ***\nUser entered a negative value.\nPlease input a positive value.\n\n");
         pauseExitProgram();
         return 2;   // Exit program code 2
+    }
+    else if (userInput == 0)
+    {
+        printf("\n*** Error ***\nUser entered zero.\nPlease input a positive value.\n\n");
+        pauseExitProgram();
+        return 3;   // Exit program code 3
     }
 
     displayOddNum(userInput);
@@ -61,16 +66,17 @@ int main()
 void pauseExitProgram()
 {
     printf("\nPress enter to quit...");
-    getchar();
+    while(getchar() != '\n');
     getchar();
 }
 
 void displayOddNum(int input)
 {
-    printf("All odd values between and inclusive of 0 and %d\n", input);
+    printf("\nAll odd values between and inclusive of: 0 to %d\n", input);
     for(int i = 1; i <= input; i += 2 )
     {
         printf(" %d ", i);
     }
+    printf("\n");
 }
 #pragma endregion

@@ -40,7 +40,6 @@ int main(){
     {
         printf("\nYou entered an invalid value. Please enter a valid integer.\n");
         pauseExitProgram();
-        getchar();
         return 1;
     }
 
@@ -101,7 +100,7 @@ void printDay(int input, char *dotw[])
 void pauseExitProgram()
 {
     printf("Press enter to quit...");
-    getchar();
+    while(getchar() != '\n');
     getchar();
 }
 #pragma endregion

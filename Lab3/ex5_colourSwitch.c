@@ -5,6 +5,11 @@
  * /// AUTHOR ///
  * Name: Jack du boulay 
  * Student ID: 32712899 
+ * 
+ * /// ABOUT PROGRAM ///
+ * Exercise 5
+ * Switch case testing.
+ * 
 */
 
 // Libraries

@@ -28,7 +28,6 @@
 
 // Declared functions
 void pauseExitProgram();
-void displayOddNum(int input);
 
 int main()
 {
@@ -43,8 +42,13 @@ int main()
     }
 
     printf("User input: %c\nASCII value: %d", userInput, (int)userInput);
-
-
-
+    pauseExitProgram();
     return 0;
+}
+
+void pauseExitProgram()
+{
+    printf("\n\nPress enter to quit...");
+    while(getchar() != '\n');
+    getchar();
 }

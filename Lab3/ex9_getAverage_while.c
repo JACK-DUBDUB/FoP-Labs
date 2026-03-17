@@ -29,7 +29,6 @@
  * To run: .\filename
 */
 
-
 // Library
 #include <stdio.h>
 #include <limits.h>
@@ -51,7 +50,6 @@ int main()
     // User input variables
     int userInput;
 
-
     printf("\nThis program requires multiple numerical inputs from the user.\nTo stop inserting numbers, type in any non-numerical character or type 0, then hit enter.\n\nPlease provide a number: ");
     do
     {
@@ -61,7 +59,7 @@ int main()
         // If first value in input buffer is a not a '\n' (nextline) value, then input is no longer valid.
         if(getchar() != '\n' || isValid == 0)
         {
-            printf("\nUser did not enter a valid number.");
+            printf("User did not enter a valid number.\n");
             while (getchar() != '\n');                          // Clear input buffer -> it WAS bugging out at the end.
             isValid = 0;  
         }

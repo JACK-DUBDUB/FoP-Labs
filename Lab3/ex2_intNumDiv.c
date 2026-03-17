@@ -19,43 +19,36 @@
 // Libraries
 #include <stdio.h>
 
+// Define
+#define LIMIT 2
+
 // Declared functions
-void performCalc(int int1, int int2);
+void performCalc(int userValues[]);
 void pauseExitProgram();
 
 int main()
 {
     // Variables
-    int usrInt1, usrInt2;
+    int userValues[LIMIT];
 
-    // FIRST INPUT
-    printf("This program divides two integers given by the user.\nIt provides both the actual division and modulus results.\nPlease enter the first value: ");
-    if (scanf("%d", &usrInt1) != 1) 
+    printf("This program divides two integers given by the user.\nIt provides both the actual division and modulus results.\n");
+    for(int i = 0; i < LIMIT; i++ )
     {
-        printf("\nYou entered an invalid value. Please enter a valid integer.\n");
-        pauseExitProgram();
-        getchar();
-        return 1;   // Exit program - code 1
-    }
-
-    // SECOND INPUT
-    printf("Please enter the second value: ");
-    if (scanf("%d", &usrInt2) != 1) 
-    {
-        printf("\nYou entered an invalid value. Please enter a valid integer.\n");
-        pauseExitProgram();
-        getchar();
-        return 2;   // Exit program - code 2
+        printf("Please enter no.%d: ", i + 1);
+        if (scanf("%d", &userValues[i]) != 1) 
+        {
+            printf("\nYou entered an invalid value. Please enter a valid integer.\n");
+            pauseExitProgram();
+            return 1;   // Exit program - code 1
+        }
     }
 
     // Check if the second input is equal to 0,     else perform calculation
-    if(usrInt2 == 0)
-    {
+    if(userValues[1] == 0)
         printf("\nSecond input is not valid. Cannot divide by zero.\n\n");
-    }
-    else{
-        performCalc(usrInt1, usrInt2);
-    }
+
+    else
+        performCalc(userValues);
 
     // Pauses the program 
     pauseExitProgram();
@@ -64,24 +57,19 @@ int main()
 
 
 #pragma region 
-// Could my variables be named better?
-// Yes, but these are just exercises.
-void performCalc(int int1, int int2)    
+void performCalc(int userValues[])    
 {
-    // TECHNICALLY I dont actually need these variables but i did it for clarity sake
-    double divOfInts = int1 / (double) int2;
-    int modulusOfInts = int1 % int2;
-    //printf("\nFirst user input: %d\n",  int1);
-    //printf("Second user input: %d\n", int2);
+    double divOfInts  = userValues[0] / (double)userValues[1];
+    int modulusOfInts = userValues[0] % userValues[1];
     printf("\n/// RESULTS ///\n");
-    printf("%d divided by %d equals: %f\n", int1, int2, divOfInts);
-    printf("%d modulus %d equals: %d, remainder: %d\n\n", int1, int2, int1/int2, modulusOfInts);
+    printf("%d divided by %d equals: %f\n", userValues[0] , userValues[1], divOfInts);
+    printf("%d modulus %d equals: %d, remainder: %d\n\n", userValues[0] , userValues[1], userValues[0] /userValues[1], modulusOfInts);
 }
 
 void pauseExitProgram()
 {
     printf("Press enter to quit...");
-    getchar();
+    while(getchar() != '\n');
     getchar();
 }
 #pragma endregion

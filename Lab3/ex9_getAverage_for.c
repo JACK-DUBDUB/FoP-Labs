@@ -8,7 +8,7 @@
  * 
  * /// ABOUT PROGRAM ///
  * Exercise 9
- * Can potentially gets multiple user inputs of data type integer
+ * Can potentially gets multiple user inputs of data type integer using a loop
  * Can quit loop when the user enters '0' or any non-numerical character, to quit the program
  * Validates the user inputs and stores them into an integer array
  * Displays all the numbers the user entered.
@@ -132,7 +132,7 @@ void displayCalculations(int numbers[], int counter)
 
 void invalidClearBuffer()
 {
-    printf("\nUser did not enter a valid number.");
+    printf("User did not enter a valid number.\n");
     while (getchar() != '\n');              // Remove all remaining chars in input buffer until '\n' (nextline)
     return;
 }
