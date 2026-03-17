@@ -43,13 +43,10 @@ int main()
     }
 
     if(userInput >= 65 && userInput <= 90)          // Swap upper case letters to lower case letters
-    {
         userInput += 32;
-    }
+        
     else if(userInput >= 97 && userInput <= 122)    // Swap lower case letters to upper case letters
-    {
         userInput -= 32;
-    }
 
     printf("User input: %c\nASCII value: %d", userInput, (int)userInput);
 
