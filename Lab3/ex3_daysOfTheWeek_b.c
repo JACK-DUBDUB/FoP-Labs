@@ -102,6 +102,6 @@ void pauseExitProgram()
     printf("Press enter to quit...");
     while(getchar() != '\n');
     getchar();
-    return
+    return;
 }
 #pragma endregion
