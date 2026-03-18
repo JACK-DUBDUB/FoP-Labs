@@ -30,4 +30,5 @@ int main()
         case 'Y':
             printf("Yellow\n");
     }
+    return 0;
 }

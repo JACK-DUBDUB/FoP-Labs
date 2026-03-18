@@ -98,4 +98,5 @@ void pauseExitProgram()
     printf("\nPress enter to quit...");
     while(getchar() != '\n');
     getchar();
+    return;
 }

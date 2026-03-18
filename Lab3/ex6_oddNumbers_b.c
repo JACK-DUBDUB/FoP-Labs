@@ -69,6 +69,7 @@ void pauseExitProgram()
     printf("\nPress enter to quit...");
     while(getchar() != '\n');
     getchar();
+    return;
 }
 
 void displayOddNum(int input)
@@ -79,5 +80,6 @@ void displayOddNum(int input)
         printf(" %d ", i);
     }
     printf("\n");
+    return;
 }
 #pragma endregion

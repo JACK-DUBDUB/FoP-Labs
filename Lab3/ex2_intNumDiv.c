@@ -64,6 +64,7 @@ void performCalc(int userValues[])
     printf("\n/// RESULTS ///\n");
     printf("%d divided by %d equals: %f\n", userValues[0] , userValues[1], divOfInts);
     printf("%d modulus %d equals: %d, remainder: %d\n\n", userValues[0] , userValues[1], userValues[0] /userValues[1], modulusOfInts);
+    return;
 }
 
 void pauseExitProgram()
@@ -71,5 +72,6 @@ void pauseExitProgram()
     printf("Press enter to quit...");
     while(getchar() != '\n');
     getchar();
+    return;
 }
 #pragma endregion
