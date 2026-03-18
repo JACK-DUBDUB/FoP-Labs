@@ -100,12 +100,10 @@ void printMessage(float *xprs_wo_prnths, float *xprs_w_prnths, int *ex_count)
     printf("Ex.%d\nExpression without parenthesis: %f\nExpression with parenthesis: %f\n", *ex_count, *xprs_wo_prnths, *xprs_w_prnths);
     
     // Display Pass/Fail message
-    if (*xprs_wo_prnths == *xprs_w_prnths){     // If values are the same -> Display Pass
+    if (*xprs_wo_prnths == *xprs_w_prnths)     // If values are the same -> Display Pass
         printf("Pass\n\n");    
-    }
-    else{                                       // If values are not same -> Display Fail
+    else                                      // If values are not same -> Display Fail
         printf("Fail\n\n");                     
-    }
     
     // Increment the counter.
     *ex_count += 1; //Can't increment with ex_count++ for some reason -> SOLUTION: you can use (*ex_count++); and that works.

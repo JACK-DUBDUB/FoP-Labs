@@ -49,7 +49,9 @@ int main ()
 }
 #pragma endregion
 
+#pragma region MAIN 
 float computeSum(float a, float b, float c)
 {
     return a + b + c;
 }
+#pragma endregion

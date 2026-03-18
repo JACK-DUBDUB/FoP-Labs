@@ -50,6 +50,7 @@ int main ()
 }
 #pragma endregion
 
+#pragma region Functions
 // We don't return anything here - use void
 void computeSwap(int *a, int *b)
 {
@@ -60,3 +61,4 @@ void computeSwap(int *a, int *b)
 
     return;
 }
+#pragma endregion

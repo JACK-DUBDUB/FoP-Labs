@@ -40,6 +40,7 @@ int main ()
 }
 #pragma endregion
 
+#pragma region Functions
 // calculate total number of bricks required
 float calcTotalBricks(int brick, int row) 
 {
@@ -47,3 +48,4 @@ float calcTotalBricks(int brick, int row)
     // Brick length: 20cm
     return (row * 100) / brick;
 }
+#pragma endregion

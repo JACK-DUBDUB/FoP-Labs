@@ -23,7 +23,7 @@ int main ()
 {
     /// Variables ///
     float interest, monthlyPayments;
-    int loan,duration;
+    int loan, duration;
 
     printf("Loan value: ");
     scanf("%d", &loan);        
@@ -31,8 +31,8 @@ int main ()
     printf("Interest per annum: ");
     scanf("%f", &interest);
 
-    printf("Loan duration: ");
-    scanf("%d*c", &duration);
+    printf("Loan duration (years): ");
+    scanf("%d", &duration);
 
     monthlyPayments = calcPayments(loan, interest,duration);
     printf("Monthly payments: %f\n\n", monthlyPayments);
@@ -47,23 +47,10 @@ float calcPayments(int loan, float interest, int duration)
 {
     interest = interest / 100;    // actual decimal value
     // simple interest
-    float x = loan * interest *duration; // P x R x T 
-    printf("\nTotal interest: %f\n", x);
-    printf("Total amount due: %f\n", x + loan );
-    x = (x + loan) / (months * duration);
-   
+    float totalpayments = loan * interest * duration; // P x R x T 
+    printf("\nTotal interest: %f\n", totalpayments);
+    printf("Total amount due: %f\n", totalpayments + loan );
 
-    /* /// COMPOUND INTEREST ///
-    float total = loan;
-    // this is compound interest me thinks
-    for (int i = 0; i <duration; i++)
-    {
-        total = total * interest;
-    }
-    printf("compound interest: %f", total);
-
-    x = (loan / duration * months);
-    printf("compound Interest monthly payments: %f\n\n", x);
-    */
-    return x;
+    float monthly = (totalpayments + loan) / (months * duration);
+    return monthly;
 }

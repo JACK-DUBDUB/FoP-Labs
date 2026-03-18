@@ -6,11 +6,12 @@
 // Libraries
 #include <stdio.h>
 
+// Defined constants
 #define LIMIT 4
 
 // Declared functions
 int getDepTime();
-int validator(char input[]);
+int validator(int input[]);
 double getDist();
 double getSpeed();
 
@@ -18,40 +19,61 @@ int main()
 {
     int departureT = getDepTime();
     if (departureT == -1)
+    {
         printf("\nNot a valid time\n");
+        return 1;
+    }
+       
 
-    double distance = getDist();
-    double speed = getSpeed();
+    //double distance = getDist();
+    //double speed = getSpeed();
 
-    double arrivalT = distance / speed;
+    //double arrivalT = distance / speed;
 
     return 0;
 }
 
-
 int getDepTime()
 {
-    char inputDepTime[LIMIT];
-    printf("Departure time (24hr): ");
-    scanf("%s", inputDepTime); // expecting string
+    int inputDepTime;
+    printf("Enter departure time (24hr): ");
 
-    // Get actual value and validate
-    if (!validator(inputDepTime))
+    // Get Input and check if it was valid.
+    if (scanf("%d", &inputDepTime) != 1)
         return -1;
-    
-    int time = 0;
-    int mult = 1000;            
+    if (getchar() != '\n')
+        return -1;
 
-    for(int i = 0; i < LIMIT; i++)
+    // Clock notation: AM = 0, PM = 1
+    int notation = 0;
+    if (inputDepTime / 100 > 11)
     {
-        time += inputDepTime[i] * mult;
-        mult = mult / 10;   
+         inputDepTime -= 1200;                  // Half it obviously... make it easier for yourself, jesus
+         notation = 1;
     }
-    
-    time = time % 2400;
+       
+    // Get each individual digit
+    int inheritVal = inputDepTime;
+    int validateTime[LIMIT] = {0, 0, 0, 0};     // This will flag if the value's inserted are invalid -> if values were inserted at all?
+    int divisor = 1000;                         // This is okay because we do not go past 1
+    for (int i = 0; i < LIMIT; i++)
+    {
+        validateTime[i] = inheritVal / divisor;
+        inheritVal = inheritVal % divisor;
+        divisor = divisor / 10;
+        //printf("%d  ", validateTime[i]);
+    }
 
-    printf("\n24hr time: %d\n", time);
-    return time;
+    // Validate the number
+    int isValid = validator(validateTime);
+    if (!isValid)
+        return -1;
+
+    // Convert to 12hr time
+    char *halves[] = {"AM", "PM"};
+    printf("\nThe departure time is %d%d:%d%d %s\n", validateTime[0], validateTime[1], validateTime[2], validateTime[3], halves[notation]);
+
+    return inputDepTime;
 }
 
 double getDist()
@@ -70,32 +92,20 @@ double getSpeed()
     scanf("%f", &speed);
 }
 
-int validator(char input[])
-{
-    // Absolute values
-    for(int i = 0; i < LIMIT; i++)
-    {
-        input[i] = input -= 48;
-    }
 
-    // Comparison
+int validator(int input[])
+{
     for (int i = 0; i < LIMIT; i++)
     {
         int digit = input[i];
-        printf("%d ", digit);           // <-  Comment this out ***
-
         if(digit < 0 || digit > 9)                      // Any digit
             return 0;
-        if (i == 0 && digit > 2)                        // digit 1
+        if (i == 0 && digit > 1)                        // digit 1
             return 0;
-        if (i == 1 && input[0] == 2 && digit > 4 && input[2] > 0 && input[3] > 0)   // digit 2
-            return 0;
-        if (i == 2 && input[i - 1] > 3 && digit > 5)    // digit 3
+        if (i == 1 && input[0] == 1 && digit > 1)       // digit 2
             return 0;
         if (i == 2 && digit > 5)                        // digit 3
             return 0;
     }
     return 1;
 }
-
-

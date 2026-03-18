@@ -44,10 +44,11 @@ int main ()
 }
 #pragma endregion
 
+#pragma region Functions
 float computeProduct(float a, float b)
 {
     // Multiply: a x b
     return a * b;               
 }
-
+#pragma endregion
 

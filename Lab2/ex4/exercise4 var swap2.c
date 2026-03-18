@@ -50,6 +50,7 @@ int main ()
 #pragma endregion
 
 // We don't return anything here - use void, also no creating of new variables so we have to use the "global" address of the integers
+#pragma region Functions
 void computeSwap(int *a, int *b) 
 {
     // Tricky for sure, nowhere near as intuitive as the other one.
@@ -68,3 +69,4 @@ void computeSwap(int *a, int *b)
     // *a = *a ^ *b;
     return;
 }
+#pragma endregion

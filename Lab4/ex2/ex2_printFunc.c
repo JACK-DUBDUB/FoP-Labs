@@ -1,15 +1,6 @@
 // Libraries
 #include <stdio.h>
-
-// Declared functions
-void printMessage();
-
-int main()
-{
-    printMessage();
-
-    return 0;
-}
+#include "ex2_printFunc.h"
 
 void printMessage()
 {

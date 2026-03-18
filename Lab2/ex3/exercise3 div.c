@@ -19,13 +19,13 @@ int computeIntDiv(int a, int b);
 int main () 
 {
     // Variables/data types
-    int a, b;               // signed int
+    int a, b;                               // signed int
     float result;     
 
     // Display first instruction
     // Get user input for first value
     printf("Enter the first no: ");  
-    scanf("%d*c", &a);                    // %d integer, &a is the var -> This does not validate the input
+    scanf("%d*c", &a);                      // %d integer, &a is the var -> This does not validate the input
 
     // Display second instruction
     // Get user input for second value.
@@ -54,6 +54,7 @@ int main ()
 }
 #pragma endregion
 
+#pragma region Functions
 float computeFloatDiv(int a, int b)
 {
     //float c = (a * 1.0) / (b * 1.0); <- force a float
@@ -64,3 +65,4 @@ int computeIntDiv(int a, int b)
 {
     return a / b;
 }
+#pragma endregio

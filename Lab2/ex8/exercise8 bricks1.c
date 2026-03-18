@@ -32,9 +32,11 @@ int main ()
 }
 #pragma endregion
 
+#pragma region functions
 float calcTotalBricks(int brick, int row)
 {
     // Row length: 11 * 100cm = 1100cm
     // Brick length: 20cm
     return (row * 100) / brick;
 }
+#pragma endregion
