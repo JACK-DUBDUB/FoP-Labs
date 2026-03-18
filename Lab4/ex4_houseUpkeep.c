@@ -1,51 +1,54 @@
 /**
  * TODO:
- * STRUCTURE CHART
+ * STRUCTURE CHART 
  * ABOUT
  * CODE
  * 
- * What do you mean modular design?
- * How modular are we talking?
- * 
  * About question 4:
- * How modular do you want Lab 4's exercise 4 to be because I have only one modular function but it returns nothing, it only displays the results.
+ * How modular do you want Lab 4's exercise 4 to be, because I only have one modular function and it returns nothing, it only displays the results.
  * 
  * CODE = DONE
  */
 
-
-
-
+ // Libraries
 #include <stdio.h>
 
+// Defined constants
 #define ARRAYLIMIT 3
-#define PERIOD 5
+#define PERIOD 5        
+
+// Declared Functions
+void displayResults(float house[], float fuel[], float tax[]);
 
 int main()
 {
-    // Could use a 2D array here?
-    // float houseData[LIMIT][LIMIT] = {{67000, 2300, 0.025}, {62000, 2500, 0.025}, {75000, 1850, 0.02}};
-    int houseCost[] = {67000, 62000, 75000};    // House cost
-    int fuelCost[] = {2300, 2500, 1850};        // Fuel cost
-    float taxRate[] = {0.025, 0.025, 0.02};     // Tax rate
+    // Variables
+    float houseCost[ARRAYLIMIT] = {67000, 62000, 75000};
+    float fuelCost[ARRAYLIMIT] = {2300, 2500, 1850};
+    float taxRate[ARRAYLIMIT] = {0.025, 0.025, 0.02};
 
-    // The house
-    for (int i = 0; i < ARRAYLIMIT; i++)
-    {
-        int totalFuel = 0;
-        float totalTax = 0;
+    // Process
+    displayResults(houseCost, fuelCost, taxRate);
 
-        // The 5 years period
-        for (int j = 0; j < PERIOD; j++) 
-        {
-            totalFuel += fuelCost[i];
-            totalTax += houseCost[i] * taxRate[i];
-            //printf("Year: %d  |  Fuel cost: %d  |  Tax: %f\n", j + 1, fuelCost[i] ,houseCost[i] * taxRate[i]);
-        }
-
-        printf("--- House %d ---\nInitial House cost: %d\n", i + 1, houseCost[i]);
-        printf("Total fuel cost over a 5 year period: %d\nTotal tax over a 5 year period: %f\nTotal cost of a house over a 5 year period: %.2f\n\n", totalFuel, totalTax, (houseCost[i] + totalFuel + totalTax));
-    }
-
+    // Exit
+    printf("Press enter to quit program...");
+    getchar();
     return 0;
+}
+
+void displayResults(float house[], float fuel[], float tax[])
+{
+    for (int i = 0; i < ARRAYLIMIT; i++)    
+    {
+        float totalFuel = fuel[i] * PERIOD;
+        float totalTax = (house[i] * tax[i]) * PERIOD;
+        // Display results
+        printf("--- House %d ---\n", i + 1);
+        printf("Initial House cost: $%.2f\n",house[i]);
+        printf("Total cost of fuel over a %d year period: $%.2f\n", PERIOD, totalFuel);
+        printf("Total cost of tax over %d year period: $%.2f\n", PERIOD, totalTax);
+        printf("Total cost of maintainenance over a %d year period: $%.2f\n", PERIOD, (totalFuel + totalTax));
+        printf("Total cost of house and maintenance over a %d year period: $%.2f\n\n", PERIOD, (house[i] + totalFuel + totalTax));
+    }
+    return;
 }

@@ -46,7 +46,7 @@ int main()
     if(!isValid)
         {
             printf("\n\nProgram auto-quit.");
-            while(getchar() != '\n');           // Clear input buffer - because clearly the input was wrong
+            while(getchar() != '\n');           // Clear input buffer - because clearly the input was wrong...
             pauseExitProgram();
             return 1;
         }
