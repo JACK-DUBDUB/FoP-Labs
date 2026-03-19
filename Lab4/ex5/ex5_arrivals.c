@@ -1,64 +1,122 @@
 
 
-// Most poorly written question yet!
-
-
 // Libraries
 #include <stdio.h>
 
 // Defined constants
-#define LIMIT 2
-#define TWELVE_H 12
+#define ARRLIMIT 2      // User array limit
+#define LOOPLIMIT 4     // For loop limit
+#define TWELVE_H 12     // 12 hours
+#define SIXITY_M 60     // 60 minutes
 
 // Declared functions
-int getTime(int compare, const char *CLOCKDISP_S[], const char *DEPARR_S);
+int getTime(int compare, const char *CLOCKDISP_S[], const char *KEYWORDS_S);
 double getDistanceOrSpeed();
+void calculations(int times[], double dstspd[], const char *CLOCKDISP_S[]);
+void displayTime(int h, int m, const char *disp);
+void pauseExitProgram();
 
 int main()
 {
     // Immutable strings
     const char *CLOCKDISP_S[] = {"AM", "PM"};
-    const char *DEPARR_S[] = {"departure time", "arrival time", "24hr", "24hr"};    // Unfortunate to duplicate 24hr for this to work // all could go here?
-    const char *DSTSPD_S[] = {"distance", "speed", "km", "km/h"};
+    const char *KEYWORDS_S[] = {"departure time", "arrival time", "distance", "speed"};
+    const char *UNITS_S[] = {"24h", "24h", "km", "km/h"};
 
-    // User input variables
-    int times[LIMIT] = {0, 0};                  // Departure and Arrival Times
-    double distanceSpeed[LIMIT] = {0.0, 0.0};   // Distance and Speed
+    // User input variable arrays
+    int times[ARRLIMIT] = {0, 0};                  // Departure and Arrival Times
+    double distanceSpeed[ARRLIMIT] = {0.0, 0.0};   // Distance and Speed
 
-    // Yes its doable.. all of them could use the same for loop LOL 
-    // Glorious code reuse to get time for both departure and arrival variables
-    for (int i = 0; i < LIMIT; i++)
+    // Glorious code reuse to get time for both departure and arrival variables as well as distance and speed.
+    for (int i = 0; i < LOOPLIMIT; i++)
     {
-        printf("--------------------------------\nEnter %s (%s): ", DEPARR_S[i], DEPARR_S[i + 2]);
+        printf("--------------------------------\n");
+        printf("Enter %s (%s): ", KEYWORDS_S[i], UNITS_S[i]);
 
-        // IF i < 2 get departure and arrival time
-        // else get distance and speed (type double)
-        times[i] = getTime(times[0], CLOCKDISP_S, DEPARR_S[i]);     // times[0] make sure the comparison is always zero to begin with.
-        if(times[i] == -1)                                          // Why -1 and not 0? Because 0 is a valid value as 00:00 am
+        /// Get departure and arrival ///
+        if (i < 2)  
+            times[i] = getTime(times[0], CLOCKDISP_S, KEYWORDS_S[i]);     // times[0] make sure the comparison is always zero to begin with.
+        /// Get distance and speed ///
+        else       
+            distanceSpeed[i - 2] = getDistanceOrSpeed();
+
+        // Why -1 and not 0? Because 0 is a valid value: 0 = 00:00 am  || Where as 0 distance and 0 speed ***********************
+        if(times[i] == -1 || distanceSpeed[i] < 0)                      
         {
-            printf("Not a valid %s.\n\n", DEPARR_S[i]);
+            printf("Not a valid %s.\n\n", KEYWORDS_S[i]);
+            pauseExitProgram();
             return 1;
         }
-        printf("User entered %s %s: %d\n\n", DEPARR_S[i + 2] ,DEPARR_S[i], times[i]);           // *** can comment this one out
+
+        // Display what the user entered
+        if (i < 2)
+            printf("User entered %s %s: %d\n\n",UNITS_S[i] ,KEYWORDS_S[i], times[i]);           // Ex: 2000 
+        else
+            printf("User entered %s: %.3lf %s\n\n", KEYWORDS_S[i], distanceSpeed[i - 2], UNITS_S[i]);  // Ex: 100 km/h
     }
 
-    /// DISTANCE and SPEED ///
-    for (int i = 0; i < LIMIT; i++)
-    {
-        printf("--------------------------------\nEnter %s (%s): ", DSTSPD_S[i], DSTSPD_S[i + 2]); // Example: Enter 'distance' '(km)': 
-        distanceSpeed[i] = getDistanceOrSpeed();
-        if(distanceSpeed[i] == -1)
-        {
-            printf("Not a valid %s.\n\n", DSTSPD_S[i]);
-            return 2;
-        }
-        printf("User entered %s: %.3lf %s\n\n", DSTSPD_S[i], distanceSpeed[i], DSTSPD_S[i + 2]);
-    }
-
+    calculations(times, distanceSpeed, CLOCKDISP_S);
+    pauseExitProgram();
     return 0;
 }
 
+void calculations(int times[], double dstspd[], const char *CLOCKDISP_S[])
+{
+    // Departure / Arrival times
+    int dep = times[0];  // ((times[0] / 100) * 60) + ((times[0] % 100) % 10);   // (1500 / 100) = 15  ->  (15 * 60) = 900  -> 900 + ()
+    int arr = times[1];  // ((times[1] / 100) * 60) + ((times[1] % 100) % 10);
 
+    // Calculations
+    double fTime  = ((dstspd[0] / dstspd[1]) * SIXITY_M);       // Find: TIME (min)     = ((DISTANCE(km) / SPEED(km/h)) x 60 
+    double fSpeed = (dstspd[0] / ((arr - dep) / SIXITY_M));     // Find: SPEED (km/h)   = (DISTANCE(km) / (TIME(min)) / 60)
+
+    // Hours, minutes, am/pm
+    int h[] = {(dep / SIXITY_M), (arr /  SIXITY_M), ((dep + (int) fTime) /  SIXITY_M)};
+    int m[] = {(dep %  SIXITY_M), (arr %  SIXITY_M), ((dep + (int) fTime) %  SIXITY_M)};
+    int ampm[] = {(0), (0), (0)};
+
+    // Get am/pm 
+    for (int i = 0; i < 3; i++)
+    {
+        if (h[i] >= TWELVE_H)
+        {
+            if(h[i] > TWELVE_H)
+                h[i] -= 12;
+            ampm[i] = 1;
+        } 
+    }
+
+    // Display messages
+    printf("--------------------------------\n");
+    printf("At a departure time of ");
+    displayTime(h[0], m[0], CLOCKDISP_S[ampm[0]]);
+    printf("To reach the destination at the designated time of ");
+    displayTime(h[1], m[1], CLOCKDISP_S[ampm[1]]);
+    printf("Approximate travel speed required to reach destination: %.3lf km/h\n\n", fSpeed);
+    printf("At the a travel speed of %.3lf km/h provided.\n", dstspd[1]); 
+    if ((fTime + dep) < (SIXITY_M * 24))
+    {
+        printf("Destination will be reached by: ");
+        displayTime(h[2], m[2], CLOCKDISP_S[ampm[2]]);
+    }
+    else
+        printf("Destination will not be reached on the same day.\n");
+    
+    return;
+}
+
+void displayTime(int h, int m, const char *disp)
+{
+    printf("%d%d:%d%d %s\n", (h / 10), (h % 10), (m / 10), (m % 10), disp);
+    return;
+}
+
+void pauseExitProgram()
+{
+    printf("\nPress enter to quit program...");
+    getchar();
+    return;
+}
 
 /** GET TIME ()  
  * What a shit show this part was.
@@ -79,11 +137,11 @@ int main()
  * /// Other neat scanf tricks
  * scanf("%d ", &x);    This actually removes any trailing white spaces 
  * scanf("%d*c", &x);   This actually performs a getchar() but its kind of fkn useless if theres many values still residing in buffer  
- * scanf("%11s", name) where limit = 12, it reads a maxmimum of 11 + the null terminator
+ * scanf("%11s", name) where LOOPlimit = 12, it reads a maxmimum of 11 + the null terminator
  * scanf("%[abcde]", letters); This is a scan set -> any letter than isn't contained in the brackets is not read (a rinky dink REGEX)
  */
 
-int getTime(int compare, const char *CLOCKDISP_S[], const char *DEPARR_S)
+int getTime(int compare, const char *CLOCKDISP_S[], const char *KEYWORDS_S)
 {
     int inputHours, inputMinutes = 0;
     int time24h = 0;
@@ -100,12 +158,12 @@ int getTime(int compare, const char *CLOCKDISP_S[], const char *DEPARR_S)
         return -1;
     
     // Values passed filter -> store it as a four digit value
-    time24h = (inputHours * 100) + inputMinutes;
+    time24h = (inputHours * 60) + inputMinutes;     // We are no longer returning the original user input -> 2330 now equals 1410 
 
     // If the comparison value is more than the user inputt time - the first compare is always 0
     if(time24h < compare)
     {
-        printf("Same day arrivals only.\n");    // Hard coded, theres no way for time24h to be below compare as we have filtered the value already.
+        printf("Same day arrivals only.\n"); 
         return -1;
     }
         
@@ -117,10 +175,8 @@ int getTime(int compare, const char *CLOCKDISP_S[], const char *DEPARR_S)
         ampm = 1;                           // Always assign PM
     }    
     
-    // Display 12 hour time - I think seeing a leading 0 looks nicer to me.
-    printf("The %s is: %d%d:%d%d %s\n", DEPARR_S, (inputHours / 10), (inputHours % 10), (inputMinutes / 10), (inputMinutes % 10), CLOCKDISP_S[ampm]);
-
-    // Can only return a single number
+    // Display 12 hour time and return 24hr value
+    printf("The %s is: %d%d:%d%d %s\n", KEYWORDS_S, (inputHours / 10), (inputHours % 10), (inputMinutes / 10), (inputMinutes % 10), CLOCKDISP_S[ampm]);
     return time24h;
 }
 
