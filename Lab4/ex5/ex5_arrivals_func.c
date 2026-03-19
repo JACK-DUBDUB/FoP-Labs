@@ -1,54 +1,49 @@
 #include <stdio.h>
 #include "ex5_arrivals_func.h"
 
-void calculations(int times[], double dstspd[], const char *CLOCKDISP_S[])
+void calculations(int arrivalTime, double distSpd[], const char *CLOCKDISP_S[])
 {
-    // Departure / Arrival times
-    int dep = times[0];  
-    int arr = times[1];  
-
     // Calculations
-    double fTime  = ((dstspd[0] / dstspd[1]) * SIXITY_M);       // Find: TIME (min)     = ((DISTANCE(km) / SPEED(km/h)) x 60 
-    double fSpeed = (dstspd[0] / ((arr - dep) / SIXITY_M));     // Find: SPEED (km/h)   = (DISTANCE(km) / (TIME(min)) / 60)
+    double fTime  = ((distSpd[0] / distSpd[1]) * SIXTY_M);   // Find: TIME (min)     = ((DISTANCE(km) / SPEED(km/h)) x 60
+    double fSpeed = ((distSpd[0] / fTime) * SIXTY_M);        // Find: SPEED (km/h)   = (DISTANCE(km) / TIME) x 60
 
-    // Hours, minutes, am/pm
-    int h[] = {(dep / SIXITY_M), (arr /  SIXITY_M), ((dep + (int) fTime) /  SIXITY_M)};
-    int m[] = {(dep %  SIXITY_M), (arr %  SIXITY_M), ((dep + (int) fTime) %  SIXITY_M)};
-    int ampm[] = {(0), (0), (0)};
-
+    // Convert to 12H clock structure 
+    // Rounding the double with + 0.5 because converting it to type int truncates the fraction with no rounding 
+    int h[ARRLIMIT] = {(arrivalTime /  SIXTY_M), (arrivalTime - (int) (fTime + 0.5)) / SIXTY_M};    // hours    ->  {arrival, departure} 
+    int m[ARRLIMIT] = {(arrivalTime %  SIXTY_M), (arrivalTime - (int) (fTime + 0.5)) % SIXTY_M};    // minutes      
+    int ampm[ARRLIMIT] = {(0), (0)};                                                                // am/pm        
+    
     // Get am/pm 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < ARRLIMIT; i++)
     {
         if (h[i] >= TWELVE_H)
         {
-            if(h[i] > TWELVE_H)
-                h[i] -= 12;
-            ampm[i] = 1;
+            if(h[i] > TWELVE_H) // 1300 -> 01:00 PM
+                h[i] -= TWELVE_H;
+            
+            ampm[i] = 1;        // 1259 -> 12:59 PM
         } 
     }
 
     // Display messages
     printf("\n-------- /// CALCULATIONS /// --------\n");
-    printf("At a departure time of ");
+    printf("For an arrival time of ");
     displayTime(h[0], m[0], CLOCKDISP_S[ampm[0]]);
-    printf("To reach the destination at the designated time of ");
-    displayTime(h[1], m[1], CLOCKDISP_S[ampm[1]]);
-    printf("Approximate travel speed required to reach destination: %.3lf km/h\n\n", fSpeed);
-
-    printf("At the travel speed of %.3lf km/h provided.\n", dstspd[1]);
-    if ((fTime + dep) < TOTAL_M) // (D/S * 60) + (departure time) does not exceed 24:00 or 1440 minutes
+    printf("Travelling a distance of %.3lf km\n", distSpd[0]);
+    printf("At a constant speed of %.3lf km/h\n", distSpd[1]);
+    if ((arrivalTime - (int) fTime) < 0)
     {
-        printf("Destination of %.3lf km will be reached by: ", dstspd[0]);
-        displayTime(h[2], m[2], CLOCKDISP_S[ampm[2]]);
+        printf("The departure could not have been on the same day.\n");
+        return;
     }
-    else
-        printf("Destination will not be reached on the same day.\n");
-    
+    printf("The approximate departure time was: ");
+    displayTime(h[1], m[1], CLOCKDISP_S[ampm[1]]);
     return;
 }
 
 void displayTime(int h, int m, const char *disp)
 {
+    // h = hours, m = minutes, disp = am/pm
     printf("%d%d:%d%d %s\n", (h / 10), (h % 10), (m / 10), (m % 10), disp);
     return;
 }
@@ -60,16 +55,17 @@ void pauseExitProgram()
     return;
 }
 
-int getTime(int compare, const char *CLOCKDISP_S[], const char *KEYWORDS_S)
+int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
 {
     int inputHours, inputMinutes = 0;
     int time24h = 0;
-    int ampm = 0;                           // Where: 0 = am, 1 = pm
+    int ampm = 0;       // Where: 0 = am, 1 = pm
 
-    // Get Input and check if it was valid.
-    if (scanf("%2d %2d", &inputHours, &inputMinutes) != 2)   // We are inputting values into two variables so... != 2 :^)  silly billy 
+    // Get 2 inputs and check if they are valid.
+    if (scanf("%2d %2d", &inputHours, &inputMinutes) != 2)   // We are inputting values into two variables so... != 2 :^)
         return -1;
-    if (getchar() != '\n')  // Does the input buffer still have values? - if it does its not a valid input.
+    // If the buffer contains invalid values -> exit
+    if (getchar() != '\n')  
         return -1;
 
     // Validate that the values entered are within 24 hour clock structure
@@ -77,25 +73,19 @@ int getTime(int compare, const char *CLOCKDISP_S[], const char *KEYWORDS_S)
         return -1;
     
     // Makes all calculatiosn easier to manage
-    time24h = (inputHours * SIXITY_M) + inputMinutes; 
+    time24h = (inputHours * SIXTY_M) + inputMinutes;    // <- You guys should reasonably explain why i should return it as its full value ***
     
-    // If the comparison value is more than the user inputt time - the first compare is always 0
-    if(time24h < compare)
-    {
-        printf("Same day arrivals only.\n"); 
-        return -1;
-    }
-        
     // All filters passed. Change values to 12 hour time
     if((inputHours - TWELVE_H) >= 0)
     {
-        if((inputHours - TWELVE_H) != 0)    // Why? Because 12 PM does not go to 00:00 but it goes 12:00 pm to 12:59 pm
+        if((inputHours - TWELVE_H) != 0)    // Why? Because 12 PM does not go to 00:00, it goes 12:00 pm to 12:59 pm
             inputHours -= TWELVE_H;         // Remove the 24hr time
-        ampm = 1;                           // Always assign PM
+
+        ampm = 1;                           // Always assign PM if >= 12
     }    
     
     // Display 12 hour time and return 24hr value
-    printf("The %s is: ", KEYWORDS_S);
+    printf("The %s is: ", KEYWORDS_S);              // Ex: The "depature time" is: "12:30 PM"
     displayTime(inputHours, inputMinutes, CLOCKDISP_S[ampm]);
     return time24h;
 }

@@ -7,29 +7,31 @@
 int main()
 {
     // Immutable strings
-    const char *CLOCKDISP_S[] = {"AM", "PM"};
-    const char *KEYWORDS_S[] = {"departure time", "arrival time", "distance", "speed"};
-    const char *UNITS_S[] = {"24h", "24h", "km", "km/h"};
+    const char *CLOCKDISP_S[]   = {"AM", "PM"};
+    const char *KEYWORDS_S[]    = {"arrival time", "distance", "speed"};
+    const char *UNITS_S[]       = {"24h", "km", "km/h"};
 
     // User input variable arrays
-    int times[ARRLIMIT] = {0, 0};                  // Departure and Arrival Times
-    double distanceSpeed[ARRLIMIT] = {0.0, 0.0};   // Distance and Speed
+    int arrivalTime = 0;                            // Arrival Time
+    double distanceSpeed[ARRLIMIT] = {0.1, 0.1};    // Distance, Speed
 
-    // Glorious code reuse to get time for both departure and arrival variables as well as values for distance and speed.
+    // Glorious code reuse to get values for both the arrival variable as  distance and speed.
     for (int i = 0; i < LOOPLIMIT; i++)
     {
         printf("\n--------------------------------\n");
         printf("Enter %s (%s): ", KEYWORDS_S[i], UNITS_S[i]);
 
-        /// Get departure and arrival ///
-        if (i < 2)  
-            times[i] = getTime(times[0], CLOCKDISP_S, KEYWORDS_S[i]);     // times[0] make sure the comparison is always zero to begin with.
-        /// Get distance and speed ///
-        else       
-            distanceSpeed[i - 2] = getDistanceOrSpeed();
+        // Get arrival
+        if (i == 0)
+            arrivalTime = getTime(CLOCKDISP_S, KEYWORDS_S[i]);
 
-        // Why -1 and not 0? Because 0 is a valid value: 0 = 00:00 am  || Where as 0 distance and 0 speed ***********************
-        if(times[i] == -1 || distanceSpeed[i] < 0)                      
+        /// Get distance, then get speed ///
+        else       
+            distanceSpeed[i - 1] = getDistanceOrSpeed();
+
+        // 0 Is a valid value -> 0 = 00:00 am that why we use -1
+        // As for dist/speed, calculations require divisions of those numbers so distSpeed cannot equal 0 
+        if(arrivalTime == -1 || distanceSpeed[i] <= 0)                      
         {
             printf("Not a valid %s.\n\n", KEYWORDS_S[i]);
             pauseExitProgram();
@@ -37,7 +39,10 @@ int main()
         }
     }
 
-    calculations(times, distanceSpeed, CLOCKDISP_S);
+    // Perform calculations
+    calculations(arrivalTime, distanceSpeed, CLOCKDISP_S);
+    
+    // Brief pause before quitting program
     pauseExitProgram();
     return 0;
 }
