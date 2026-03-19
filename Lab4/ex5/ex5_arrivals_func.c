@@ -75,7 +75,7 @@ int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
     // Makes all calculatiosn easier to manage
     time24h = (inputHours * SIXTY_M) + inputMinutes;    // <- You guys should reasonably explain why i should return it as its full value ***
     
-    // All filters passed. Change values to 12 hour time
+    // All filters passed. Change value to 12 hour time
     if((inputHours - TWELVE_H) >= 0)
     {
         if((inputHours - TWELVE_H) != 0)    // Why? Because 12 PM does not go to 00:00, it goes 12:00 pm to 12:59 pm
@@ -85,7 +85,7 @@ int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
     }    
     
     // Display 12 hour time and return 24hr value
-    printf("The %s is: ", KEYWORDS_S);              // Ex: The "depature time" is: "12:30 PM"
+    printf("The %s is: ", KEYWORDS_S);              // Ex: The "arrival time" is: "12:30 PM"
     displayTime(inputHours, inputMinutes, CLOCKDISP_S[ampm]);
     return time24h;
 }
