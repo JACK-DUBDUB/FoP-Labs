@@ -1,18 +1,27 @@
 /**
- * TODO:
- * STRUCTURE CHART 
- * ABOUT
- * CODE
+ * /// DATE ///
+ * 20/03/2026
  * 
- * About question 4:
- * How modular do you want Lab 4's exercise 4 to be, because I only have one modular function and it returns nothing, it only displays the results.
+ * /// AUTHOR ///
+ * Name: Jack du boulay 
+ * Student ID: 32712899 
  * 
- * CODE = DONE
- * How to compile
+ * /// ABOUT PROGRAM ///
+ * Exercise 4
+ * Program displays calculation results of 3 houses
+ *      Calculation results include, tax rates + fuel costs + house cost totals
  * 
- * gcc ".\filename1.c" ".\filename2.c" -o program
+ * /// ALGORITHM ///
+ * 1. Call displayResults
+ *      2. LOOP [3] TIMES
+ *          a. Displays each house's calculation results
+ *      3. END LOOP
+ * 4. Close program
  * 
- */
+ * /// HOW TO COMPILE AND RUN ///
+ * To compile: gcc '.\filename_main.c' '.\filename_func.c'-o 'filename'
+ * To run: .\filename
+*/
 
  // Libraries
 #include <stdio.h>
@@ -21,7 +30,7 @@
 int main()
 {
     // Variables
-    float houseCost[ARRAYLIMIT] = {67000, 62000, 75000};
+    float houseCost[ARRAYLIMIT] = {67000, 62000, 75000}; // {house 1, house 2, house 3}
     float fuelCost[ARRAYLIMIT] = {2300, 2500, 1850};
     float taxRate[ARRAYLIMIT] = {0.025, 0.025, 0.02};
 

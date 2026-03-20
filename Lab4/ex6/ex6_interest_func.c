@@ -92,7 +92,7 @@ void calculateInterestPayments(double downPayment, double assetValue, double int
      * r <=> M
      * 
      *                      P x r x (1 + r)^n               M x P 
-     * Monthly payments  =  -------------------   =   ------------------
+     * Monthly payments  =  -------------------   or   ------------------
      *                         (1 + r)^n - 1            1 - (1 + M)^-n 
      */
 

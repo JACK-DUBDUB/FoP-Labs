@@ -5,7 +5,8 @@ void displayResults(float house[], float fuel[], float tax[])
 {
     for (int i = 0; i < ARRAYLIMIT; i++)    
     {
-        float totalFuel = fuel[i] * PERIOD;
+        // Where period = 5
+        float totalFuel = fuel[i] * PERIOD; 
         float totalTax = (house[i] * tax[i]) * PERIOD;
         // Display results
         printf("--- House %d ---\n", i + 1);

@@ -1,11 +1,7 @@
 /**
- * 
- * 
- * 
  * How to compile
  * 
  * gcc ".\filename1.c" ".\filename2.c" -o program
- * 
  * 
  */
 

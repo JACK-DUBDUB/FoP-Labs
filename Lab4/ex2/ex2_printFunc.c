@@ -4,6 +4,6 @@
 
 void printMessage()
 {
-    printf("Jack du Boulay\nICT159");
+    printf("FirstName LastName\nICTXYZ");
     return;
 }

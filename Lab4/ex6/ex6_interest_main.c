@@ -1,22 +1,39 @@
-
-
-
-
 /**
- * BROKIE DECIDES TO GET A CAR LOAN INSTEAD OF SAVING HIS PITIFUL $500 LIQUID CASH
- * This is exactly why people are poor.
+ * /// DATE ///
+ * 20/03/2026
  * 
+ * /// AUTHOR ///
+ * Name: Jack du boulay 
+ * Student ID: 32712899 
  * 
+ * /// ABOUT PROGRAM ///
+ * Exercise 6
+ * User is displayed a menu key selection to choose what to do with the program
+ *      User can insert new values for the four major variables {downPayment, assetValue, interestRate, duration}
+ *      User can choose to view the variables current values
+ *      User can choose to display the calculations of interest 
+ *      User can choose to quit the program
  * 
- */
-
+ * /// ALGORITHM ///
+ * 1. Display menu instructions 
+ * 2. LOOP START
+ *      3. Prompt user for menu key
+ *      4. Validate menu key and pick option
+ *          a. Can insert values for variables: {downPayment, assetValue, interestRate, duration}
+ *          b. Can view variable values
+ *          c. Can calculate and display interest payments
+ *          d. Can quit the program
+ * 5. LOOP UNTIL "QUIT"
+ * 6. Close program
+ * 
+ * /// HOW TO COMPILE AND RUN ///
+ * To compile: gcc '.\filename.c' -o 'filename'
+ * To run: .\filename
+*/
 
 #include <stdio.h>
-#include <math.h>
 #include "ex6_interest_func.h"
 #include "ex6_interest_msgs.h"
-
-#define MONTHS 12
 
 int main()
 {   

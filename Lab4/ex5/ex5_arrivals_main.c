@@ -1,4 +1,29 @@
-
+/**
+ * /// DATE ///
+ * 20/03/2026
+ * 
+ * /// AUTHOR ///
+ * Name: Jack du boulay 
+ * Student ID: 32712899 
+ * 
+ * /// ABOUT PROGRAM ///
+ * Exercise 5
+ * User is prompted for values: {arrivalTime, distance speed}
+ * If all inputs are valid -> calculate departure time.
+ * 
+ * /// ALGORITHM ///
+ * 1. LOOP [3] TIMES
+ *      a. Prompt user for arrival time
+ *      b. Prompt user for distance 
+ *      c. Prompt user for speed
+ * 2. END LOOP
+ * 3. Display departure calculation
+ * 4. Close program
+ * 
+ * /// HOW TO COMPILE AND RUN ///
+ * To compile: gcc '.\filename_main.c' '.\filename_func.c'-o 'filename'
+ * To run: .\filename
+*/
 
 // Learnt something cool -> for (;;){} is actually a while loop with no condition checking
 

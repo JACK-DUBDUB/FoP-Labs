@@ -30,7 +30,7 @@ void DisplayCalculations(double runnerTimes[])
         double speedFeet = FEETPERMILE / runnerTimes[i];
         double speedMetres = speedFeet / FEETPERMETER;
         printf("--- Runner %d ---\n", i + 1);
-        printf("Time (seconds): %f\nSpeed in (feet): %f per second\nSpeed in (meters): %f\n\n", runnerTimes[i], speedFeet, speedMetres);
+        printf("Time (seconds): %f\nSpeed in (feet): %f per second\nSpeed in (meters): %f per second\n\n", runnerTimes[i], speedFeet, speedMetres);
     }
     return;
 }
