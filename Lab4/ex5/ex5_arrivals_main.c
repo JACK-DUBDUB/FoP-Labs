@@ -1,5 +1,7 @@
 
 
+// Learnt something cool -> for (;;){} is actually a while loop with no condition checking
+
 // Libraries
 #include <stdio.h>
 #include "ex5_arrivals_func.h"
