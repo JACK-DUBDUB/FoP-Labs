@@ -6,9 +6,11 @@
 #define INPUT_ERROR -1.0
 
 // Declared functions
-float getSalaries();
+float getUserFloatValue();
 void displayMinMax(float salaries[]);
 void displayAverage(float salaries[]);
+void displaySearchResults(float salaries[]);
+void pauseContinueProgram();
 void pauseExitProgram();
 
 

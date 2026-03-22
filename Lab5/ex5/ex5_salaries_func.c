@@ -2,7 +2,7 @@
 #include "ex5_salaries_func.h"
 
 #pragma region User Inputs
-float getSalaries()
+float getUserFloatValue()
 {
     float salaryInput = 0;
     if(scanf("%f", &salaryInput) != 1)
@@ -15,10 +15,7 @@ float getSalaries()
     }
         
     if(salaryInput <= 0)
-    {
         salaryInput = INPUT_ERROR;
-        printf("Not a valid value.\n");
-    }
 
     // Passed basic filter
     return salaryInput;
@@ -51,15 +48,9 @@ void displayMinMax(float salaries[])
         }
     }
 
-    if (salaries[max] != INPUT_ERROR)
-    {
-        printf("Highest salary at element [%d]: $ %.2f\n", max, salaries[max]);
-        printf("Lowest salary at element [%d]: $ %.2f\n\n", min, salaries[min]);
-        return;
-    }
-    else
-        printf("Did not perform min max calculation.\nUser did not enter any valid salaries.\n\n");
-    
+    printf("Highest employee salary: Employee [%d]: $ %.2f\n", max + 1, salaries[max]);
+    printf("Lowest employee salary:  Employee [%d]: $ %.2f\n\n", min + 1, salaries[min]);
+    pauseContinueProgram();
     return;
 }
 
@@ -79,17 +70,62 @@ void displayAverage(float salaries[])
         }
     }
 
-    if(counter > 0) // Protects against Divide by 0 issues
-    {
-        average = sum / counter;
-        printf("Using %d valid salaries.\n", counter);
-        printf("The total sum of salaries: %.2f\n", sum);
-        printf("The average salary is: $ %.2f\n\n", average);
-        return;
-    }
-    else
-        printf("Did not perform average calculation.\nUser did not enter any valid salaries.\n\n");
+    // Get average
+    average = sum / counter;
 
+    // Display
+    printf("Using %d valid salaries.\n", counter);
+    printf("The total sum of salaries: %.2f\n", sum);
+    printf("The average salary is: $ %.2f\n\n", average);
+    pauseContinueProgram();
+    return;
+}
+
+
+void displaySearchResults(float salaries[])
+{
+    int counter;            // Counts number of employees below search value
+    float searchVal = 0;
+    printf("\n-------- Search Salaries --------\n\n");
+    printf("Enter a search value to find all employee salaries below it.\n");
+    printf("Enter any: | non-numerical | negative | zero | value to quit search.\n");
+    printf("\nEnter a search value: ");
+
+    do
+    {
+        // Get the user search value
+        searchVal =  getUserFloatValue();
+
+         // If it's not a valid search -> exit
+        if(searchVal != INPUT_ERROR)       
+        {
+            // Reset counter to 0
+            counter = 0; 
+            printf("Searching for employee salaries below: $ %.2f\n\n", searchVal);
+
+            // Linear search (Complexity: O(n)) 
+            for(int i = 0; i < SIZE; i++)
+            {
+                // Being sure to not include invalid values...
+                if(salaries[i] < searchVal && salaries[i] != INPUT_ERROR)
+                {
+                    counter++;
+                    printf("Employee [%d] salary: $ %.2f\n", i + 1, salaries[i]);
+                }
+            }
+            printf("Number of employee salaries below search value: %d Employees\n", counter);
+            printf("\nEnter next search value: ");
+        }
+    } while (searchVal != INPUT_ERROR);
+
+    printf("User stopped search.\n\n");
+    return;
+}
+
+void pauseContinueProgram()
+{
+    printf("Press enter to continue...");
+    getchar();
     return;
 }
 
