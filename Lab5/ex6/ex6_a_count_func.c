@@ -11,7 +11,11 @@
 void getUserString(char *userString, int stringSize) // Pointer to char array
 {
     printf("Enter a string: ");
-    fgets(userString, stringSize, stdin);  // userString decays to char*
+
+    // fgets(destination, size, FILE* ) // File* is a pointer
+    // Where: stdin = standard input, stdout = standard ouput, stderr = stanndard error
+    fgets(userString, stringSize, stdin);  // https://www.w3schools.com/c/ref_stdio_fgets.php  <- This one is super important to know ***
+    
     return;
 }
 
