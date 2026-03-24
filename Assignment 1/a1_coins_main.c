@@ -1,131 +1,63 @@
 
-/** Assignment 1
- * Same dog, same tricks.
+/** Assignment 1 -  Coin sorting program
+ *
+ * ---- Author ----
+ * Name:    Jack du Boulay
+ * ID:      32712899
+ * 
+ * ---- About ----
  * 
  * 
  * 
- * Coin sorting algorithm
  * 
+ * ---- Compile and Run ----
+ * gcc '.\a1_coins_main.c' '.\a1_coins_const.c' '.\a1_coins_func.c' -o a1_coins
  */
 
 #include <stdio.h>
-
-#define USER_INPUT_ERROR -1
-#define USER_MAX 95
-#define USER_MIN 1
-
-int getUserInt(int rangeMin, int rangeMax);
-void displayChange(int selection, int change, int currency[], int arraySize, const char *currencyType);
+#include "a1_coins_func.h"
+#include "a1_coins_const.h"
 
 int main()
 {
-    int coinsUS[] = {50, 25, 10, 1};
-    int coinsAU[] = {50, 20, 10, 5};
-    int coinsEU[] = {20, 10 , 5, 1};
-
-    const char *MENUSELECTION_S[] = {
-    "Currency Selection: ",
-    "[1] $ USD - [ 50, 25, 10, 1 ]",
-    "[2] $ AUD - [ 50, 20, 10, 5 ]",
-    "[3] $ EUR - [ 20, 10,  5, 1 ]"
-    };
-
-    const char *CURRENCYTYPE_S[] = {"$ USD", "$ AUD", "$ EUR"};
-
-
-    // Get change value
-    printf("Please enter change amount (1-95 cents): ");
-    int userChange = getUserInt(USER_MIN, USER_MAX);
-
-    if(userChange == USER_INPUT_ERROR)
+    /** [Step 1] - Get user input for change value
+     *      a. Prompt the user to enter an integer value between (1-95) inclusive.
+     *      b. Get the user input and filter it for validity, returning a value to main.
+     *      c. If the user input fails, then quit program.
+     *      d. If the user input is valid we continue with program.
+     */
+    printf("Please enter change amount (1-95 cents): ");                
+    int userChange = getUserInt(CHANGE_MIN, CHANGE_MAX);                // (1, 95) -> the range min and max of whats valid
+    if(userChange == USER_INPUT_ERROR)                                  // Exit program code: 1
     {
-        printf("User entered an invalid change amount.\n");
-        return 1;
+        printf("User entered an invalid change amount.");
+        pauseExitProgram();
+        return 1;                                       
     }
 
-    // Display selection
-    for(int i = 0; i < 4; i++)
+    /** [Step 2] - Get user input for currency selection
+     *      a. Display the selection menu, then prompt the user to enter an integer value between (1-3) inclusive.
+     *      b. Get the user input and filter it for validity, returning a value to main.
+     *      c. If the user input fails, then quit program.
+     *      d. If the user input is valid we continue with program.
+     */
+    printf("%s", MENUSELECTION_S);                                      
+    printf("Please enter currency type (1-3): ");                       
+    int userSelection = getUserInt(SELECTION_MIN, SELECTION_MAX) - 1;   // Range min and max: (1, 3)  | -1 because array index starts at 0;
+    if(userSelection + 1 == USER_INPUT_ERROR)                           // Exit program code: 2
     {
-        printf("%s\n", MENUSELECTION_S[i]);
+        printf("User entered an invalid currency type selection.");
+        pauseExitProgram();
+        return 2;  
     }
 
-    printf("Please enter currency type (1-3): ");
-    int userSelection = getUserInt(1, 3) - 1;   // Currency Selection: 1 = US, 2 = AU, 3 = EU
-
-    if(userSelection == USER_INPUT_ERROR)
-    {
-        printf("User entered an invalid currency type selection.\n");
-        return 1;
-    }
-
-    int arraySize;
-    switch (userSelection)
-    {
-        case 0:
-            arraySize = (sizeof(coinsUS) / sizeof(coinsUS[0]));
-            displayChange(userSelection, userChange, coinsUS, arraySize, CURRENCYTYPE_S[userSelection]);  
-            break;
-        case 1:
-            arraySize = (sizeof(coinsAU) / sizeof(coinsAU[0]));
-            displayChange(userSelection, userChange, coinsAU, arraySize, CURRENCYTYPE_S[userSelection]);  
-            break;
-        case 2:
-            arraySize = (sizeof(coinsEU) / sizeof(coinsEU[0]));
-            displayChange(userSelection, userChange, coinsEU, arraySize, CURRENCYTYPE_S[userSelection]);
-            break;  
-        default:
-            printf("Default block triggered - ERROR.");
-            break;
-    }
-         
+    /** [Step 3] - Display correct amount of change
+     *      a. Get the correct array size based on the valid currency selection made in [Step 2]. 
+     *      b. Display the correct change allocation for the change inserted in [Step 1].
+     *      c. Pause the program momentarily to allow the user program exit on user term.
+     */
+    int arraySize = coinsArraySizes[userSelection];
+    displayChange(userChange, coinsArray[userSelection], arraySize, CURRENCYTYPE_S[userSelection]);  
+    pauseExitProgram();
     return 0;
-}
-
-int getUserInt(int rangeMin, int rangeMax)
-{
-    int userInput;
-    if(scanf("%d", &userInput) != 1)
-        userInput = USER_INPUT_ERROR;
-    
-    if(getchar() != '\n')
-    {
-         while(getchar() != '\n');
-         userInput = USER_INPUT_ERROR;
-    }
-
-    if(userInput < rangeMin || userInput > rangeMax) // In sid the sloth's voice: "I'm a genius"
-        userInput = USER_INPUT_ERROR;
-    
-    return userInput;
-}
-
-void displayChange(int selection, int change, int currency[], int arraySize, const char *currencyType)
-{
-    int temp;
-    int results[arraySize];
-
-    printf("Currency selected: %s\n", currencyType);
-    printf("Change value: %d\n", change);
-
-    for (int i = 0; i < arraySize; i++)
-    {
-        temp = change;  // Get change value
-
-        results[i] = temp / currency[i]; // Get number
-
-        change %= currency[i]; // Find remainders
-
-        if((i == (arraySize - 1) && change > 0) && (change > (currency[i] / 2))) // Only AUD suffers from this
-            results[i] += 1;
-    }
-
-    // Display results
-    int approximateValue = 0;
-    for (int i = 0; i < arraySize; i++)
-    {
-        printf("%d cent coins: %d\n", currency[i], results[i]);
-        approximateValue += results[i] * currency[i];
-    }
-    printf("Approximate value: %d \n\n", approximateValue);
-    return;
 }
