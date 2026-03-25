@@ -56,7 +56,6 @@ int validateValues(double downPayment, double assetValue, double interest, doubl
     return 0;
 }
 
-
 void calculateMonthlyLoanPayments(double downPayment, double assetValue, double annualInterest, double duration)
 {
     /** Compound interest
@@ -72,12 +71,12 @@ void calculateMonthlyLoanPayments(double downPayment, double assetValue, double 
      * 
      * *** Initially I had a for loop do my exponents multiplication: ***
      * 
-     * double totalInterest = (1 + monthlyRate_r);
-     * double temp = totalInterest; 
-     * for (int i = 1; i < months_n; i++)
-     * {
+     *  double totalInterest = (1 + monthlyRate_r);
+     *  double temp = totalInterest; 
+     *  for (int i = 1; i < months_n; i++)
+     *  {
      *      totalInterest = totalInterest * temp;
-     * }
+     *  }
      * 
      * Which should calculate the exponent value.
      * But math.pow is much easier to read.

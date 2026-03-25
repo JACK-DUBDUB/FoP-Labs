@@ -34,6 +34,7 @@
 #include <limits.h>
 
 // Declared functions
+void displayCalculations(int counter,int min, int max, int sum, float average);
 void pauseExitProgram();
 
 int main()
@@ -79,28 +80,17 @@ int main()
             
         if(isValid)
         {
-            // Increment counter (value required to calculate average)
-            counter++;
-
-            // Get Sum
-            sum += userInput;
-
-            // Get max
+            // Calculations
+            counter++; // Increment counter (value required to calculate average)
+            sum += userInput; // Get Sum
             if(userInput > max)
-                max = userInput;
-
-            // Get min
-            if(userInput < min)
-                min = userInput;
-
-            // Get avrg
-            average = (float) sum / counter;
+                max = userInput; // Get max
+            if(userInput < min) 
+                min = userInput; // Get min
+            average = (float) sum / counter; // Get avrg
             
-            // Display results
-            printf("\n\n/// Results ///\nNumber of values provided: %d\nSum total: %d\nMaximum: %d\nMinimum: %d\nAverage: %f\n\n", counter, sum, max, min, average);
-
-            // Display prompt to get next number
-            printf("Next number: ");
+            // Display calculations
+            displayCalculations(counter, min, max, sum, average);
         }
     } while (isValid);
     
@@ -109,6 +99,14 @@ int main()
 }
 
 #pragma region Functions
+void displayCalculations(int counter,int min, int max, int sum, float average)
+{
+    printf("\nNumber of values provided: %d\nSum total: %d\nMaximum: %d\nMinimum: %d\nAverage: %f\n\n", counter, sum, max, min, average);
+    printf("Next number: ");
+    return;
+}
+
+
 void pauseExitProgram()
 {
     printf("\nPress enter to quit program...");

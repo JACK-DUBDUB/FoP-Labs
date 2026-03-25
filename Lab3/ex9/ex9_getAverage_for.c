@@ -40,7 +40,8 @@
 
 // Declared functions
 void displayUserNumbers(int numbers[], int counter);
-void displayCalculations(int numbers[], int counter);
+void calculations(int numbers[], int counter);
+void displayCalculations(int counter, int min, int max, int sum, float average);
 void invalidClearBuffer();
 void pauseExitProgram();
 
@@ -77,7 +78,7 @@ int main()
         // Display the numbers provided + the calculations performed
         // (counter + 1) because the current input value made it through the above if-else statements that are checking for errors.
         displayUserNumbers(numbers, counter + 1);   
-        displayCalculations(numbers, counter + 1);
+        calculations(numbers, counter + 1);
 
         // If the counter is equal to the LIMIT - 1, the message "next number: " will be displayed without the user being able to insert the next value.
         if(counter != LIMIT - 1)        
@@ -101,7 +102,7 @@ void displayUserNumbers(int numbers[], int counter)
     return;
 }
 
-void displayCalculations(int numbers[], int counter)
+void calculations(int numbers[], int counter)
 {
     int max = INT_MIN;
     int min = INT_MAX;
@@ -114,7 +115,7 @@ void displayCalculations(int numbers[], int counter)
         sum += numbers[i];
 
         // Get max
-        if(numbers[i] > max)   // Why More than or equal to? -> If the user inserts the value INT_MAX
+        if(numbers[i] > max)   // Why More than > If the user inserts the value INT_MAX
             max = numbers[i];
 
         // Get min
@@ -126,6 +127,12 @@ void displayCalculations(int numbers[], int counter)
             average = (float) sum / counter;
     }
 
+    displayCalculations(counter, min, max, sum, average);
+    return;
+}
+
+void displayCalculations(int counter,int min, int max, int sum, float average)
+{
     printf("\nNumber of values provided: %d\nSum total: %d\nMaximum: %d\nMinimum: %d\nAverage: %f\n", counter, sum, max, min, average);
     return;
 }

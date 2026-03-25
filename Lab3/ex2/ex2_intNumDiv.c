@@ -24,6 +24,7 @@
 
 // Declared functions
 void performCalc(int userValues[]);
+void displayCalc(int value1, int value2, double divOfInts, int modofInts);
 void pauseExitProgram();
 
 int main()
@@ -60,11 +61,16 @@ int main()
 void performCalc(int userValues[])    
 {
     double divOfInts  = userValues[0] / (double)userValues[1];
-    int modulusOfInts = userValues[0] % userValues[1];
-    printf("\n/// RESULTS ///\n");
-    printf("%d divided by %d equals: %f\n", userValues[0] , userValues[1], divOfInts);
-    printf("%d modulus %d equals: %d, remainder: %d\n\n", userValues[0] , userValues[1], userValues[0] /userValues[1], modulusOfInts);
+    int modOfInts = userValues[0] % userValues[1];
+    displayCalc(userValues[0], userValues[1], divOfInts, modOfInts);
     return;
+}
+
+void displayCalc(int value1, int value2, double divOfInts, int modOfInts)
+{
+    printf("\n/// RESULTS ///\n");
+    printf("%d divided by %d equals: %f\n", value1 , value2, divOfInts);
+    printf("%d modulus %d equals: %d, remainder: %d\n\n", value1, value2, value1 / value2, modOfInts);
 }
 
 void pauseExitProgram()

@@ -49,6 +49,7 @@ int main()
         pauseExitProgram();
         return 2;   // Exit program code 2
     }
+
     else if (userInput == 0)
     {
         printf("\n*** Error ***\nUser entered zero.\nPlease input a positive value.\n\n");
@@ -57,7 +58,6 @@ int main()
     }
 
     displayOddNum(userInput);
-
     pauseExitProgram();
     return 0;
 }
