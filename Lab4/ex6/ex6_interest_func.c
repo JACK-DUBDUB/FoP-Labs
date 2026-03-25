@@ -7,21 +7,18 @@ double getDoubleValue(double currentValue)
 {
     double inputVal = 0.0;
     if(scanf("%lf", &inputVal) != 1)
-        inputVal = -1;
-    
+        inputVal = USER_INPUT_ERROR;
     if(getchar() != '\n')
     {
         clearInputBuffer();
-        inputVal = -1;
+        inputVal = USER_INPUT_ERROR;
     }
-        
     if(inputVal <= 0)
     {
         printf("\nUser did not enter a valid value.\n");  // User cannot use negative values for a loan
         returnToMenu();
         return currentValue; // Return the default value so it remains "unchanged"
     }
-        
     returnToMenu();
     return inputVal;
 }
@@ -29,73 +26,80 @@ double getDoubleValue(double currentValue)
 char getMenuKey()
 {
     char inputVal = 0;
-    printf("Enter a menu key: ");
     if(scanf("%c", &inputVal) != 1)
         return 0;
     if(inputVal < 0)
         return 0;
     if(getchar() != '\n')
         clearInputBuffer();
-
     if(inputVal >= 'a' && inputVal <= 'z')  // force to upper
         inputVal -= 32;
     
     return inputVal;
 }
 
-
-void calculateInterestPayments(double downPayment, double assetValue, double interest, double duration)
+int validateValues(double downPayment, double assetValue, double interest, double duration)
 {
-    if (downPayment <= 0 || assetValue <= 0 || interest <= 0 || duration <= 0 || assetValue < downPayment)
-    {
-        printf("ERROR: Current values are invalid.\nCannot perform calculations.\n");
-        returnToMenu();
-        return;
-    }
+    if (downPayment < 0)
+        printf("ERROR: down payment value is invalid. (use positive value)\n");
+    else if (assetValue <= 0)
+        printf("ERROR: asset value is invalid. (use positive value)\n");
+    else if (assetValue <= downPayment)
+        printf("ERROR: asset value is invalid. (Asset Value must be more than down payment)\n");
+    else if (interest <= 0)
+        printf("ERROR: interest value is invalid. (use positive value)\n");
+    else if (duration <= 0)
+        printf("ERROR: duration value is invalid. (use positive value)\n");
+    else
+        return 1; // Success
+    returnToMenu();
+    return 0;
+}
 
-    /**
-     * Took a lot longer than expected but I got there in the end.
-     * Had to use math.h for pow()
+
+void calculateMonthlyLoanPayments(double downPayment, double assetValue, double annualInterest, double duration)
+{
+    /** Compound interest
+     * The tricky part
+     *                      P     p x r x (1 + r)^n               m x p 
+     * Monthly payments  = --- = -------------------   or   ------------------
+     *                      Q     (1 + r)^n - 1               1 - (1 + m)^-n 
      * 
-     * r <=> M
+     * Key: 
+     *      p     = Principal (loan value)
+     *      r / m = Rate (interest rate)
+     *      n     = Number of payments 
      * 
-     *                      P x r x (1 + r)^n               M x P 
-     * Monthly payments  =  -------------------   or   ------------------
-     *                         (1 + r)^n - 1            1 - (1 + M)^-n 
+     * *** Initially I had a for loop do my exponents multiplication: ***
      * 
-     * Had to break it down because it got a little bit hard to read.
+     * double totalInterest = (1 + monthlyRate_r);
+     * double temp = totalInterest; 
+     * for (int i = 1; i < months_n; i++)
+     * {
+     *      totalInterest = totalInterest * temp;
+     * }
+     * 
+     * Which should calculate the exponent value.
+     * But math.pow is much easier to read.
      */
 
-    // P principle - The loan
-    double loanValue_p = (assetValue - downPayment); 
+    // ---- Components of Compound Interest ---- //
+    double  loanValue_p      = (assetValue - downPayment);                  // (p)       
+    int     months_n         = (int) (duration * MONTHS_PER_YEAR + 0.5);    // (n)          +0.5 rounding to nearest month
+    double  monthlyRate_r    = (annualInterest / 100) / MONTHS_PER_YEAR;    // (r)
+    double  totalInterest    = pow((1 + monthlyRate_r), months_n);          // ((1 + r)^n)
 
-    // n Nth  - Number of total payments               Expected duration:  (36, 48, 60) = (3.0y, 4.0y, 5.0y)
-    int months_n = ((int) (duration * MONTHS_PER_YEAR) + 0.5);  // + 0.5 rounds to nearest month
-
-    // R rate - Mnthly interest rate     
-    double monthlyRate_r = (interest / 100) / MONTHS_PER_YEAR;    
-
-    // (1 + m)^n - Total interest factor
-    double totalInterest = pow((1 + monthlyRate_r), months_n);
-
-    // P x r x (1 + M)^n (numerator)
-    double p = loanValue_p * monthlyRate_r * totalInterest; 
-
-    // (1 + M)^n - 1 (denominator)
-    double q = (totalInterest - 1);
+    // --- Numerator and Denominator ---- //
+    double P = loanValue_p * monthlyRate_r * totalInterest;  
+    double Q = (totalInterest - 1);                          
 
     // ---- Results ---- //
-    // Monthly payments
-    double monthlyPayment = (p / q);
-    
-    // Total loan payment
+    double monthlyPayment = (P / Q);
     double fullLoanPayment = monthlyPayment * months_n;
+    double fullTotalPayment = downPayment + fullLoanPayment;
 
-    // total payment
-    double fullTotalPayment = downPayment + (monthlyPayment * months_n);
-
-
-    displayCalculation(loanValue_p, monthlyRate_r, months_n, fullLoanPayment, fullTotalPayment, monthlyPayment);
+    // Display calculations
+    displayLoanPayments(loanValue_p, monthlyRate_r, months_n, fullLoanPayment, fullTotalPayment, monthlyPayment);
     returnToMenu();
     return;
 }

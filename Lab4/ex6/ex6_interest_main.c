@@ -1,6 +1,6 @@
 /**
  * /// DATE ///
- * 20/03/2026
+ * 25/03/2026 - updated
  * 
  * /// AUTHOR ///
  * Name: Jack du boulay 
@@ -21,7 +21,7 @@
  *      4. Validate menu key and pick option
  *          a. Can insert values for variables: {downPayment, assetValue, interestRate, duration}
  *          b. Can view variable values
- *          c. Can calculate and display interest payments
+ *          c. Can calculate and display monthly loan payments
  *          d. Can quit the program
  * 5. LOOP UNTIL "QUIT"
  * 6. Close program
@@ -41,7 +41,7 @@ int main()
     double assetValue = 5000.0;     // Default asset value 
     double annualInterest = 5.0;    // Default annual interest value 
     double duration = 5;            // Default duration in years
-    char menuKey = 00;              
+    char menuKey = 0;              
 
     // Display the default values first before the user sees the menu
     displayCurrentVariables(downPayment, assetValue, annualInterest, duration);
@@ -50,6 +50,7 @@ int main()
     {
         ///  MENU ///
         printf("%s", MENU);
+        printf("Enter a menu key: ");
         menuKey = getMenuKey();
 
         switch (menuKey)
@@ -59,30 +60,40 @@ int main()
                 displayCurrentVariables(downPayment, assetValue, annualInterest, duration);
                 returnToMenu();
                 break;
+                
             case 'A':   // Insert new asset value
                 displayOptionSelected(1, MENUSELECTION_S);
                 assetValue = getDoubleValue(assetValue);
                 break;
+
             case 'S':   // Insert new annual interest value
                 displayOptionSelected(2, MENUSELECTION_S);
                 annualInterest = getDoubleValue(annualInterest);
                 break;
+
             case 'D':   // Insert new duration value
                 displayOptionSelected(3, MENUSELECTION_S);
                 duration = getDoubleValue(duration);
                 break;
+
             case 'F':   // Insert new down payment value
                 displayOptionSelected(4, MENUSELECTION_S);
                 downPayment = getDoubleValue(downPayment);
                 break;
+
             case 'G':   // Calculate interest
                 displayOptionSelected(5, MENUSELECTION_S);
-                displayCurrentVariables(downPayment, assetValue, annualInterest, duration);
-                calculateInterestPayments(downPayment, assetValue, annualInterest, duration);
+                if(validateValues(downPayment, assetValue, annualInterest, duration)) // Returns an error
+                {
+                    displayCurrentVariables(downPayment, assetValue, annualInterest, duration);
+                    calculateMonthlyLoanPayments(downPayment, assetValue, annualInterest, duration);
+                }
                 break;
+
             case 'Q':   // Quit
                 displayOptionSelected(6, MENUSELECTION_S);
                 break;
+
             default:    // User entered invalid value
                 displayOptionSelected(7, MENUSELECTION_S);
                 printf("Press enter to retry: ");

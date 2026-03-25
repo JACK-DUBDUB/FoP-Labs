@@ -13,7 +13,7 @@ void clearInputBuffer();
 void pauseExitProgram();
 void displayOptionSelected(int option, const char *MENUSELECTION_S[]);
 void displayCurrentVariables(double downPayment, double assetValue, double interest, double duration);
-void displayCalculation(double loanValue_p, double monthlyRate_r, int months_n, double fullLoanPayment, double fullTotalPayment, double monthlyPayment);
+void displayLoanPayments(double loanValue_p, double monthlyRate_r, int months_n, double fullLoanPayment, double fullTotalPayment, double monthlyPayment);
 
 
 #endif
