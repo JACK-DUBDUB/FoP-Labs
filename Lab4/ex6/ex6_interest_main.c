@@ -14,7 +14,7 @@
  *      User can choose to display the calculations of interest 
  *      User can choose to quit the program
  * 
- * /// ALGORITHM ///
+ * /// HIGH LEVEL ALGORITHM ///
  * 1. Display menu instructions 
  * 2. LOOP START
  *      3. Prompt user for menu key
@@ -54,36 +54,36 @@ int main()
 
         switch (menuKey)
         {
-            case 'V':
+            case 'V':   // View values
                 displayOptionSelected(0, MENUSELECTION_S);  // Option 0
                 displayCurrentVariables(downPayment, assetValue, annualInterest, duration);
                 returnToMenu();
                 break;
-            case 'A':
+            case 'A':   // Insert new asset value
                 displayOptionSelected(1, MENUSELECTION_S);
                 assetValue = getDoubleValue(assetValue);
                 break;
-            case 'S':
+            case 'S':   // Insert new annual interest value
                 displayOptionSelected(2, MENUSELECTION_S);
                 annualInterest = getDoubleValue(annualInterest);
                 break;
-            case 'D':
+            case 'D':   // Insert new duration value
                 displayOptionSelected(3, MENUSELECTION_S);
                 duration = getDoubleValue(duration);
                 break;
-            case 'F':
+            case 'F':   // Insert new down payment value
                 displayOptionSelected(4, MENUSELECTION_S);
                 downPayment = getDoubleValue(downPayment);
                 break;
-            case 'G':
+            case 'G':   // Calculate interest
                 displayOptionSelected(5, MENUSELECTION_S);
                 displayCurrentVariables(downPayment, assetValue, annualInterest, duration);
                 calculateInterestPayments(downPayment, assetValue, annualInterest, duration);
                 break;
-            case 'Q':
+            case 'Q':   // Quit
                 displayOptionSelected(6, MENUSELECTION_S);
                 break;
-            default:
+            default:    // User entered invalid value
                 displayOptionSelected(7, MENUSELECTION_S);
                 printf("Press enter to retry: ");
                 clearInputBuffer();

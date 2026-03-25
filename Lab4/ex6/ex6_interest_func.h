@@ -2,7 +2,7 @@
 #define EX6_FUNC_H
 
 // Defined constants
-#define MONTHS 12
+#define MONTHS_PER_YEAR 12
 
 // Declared functions
 void calculateInterestPayments(double downPayment, double assetValue, double interest, double duration);

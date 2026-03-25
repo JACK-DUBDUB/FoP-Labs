@@ -30,12 +30,12 @@
 int main()
 {
     // Variables
-    float houseCost[ARRAYLIMIT] = {67000, 62000, 75000}; // {house 1, house 2, house 3}
-    float fuelCost[ARRAYLIMIT] = {2300, 2500, 1850};
-    float taxRate[ARRAYLIMIT] = {0.025, 0.025, 0.02};
+    float houseCost[ARRAY_LIMIT] = {67000, 62000, 75000}; // {house 1, house 2, house 3}
+    float fuelCost[ARRAY_LIMIT] = {2300, 2500, 1850};
+    float taxRate[ARRAY_LIMIT] = {0.025, 0.025, 0.02};
 
-    // Process
-    displayResults(houseCost, fuelCost, taxRate);
+    // Process and display
+    calculateResults(houseCost, fuelCost, taxRate);
 
     // Exit
     printf("Press enter to quit program...");

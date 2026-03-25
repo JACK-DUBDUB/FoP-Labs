@@ -28,7 +28,7 @@ const char* MENU =
 void clearInputBuffer()
 {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF); //EOF -> end of file
+    while ((c = getchar()) != '\n' && c != EOF); //EOF -> end of file (macro)
     return;
 }
 
@@ -60,5 +60,17 @@ void returnToMenu()
     printf("\nPress enter to go to menu...");
     getchar();
     printf("\n\n");
+    return;
+}
+
+void displayCalculation(double loanValue_p, double monthlyRate_r, int months_n, double fullLoanPayment, double fullTotalPayment, double monthlyPayment)
+{
+    printf("\n--------  Calculations  --------\n");
+    printf("P Principle loan value  = $ %.2lf\n", loanValue_p);
+    printf("M Monthly interest rate =   %lf %%\n", monthlyRate_r * 100);
+    printf("N Number of payments    =   %d (months) \n\n", months_n);
+    printf("Total Loan payment      = $ %.2lf\n", fullLoanPayment);
+    printf("Full Total payment      = $ %.2lf\n\n", fullTotalPayment);
+    printf("Monthly payments        = $ %.2lf\n", monthlyPayment);
     return;
 }

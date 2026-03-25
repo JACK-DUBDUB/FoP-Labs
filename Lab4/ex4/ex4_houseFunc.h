@@ -2,10 +2,11 @@
 #define EX_FUNC_H
 
 // Defined constants
-#define ARRAYLIMIT 3
-#define PERIOD 5   
+#define ARRAY_LIMIT 3
+#define PERIOD_YEARS 5     
 
 // Declared Functions
-void displayResults(float house[], float fuel[], float tax[]);
+void calculateResults(float house[], float fuel[], float tax[]);
+void displayResults(float totalFuel, float totalTax, float house, int index);
 
 #endif

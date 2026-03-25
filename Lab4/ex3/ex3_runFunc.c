@@ -22,16 +22,22 @@ double getRunnerTimes()
     return (minutes * 60) + seconds;
 }
 
-void DisplayCalculations(double runnerTimes[])
+void calculateRunnerTimes(double runnerTimes[])
 {
     printf("\n/// RESULTS ///\n");
     for(int i = 0; i < LIMIT; i++)
     {
         double speedFeet = FEETPERMILE / runnerTimes[i];
-        double speedMetres = speedFeet / FEETPERMETER;
-        printf("--- Runner %d ---\n", i + 1);
-        printf("Time (seconds): %f\nSpeed in (feet): %f per second\nSpeed in (meters): %f per second\n\n", runnerTimes[i], speedFeet, speedMetres);
+        double speedMeters = speedFeet / FEETPERMETER;
+        displayRunnertimes(speedFeet, speedMeters, runnerTimes[i], i + 1);
     }
+    return;
+}
+
+void displayRunnertimes(double speedFeet, double speedMeters, double runnerTime, int index)
+{
+    printf("--- Runner %d ---\n", index);
+    printf("Time (seconds): %f\nSpeed in (feet): %f per second\nSpeed in (meters): %f per second\n\n", runnerTime, speedFeet, speedMeters);
     return;
 }
 

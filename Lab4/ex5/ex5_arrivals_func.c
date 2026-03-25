@@ -6,11 +6,12 @@ void calculations(int arrivalTime, double dist, double speed, const char *CLOCKD
     // Calculations
     // Rounding the double with + 0.5 because converting it to type int truncates the fraction with no rounding 
     int fDepTime  = (int) ((dist / speed) * SIXTY_M) + 0.5;   // Find: Departure TIME (min)     = ((DISTANCE(km) / SPEED(km/h)) x 60 + rounding
+    int validTime = arrivalTime - fDepTime;
 
     // Convert to 12H clock structure 
-    int hrs[ARRLIMIT] = {(arrivalTime /  SIXTY_M), (arrivalTime - fDepTime) / SIXTY_M};    // hours    ->  {arrival, departure} 
-    int min[ARRLIMIT] = {(arrivalTime %  SIXTY_M), (arrivalTime - fDepTime) % SIXTY_M};    // minutes      
-    int ampm[ARRLIMIT] = {(0), (0)};                                                    // am/pm        
+    int hrs[ARRLIMIT] = {(arrivalTime /  SIXTY_M), (arrivalTime - fDepTime) / SIXTY_M};     // hours    ->  {arrival, departure} 
+    int min[ARRLIMIT] = {(arrivalTime %  SIXTY_M), (arrivalTime - fDepTime) % SIXTY_M};     // minutes      
+    int ampm[ARRLIMIT] = {(0), (0)};                                                        // am/pm        
     
     // Get am/pm 
     for (int i = 0; i < ARRLIMIT; i++)
@@ -23,14 +24,21 @@ void calculations(int arrivalTime, double dist, double speed, const char *CLOCKD
             ampm[i] = 1;        // 1259 -> 12:59 PM
         } 
     }
+    
+    // Display calculations 
+    displayCalculations(hrs, min, ampm, dist, speed, CLOCKDISP_S, validTime);
 
-    // Display calculations
+    return;
+}
+
+void displayCalculations(int hrs[], int min[], int ampm[], double dist, double speed, const char *CLOCKDISP_S[], int validTime)
+{
     printf("\n-------- /// CALCULATIONS /// --------\n");
     printf("For an arrival time of ");
     displayTime(hrs[0], min[0], CLOCKDISP_S[ampm[0]]);
     printf("Travelling a distance of %.3lf km\n", dist);
     printf("At a constant speed of %.3lf km/h\n", speed);
-    if ((arrivalTime - fDepTime) < 0) // Arrival time (minutes) - departure time (minutes)
+    if (validTime < 0) // Arrival time (minutes) - departure time (minutes)
     {
         printf("The departure could not have been on the same day.\n");
         return;
@@ -64,6 +72,7 @@ int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
     // Get 2 inputs and check if they are valid.
     if (scanf("%2d %2d", &inputHours, &inputMinutes) != 2)   // We are inputting values into two variables so... != 2 :^)
         return -1;
+    
     // If the buffer contains invalid values -> exit
     if (getchar() != '\n')  
         return -1;

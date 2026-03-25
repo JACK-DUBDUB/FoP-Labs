@@ -13,6 +13,7 @@ int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S);
 double getDistanceOrSpeed();
 void calculations(int arrivalTime, double dist, double speed, const char *CLOCKDISP_S[]);
 void displayTime(int h, int m, const char *disp);
+void displayCalculations(int hrs[], int min[], int ampm[], double dist, double speed, const char *CLOCKDISP_S[], int validTime);
 void pauseExitProgram();
 
 

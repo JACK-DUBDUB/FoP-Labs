@@ -28,16 +28,6 @@
 #include <stdio.h>
 #include "ex3_runFunc.h"
 
-// Defined constants ?
-#define LIMIT           4
-#define FEETPERMILE     5280
-#define FEETPERMETER    3.28084
-
-// Declare functions
-void DisplayCalculations(double runnerTimes[]);
-double getRunnerTimes();
-void pauseExitProgram();
-
 int main()
 {
     double runnerTimes[LIMIT];  // = {232.83, 239.83, 240.03, 256.22};
@@ -70,7 +60,7 @@ int main()
             return 1;
         }
     else
-        DisplayCalculations(runnerTimes);
+        calculateRunnerTimes(runnerTimes);
     
     pauseExitProgram();
     return 0;

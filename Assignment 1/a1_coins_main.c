@@ -15,7 +15,7 @@
  */
 
 /** QUESTIONS
- * - Ensure that the multiple value is equal to 5 for AUD <- WHAT? Why can't i just round
+ * - Ensure that the multiple value is equal to 5 for AUD <- WHAT! Why can't i just round it?
  */
 
 #include <stdio.h>
@@ -81,6 +81,7 @@ int main()
         exitProgram = getUserInt(0, 1);
         if(!exitProgram)
             exitProgram = USER_INPUT_ERROR;
+        
     } while (exitProgram != USER_INPUT_ERROR);
 
     // Exit
