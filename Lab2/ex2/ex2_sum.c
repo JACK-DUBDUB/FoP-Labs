@@ -38,7 +38,7 @@ int main ()
     // computes the summation of the 3 values a, b, c.
     // Displays the result
     result = computeSum(a, b, c);
-    printf("The summation of values [%f, %f, %f] \nResult: %f\n", a, b, c, result);
+    printf("The summation of values [%.3f, %.3f, %.3f] \nResult: %.3f\n", a, b, c, result);
 
     // Halts program so it doesn't autoclose immediately
     printf("Press any key to exit program:"); 

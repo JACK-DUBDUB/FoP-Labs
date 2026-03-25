@@ -12,7 +12,8 @@
 #include <stdio.h> 
 
 // Declared functions
-void computeSwap(int *a, int *b);       // Performs the swap between the two variables
+void computeSwap(int a, int b);       // Performs the swap between the two variables
+void displaySwappedValues(int a, int b);
 
 #pragma region MAIN 
 int main () 
@@ -35,10 +36,7 @@ int main ()
 
     // Perform swap of values and displays the result in the same function.
     // using values at the address of a and b
-    computeSwap(&a, &b);    
-
-    // print message
-    printf("Post swapped values of A = %d    B = %d\n", a, b);
+    computeSwap(a, b);    
 
     // Halts program so it doesn't auto-close immediately
     printf("Press any key to exit program: "); 
@@ -52,13 +50,21 @@ int main ()
 
 #pragma region Functions
 // We don't return anything here - use void
-void computeSwap(int *a, int *b)
+void computeSwap(int a, int b)
 {
     // create temporary var c to perform swap
-    int c = *a;     // value at: a
-    *a = *b;        // value at: a = value at: b
-    *b = c;         // value at: b = c
+    int c = a;      // value at: a
+    a = b;          // value at: a = value at: b
+    b = c;          // value at: b = c
 
+    displaySwappedValues(a, b);
     return;
 }
+
+void displaySwappedValues(int a, int b)
+{
+    printf("Post swapped values of A = %d    B = %d\n", a, b);
+    return;
+}
+
 #pragma endregion

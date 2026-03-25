@@ -16,7 +16,8 @@
 #define months 12
 
 // Functions
-float calcPayments(int loan, float interest, int duration);
+void calcPayments(int loan, float interest, int duration);
+void displayResults(float totalPayments, int loan, float monthlyPayments);
 
 #pragma region MAIN 
 int main () 
@@ -34,23 +35,30 @@ int main ()
     printf("Loan duration (years): ");
     scanf("%d", &duration);
 
-    monthlyPayments = calcPayments(loan, interest,duration);
-    printf("Monthly payments: %f\n\n", monthlyPayments);
+    calcPayments(loan, interest,duration);
 
     // Exits program safely
     return 0;
 }
 #pragma endregion
 
-
-float calcPayments(int loan, float interest, int duration)
+// Simple interest
+#pragma region Functions
+void calcPayments(int loan, float interest, int duration)
 {
+    // P x R x T  
     interest = interest / 100;    // actual decimal value
-    // simple interest
-    float totalpayments = loan * interest * duration; // P x R x T 
-    printf("\nTotal interest: %f\n", totalpayments);
-    printf("Total amount due: %f\n", totalpayments + loan );
-
-    float monthly = (totalpayments + loan) / (months * duration);
-    return monthly;
+    float totalpayments = loan * interest * duration; 
+    float monthlyPayments = (totalpayments + loan) / (months * duration);
+    
+    displayResults(totalpayments, loan, monthlyPayments);
+    return;
 }
+
+void displayResults(float totalPayments, int loan, float monthlyPayments)
+{
+    printf("\nTotal interest: %f\n", totalPayments);
+    printf("Total amount due: %f\n", totalPayments + loan );
+    printf("Monthly payments: %f\n\n", monthlyPayments);
+}
+#pragma endregion

@@ -13,7 +13,8 @@
 #include <stdio.h> 
 
 // Declared functions
-void computeSwap(int *a, int *b);       // Performs the swap between the two variables
+void computeSwap(int a, int b);       // Performs the swap between the two variables
+void displaySwappedValues(int a, int b);
 
 #pragma region MAIN 
 int main () 
@@ -35,9 +36,7 @@ int main ()
     printf("Values provided: A = %d     B = %d\n", a, b);
 
     // Perform swap of values and displays the result in the same function.
-    // print message
-    computeSwap(&a, &b);                
-    printf("Post swapped values: A = %d    B = %d\n", a, b);
+    computeSwap(a, b);      
 
     // Halts program so it doesn't auto-close immediately
     printf("Press any key to exit program: "); 
@@ -50,23 +49,36 @@ int main ()
 #pragma endregion
 
 // We don't return anything here - use void, also no creating of new variables so we have to use the "global" address of the integers
-#pragma region Functions
-void computeSwap(int *a, int *b) 
-{
-    // Tricky for sure, nowhere near as intuitive as the other one.
-    // Brief example of whats going on: 
-    // Where A = 1     B = 
-    // a = 1 + 2 = 3
-    // b = 3 - 2 = 1 
-    // a = 3 - 1 = 2
-    *a = *a + *b; 
-    *b = *a - *b;
-    *a = *a - *b;
 
-    // Could also use the bitwise XOR swap 
-    // *a = *a ^ *b;
-    // *b = *a ^ *b;
-    // *a = *a ^ *b;
+/**
+ * Tricky for sure, nowhere near as intuitive as the other one.
+ * Brief example of whats going on: 
+ * Where A = 1     B = 2
+ * a = 1 + 2 = 3
+ * b = 3 - 2 = 1 
+ * a = 3 - 1 = 2
+ * 
+ * Could also use the bitwise XOR swap 
+ * a = a ^ b;
+ * b = a ^ b;
+ * a = a ^ b;
+ * 
+
+ */
+#pragma region Functions
+void computeSwap(int a, int b) 
+{
+    a = a + b; 
+    b = a - b;
+    a = a - b;
+
+    displaySwappedValues(a, b);
+    return;
+}
+
+void displaySwappedValues(int a, int b)
+{
+    printf("Post swapped values of A = %d    B = %d\n", a, b);
     return;
 }
 #pragma endregion

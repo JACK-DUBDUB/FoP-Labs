@@ -11,10 +11,9 @@
 // Libraries
 #include <stdio.h> 
 
-// Define
-
 // Functions
 float calcTotalBricks(int brick, int row);
+void displayBrickResults(const int brickLength, float rowLength, float totalBricks);
 
 #pragma region MAIN 
 int main () 
@@ -33,7 +32,7 @@ int main ()
     float totalBricks = calcTotalBricks(brickLength, rowLength);
 
     // Display
-    printf("Brick length: %d\nRow length: %fm\nTotal bricks: %f\n", brickLength, rowLength, totalBricks);
+    displayBrickResults(brickLength, rowLength, totalBricks);
 
     // Exits program safely
     return 0;
@@ -47,5 +46,11 @@ float calcTotalBricks(int brick, int row)
     // Row length: 11 * 100cm = 1100cm
     // Brick length: 20cm
     return (row * 100) / brick;
+}
+
+void displayBrickResults(const int brickLength, float rowLength, float totalBricks)
+{
+    printf("Brick length: %d\nRow length: %.2fm\nTotal bricks: %.2f\n", brickLength, rowLength, totalBricks);
+    return;
 }
 #pragma endregion
