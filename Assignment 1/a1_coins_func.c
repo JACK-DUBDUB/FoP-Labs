@@ -23,7 +23,7 @@ int getUserInt(int rangeMin, int rangeMax)
 
 void pauseExitProgram()
 {
-    printf("\n\nPress enter to quit program...");
+    printf("\nPress enter to quit program...");
     getchar();
     return;
 }
@@ -34,8 +34,8 @@ void displayChange(int change, const int currency[], int arraySize, const char *
 {
     int totalCoins[arraySize]; // Stores total number of each coin available 
 
-    printf("\nCurrency selected: %s\n", currencyType);
-    printf("Change value: %d\nCOINS | ", change);
+    printf("\nCurrency type selected: %s\n", currencyType);
+    printf("Change value: %d cents\nCOINS | ", change);
 
     // Force rounding to lowest available value if applicable (AUD)
     if(change % currency[arraySize -1] > currency[arraySize -1] / 2)
@@ -58,7 +58,7 @@ void displayChange(int change, const int currency[], int arraySize, const char *
 
     // Display approximate value if change rounding was required
     if(change > 0)
-        printf("\n\nApproximate value: %d cents", approximateValue);
+        printf("\n\nApproximate rounded value: %d cents", approximateValue);
     
     return;
 }

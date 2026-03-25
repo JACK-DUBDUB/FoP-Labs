@@ -40,7 +40,8 @@ int main()
 
     // User input variable arrays
     int arrivalTime = 0;                            // Arrival Time
-    double distanceSpeed[ARRLIMIT] = {0.1, 0.1};    // Distance, Speed
+    double distance = 0.1;
+    double speed = 0.1;
 
     // Glorious code reuse to get values for both the arrival variable as  distance and speed.
     for (int i = 0; i < LOOPLIMIT; i++)
@@ -50,15 +51,19 @@ int main()
 
         // Get arrival
         if (i == 0)
-            arrivalTime = getTime(CLOCKDISP_S, KEYWORDS_S[i]);
+            arrivalTime = getTime(CLOCKDISP_S, KEYWORDS_S[0]);
 
-        /// Get distance, then get speed ///
-        else       
-            distanceSpeed[i - 1] = getDistanceOrSpeed();
-
+        /// Get distance
+        if (i == 1)       
+            distance = getDistanceOrSpeed();
+        
+        // Get speed
+        if (i == 2)
+            speed = getDistanceOrSpeed();
+        
         // 0 Is a valid value -> 0 = 00:00 am that why we use -1
         // As for dist/speed, calculations require divisions of those numbers so distSpeed cannot equal 0 
-        if(arrivalTime == -1 || distanceSpeed[i] <= 0)                      
+        if(arrivalTime == -1 || distance <= 0 || speed <= 0)                      
         {
             printf("Not a valid %s.\n\n", KEYWORDS_S[i]);
             pauseExitProgram();
@@ -67,7 +72,7 @@ int main()
     }
 
     // Perform calculations
-    calculations(arrivalTime, distanceSpeed, CLOCKDISP_S);
+    calculations(arrivalTime, distance, speed, CLOCKDISP_S);
     
     // Brief pause before quitting program
     pauseExitProgram();

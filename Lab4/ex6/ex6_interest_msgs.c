@@ -16,10 +16,49 @@ const char *MENUSELECTION_S[] = {
 // One big menu "string"
 const char* MENU =
 "-------- /// MENU /// --------\n Menu keys:\n"
-" 'v' - To view current variable values\n"
-" 'a' - To insert new asset value\n"
-" 's' - To insert new annual interest rate\n"
-" 'd' - To insert new duration\n"
-" 'f' - To insert new down payment amount\n"
-" 'g' - To perform interest calculation\n"
-" 'q' - To quit program\n\n";
+" 'V' - To view current variable values\n"
+" 'A' - To insert new asset value\n"
+" 'S' - To insert new annual interest rate\n"
+" 'D' - To insert new duration\n"
+" 'F' - To insert new down payment amount\n"
+" 'G' - To perform interest calculation\n"
+" 'Q' - To quit program\n\n";
+
+
+void clearInputBuffer()
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF); //EOF -> end of file
+    return;
+}
+
+void pauseExitProgram()
+{
+    printf("\nPress enter to quit program...");
+    getchar();
+    return;
+}
+
+void displayOptionSelected(int option, const char *MENUSELECTION_S[])
+{
+    printf("%s", MENUSELECTION_S[option]);
+    return;
+}
+
+void displayCurrentVariables(double downPayment, double loan, double interest, double duration)
+{
+    printf("-------- Current Values --------\n");
+    printf("Down payment value      = $ %.2lf\n", downPayment);
+    printf("Asset value             = $ %.2lf\n", loan);           
+    printf("Interest rate (p.a)     =   %.2lf %%\n", interest);  // Print the actial % sign using %% or use ()"%c", 37)
+    printf("Duration (years)        =   %.1lf\n", duration);
+    return;
+}
+
+void returnToMenu()
+{
+    printf("\nPress enter to go to menu...");
+    getchar();
+    printf("\n\n");
+    return;
+}

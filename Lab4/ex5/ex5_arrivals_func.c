@@ -1,45 +1,45 @@
 #include <stdio.h>
 #include "ex5_arrivals_func.h"
 
-void calculations(int arrivalTime, double distSpd[], const char *CLOCKDISP_S[])
+void calculations(int arrivalTime, double dist, double speed, const char *CLOCKDISP_S[])
 {
     // Calculations
-    double fTime  = ((distSpd[0] / distSpd[1]) * SIXTY_M);   // Find: TIME (min)     = ((DISTANCE(km) / SPEED(km/h)) x 60
-    double fSpeed = ((distSpd[0] / fTime) * SIXTY_M);        // Find: SPEED (km/h)   = (DISTANCE(km) / TIME) x 60
+    // Rounding the double with + 0.5 because converting it to type int truncates the fraction with no rounding 
+    int fDepTime  = (int) ((dist / speed) * SIXTY_M) + 0.5;   // Find: Departure TIME (min)     = ((DISTANCE(km) / SPEED(km/h)) x 60 + rounding
 
     // Convert to 12H clock structure 
-    // Rounding the double with + 0.5 because converting it to type int truncates the fraction with no rounding 
-    int h[ARRLIMIT] = {(arrivalTime /  SIXTY_M), (arrivalTime - (int) (fTime + 0.5)) / SIXTY_M};    // hours    ->  {arrival, departure} 
-    int m[ARRLIMIT] = {(arrivalTime %  SIXTY_M), (arrivalTime - (int) (fTime + 0.5)) % SIXTY_M};    // minutes      
-    int ampm[ARRLIMIT] = {(0), (0)};                                                                // am/pm        
+    int hrs[ARRLIMIT] = {(arrivalTime /  SIXTY_M), (arrivalTime - fDepTime) / SIXTY_M};    // hours    ->  {arrival, departure} 
+    int min[ARRLIMIT] = {(arrivalTime %  SIXTY_M), (arrivalTime - fDepTime) % SIXTY_M};    // minutes      
+    int ampm[ARRLIMIT] = {(0), (0)};                                                    // am/pm        
     
     // Get am/pm 
     for (int i = 0; i < ARRLIMIT; i++)
     {
-        if (h[i] >= TWELVE_H)
+        if (hrs[i] >= TWELVE_H)
         {
-            if(h[i] > TWELVE_H) // 1300 -> 01:00 PM
-                h[i] -= TWELVE_H;
+            if(hrs[i] > TWELVE_H) // 1300 -> 01:00 PM
+                hrs[i] -= TWELVE_H;
             
             ampm[i] = 1;        // 1259 -> 12:59 PM
         } 
     }
 
-    // Display messages
+    // Display calculations
     printf("\n-------- /// CALCULATIONS /// --------\n");
     printf("For an arrival time of ");
-    displayTime(h[0], m[0], CLOCKDISP_S[ampm[0]]);
-    printf("Travelling a distance of %.3lf km\n", distSpd[0]);
-    printf("At a constant speed of %.3lf km/h\n", distSpd[1]);
-    if ((arrivalTime - (int) fTime) < 0)
+    displayTime(hrs[0], min[0], CLOCKDISP_S[ampm[0]]);
+    printf("Travelling a distance of %.3lf km\n", dist);
+    printf("At a constant speed of %.3lf km/h\n", speed);
+    if ((arrivalTime - fDepTime) < 0) // Arrival time (minutes) - departure time (minutes)
     {
         printf("The departure could not have been on the same day.\n");
         return;
     }
     printf("The approximate departure time was: ");
-    displayTime(h[1], m[1], CLOCKDISP_S[ampm[1]]);
+    displayTime(hrs[1], min[1], CLOCKDISP_S[ampm[1]]);
     return;
 }
+
 
 void displayTime(int h, int m, const char *disp)
 {

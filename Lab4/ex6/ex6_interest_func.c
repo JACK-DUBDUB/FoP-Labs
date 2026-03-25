@@ -8,8 +8,12 @@ double getDoubleValue(double currentValue)
     if(scanf("%lf", &inputVal) != 1)
         inputVal = -1;
     
-    clearInputBuffer(); // Clear
-
+    if(getchar() != '\n')
+    {
+        clearInputBuffer();
+        inputVal = -1;
+    }
+        
     if(inputVal <= 0)
     {
         printf("\nUser did not enter a valid value.\n");  // User cannot use negative values for a loan
@@ -38,47 +42,10 @@ char getMenuKey()
     return inputVal;
 }
 
-void clearInputBuffer()
-{
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF); //EOF -> end of file
-    return;
-}
-
-void pauseExitProgram()
-{
-    printf("\nPress enter to quit program...");
-    getchar();
-    return;
-}
-
-void displayOptionSelected(int option, const char *MENUSELECTION_S[])
-{
-    printf("%s", MENUSELECTION_S[option]);
-    return;
-}
-
-void displayCurrentVariables(double downPayment, double loan, double interest, double duration)
-{
-    printf("-------- Current Values --------\n");
-    printf("Down payment value      = $ %.2lf\n", downPayment);
-    printf("Asset value             = $ %.2lf\n", loan);           
-    printf("Interest rate (p.a)     =   %.2lf %%\n", interest);  // Print the actial % sign using %% or use ()"%c", 37)
-    printf("Duration (years)        =   %.1lf\n", duration);
-    return;
-}
-
-void returnToMenu()
-{
-    printf("\nPress enter to go to menu...");
-    getchar();
-    printf("\n\n");
-    return;
-}
 
 void calculateInterestPayments(double downPayment, double assetValue, double interest, double duration)
 {
-    if (downPayment <= 0 || assetValue <= 0 || interest <= 0 || duration <= 0)
+    if (downPayment <= 0 || assetValue <= 0 || interest <= 0 || duration <= 0 || assetValue < downPayment)
     {
         printf("ERROR: Current values are invalid.\nCannot perform calculations.\n");
         returnToMenu();
@@ -121,7 +88,7 @@ void calculateInterestPayments(double downPayment, double assetValue, double int
     printf("\n--------  Calculations  --------\n");
     printf("P Principle loan value  = $ %.2lf\n", (assetValue - downPayment));
     printf("M Monthly interest rate =   %lf %%\n", monthlyRate_r * 100);
-    printf("N Number of payments    =   %d \n\n", months_n);
+    printf("N Number of payments    =   %d (months) \n\n", months_n);
     printf("Total interest payment  = $ %.2lf\n", (monthlyPayment * months_n) - loanValue_p);
     printf("Total loan payment      = $ %.2lf\n", monthlyPayment * months_n);
     printf("Total payment           = $ %.2lf\n\n", downPayment + monthlyPayment * months_n);

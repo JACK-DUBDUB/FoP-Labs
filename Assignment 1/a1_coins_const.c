@@ -8,7 +8,7 @@ const int coinsUS[] = {50, 25, 10, 1};
 const int coinsAU[] = {50, 20, 10, 5};
 const int coinsEU[] = {20, 10 , 5, 1};
 
-// Pointer of coin arrays
+// Array of pointers to arrays
 const int *coinsArray[] = {coinsUS, coinsAU, coinsEU};
 
 // Store the size of each array -> Not exactly dynamic but solves the problem... 
@@ -26,5 +26,5 @@ const char* MENUSELECTION_S = {"\nCurrency Selection menu: \n"
     "[3] $ EUR coins: 20, 10,  5, 1 \n"
 };
 
-// Array of string pointers
+// Array of pointers to strings
 const char *CURRENCYTYPE_S[] = {"$ USD", "$ AUD", "$ EUR"};

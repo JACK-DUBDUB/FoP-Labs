@@ -11,7 +11,7 @@
 // Declared functions
 int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S);
 double getDistanceOrSpeed();
-void calculations(int arrivalTime, double distSpd[], const char *CLOCKDISP_S[]);
+void calculations(int arrivalTime, double dist, double speed, const char *CLOCKDISP_S[]);
 void displayTime(int h, int m, const char *disp);
 void pauseExitProgram();
 

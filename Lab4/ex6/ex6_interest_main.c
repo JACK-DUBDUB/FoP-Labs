@@ -30,10 +30,9 @@
  * To compile: gcc '.\filename.c' -o 'filename'
  * To run: .\filename
 */
-
 #include <stdio.h>
-#include "ex6_interest_func.h"
 #include "ex6_interest_msgs.h"
+#include "ex6_interest_func.h"
 
 int main()
 {   
