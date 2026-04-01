@@ -13,7 +13,7 @@
 
 int main()
 {
-    // Declaration of arrays (values at elements unassigned)
+    // Declaration of arrays (values at all elements unassigned)
     int numbers[SIZE];
     int half = SIZE / 2;
 

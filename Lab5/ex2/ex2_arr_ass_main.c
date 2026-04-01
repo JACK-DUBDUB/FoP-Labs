@@ -1,28 +1,18 @@
-
-
-
-
-
-
-
-
-
 #include <stdio.h>
-
-#define INT_LIMIT 21
+#include "ex2_arr_ass_func.h"
 
 int main()
 {
-    // Declaration of arrays (values at elements unassigned)
-    int numbers[INT_LIMIT];
-    int half = INT_LIMIT / 2;
+    // Declaration of arrays (values at all elements unassigned)
+    int numbers[ARRAY_LIMIT];
+    int half = ARRAY_LIMIT / 2;
 
-    numbers[0] = 10, numbers[half] = 50, numbers[INT_LIMIT] = 35;
+    // Assign values to specified indexes
+    numbers[0] = 10, numbers[half] = 50, numbers[ARRAY_LIMIT] = 35;
 
-    printf("Value at element %d: %d\n", 0, numbers[0]);
-    printf("Value at element %d: %d\n", half, numbers[half]);
-    printf("Value at element %d: %d\n", INT_LIMIT, numbers[0]);
-
+    // Display values at indexes
+    displayValueAtElement(0, numbers[0]);
+    displayValueAtElement(half, numbers[half]);
+    displayValueAtElement(ARRAY_LIMIT, numbers[ARRAY_LIMIT]);
     return 0;
 }
-

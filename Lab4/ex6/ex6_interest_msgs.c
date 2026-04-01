@@ -14,7 +14,7 @@ const char *MENUSELECTION_S[] = {
 };
 
 // One big menu "string"
-const char* MENU =
+const char *MENU =
 "-------- /// MENU /// --------\n Menu keys:\n"
 " 'V' - To view current variable values\n"
 " 'A' - To insert new asset value\n"
