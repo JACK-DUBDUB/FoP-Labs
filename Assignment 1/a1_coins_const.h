@@ -1,24 +1,28 @@
 #ifndef COIN_SORT_CONST_H
 #define COIN_SORT_CONST_H
 
-// Defined constants
-#define USER_INPUT_ERROR -1
-#define CHANGE_MAX 95
-#define CHANGE_MIN 1
-#define SELECTION_MAX 3 
-#define SELECTION_MIN 1
+// ---- defined constants ---- 
+// Could use ENUM potentially, will look into it later...
+#define USER_INPUT_ERROR   -1
+#define USER_CHANGE_MAX     95
+#define USER_CHANGE_MIN     1
+#define CURR_SELECTION_MIN  1   // 
+#define PROG_REPEAT         1
+#define PROG_EXIT           0
 
-// ---- Arrays ---- //
+// ---- Arrays ---- 
 extern const int coinsUS[];
 extern const int coinsAU[];
 extern const int coinsEU[];
-extern const int *coinsArray[];
 extern const int coinsArraySizes[];
+extern const int *currencyArray[];
 
-// ---- Strings ---- //
-extern const char* MENUSELECTION_S;
+// --- Int ----
+extern const int currencyArrayNum; // size of *coinsArray
 
 // ---- List of strings ---- //
-extern const char *CURRENCYTYPE_S[];
+extern const char *CURRENCY_TYPE_S[];
+extern const char *CURRENT_STEP_S[];
+
 
 #endif
