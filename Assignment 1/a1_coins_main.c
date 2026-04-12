@@ -15,28 +15,13 @@
  * Takes in 3 user inputs using the CLI:
  *      - [Step 1] 1 input for choosing the currency type (US/AU/EU)
  *      - [Step 2] 1 input for the change value (cents) 
- *              -> [Step 3] Program then displays the correct amount of change after receiving valid input
+ *              -> [Step 4] Program calculates required coins
+ *              -> [Step 3] Program displays the correct number of coins
  *      - [Step 4] 1 input to continue/quit program
  *              -> If user continues: Repeat 3 input process again -> Back to [Step 1]
  *              -> Else quit program [End]
  * 
  * If the user inserts an invalid value for their inputs, they will be displayed an error message then re-prompted to try again until they insert a valid value for the.
- * 
- * ---- My thoughts of Assignment 1 ----
- * 2. The structure chart (10%)
- *  I fundamentally disagree with the idea of strict adherence:"your algorithm / program should match this structure chart otherwise marks will be deducted."
- *  REAL PROGRAMMERS REFACTOR CONSTANTLY!!!
- *  As you progress with the programming itself, new solutions will always be found for how things can be refactored, implemented and/or reused.
- *  The more one programs, the more insight, knowledge and concepts become accessible to them as programmer as they progress and gain experience.
- *  So I disagree with strict adherence to the structure chart as it relies on the user's own pre-existing knowledge of what 'might' be required, not taking into account of the unknown unkowns.
- *  It does not take into account of user-error either, which is always abound, so coming up with new strategies to mitigate user-errors makes it an ever evolving process.
- *  So strict adherence prior to the structure chart prior to actuall programming as a novice you may be:
- *      - unaware of possible Edge Cases
- *      - unaware of pre-existing library functions that could replace the need of entire modules
- *      - forced into a design purely of PREDICTED needs and not ACTUAL needs
- * 
- * So why design an assignment that penalizes a student for learning and applying the correct concepts?
- * 
  * 
  * ---- Compile and Run ----
  * gcc '.\a1_coins_main.c' '.\a1_coins_const.c' '.\a1_coins_func.c' -o a1_coins
@@ -45,63 +30,99 @@
 
 #include <stdio.h>
 #include "a1_coins_func.h"
-#include "a1_coins_const.h"
 
 int main()
 {
-    int exitProgram = 0;
+    // ==== CONSTANTS ====
+    // ---- Coin Arrays ---- 
+    // Always largest to smallest value
+    const int coinsUS[] = {50, 25, 10, 1};
+    const int coinsAU[] = {50, 20, 10, 5};
+    const int coinsEU[] = {20, 10,  5, 1};
+
+    // Array of pointers to arrays
+    const int *currencyArray[] = {coinsUS, coinsAU, coinsEU}; // 2D array
+
+    // ---- Array Sizes ---- 
+    // Store the size of each array
+    const int coinsArraySizes[] = {
+        sizeof(coinsUS) / sizeof(coinsUS[0]),
+        sizeof(coinsAU) / sizeof(coinsAU[0]),
+        sizeof(coinsEU) / sizeof(coinsEU[0]),
+    };
+
+    // Store size of pointer coins Array
+    const int currencyArrayNum = sizeof(currencyArray) / sizeof(currencyArray[0]); 
+
+    // ---- Strings ---- 
+    // Array of pointers to "strings"
+    const char *CURRENCY_TYPE_S[] = {
+        "$ USD", 
+        "$ AUD", 
+        "$ EUR"
+    };
+
+    // ==== VARIABLES ====
+    // User variables
     int userChange = 0;  
     int userCurrencyType = 0;
+
+    // Calculation
     int arraySize = 0;
+
+    // Exit
+    int exitProgram = 0;
 
     do
     {
         /** [Step 1] - Get user input for currency selection
-         *      a. Display the selection menu 
-         *      b. Prompt the user to enter an integer value between (1-3) inclusive.
-         *      c. Get the user input and filter it for validity, returning a valid user selection.
-         *      d. Display what currency type the user selected.
+         *      a. Display the selection menu prompting the user to enter an integer value between (1-3) inclusive.
+         *      b. Get the user input and filter it for validity, returning a valid user selection.
+         *      c. Display what currency type the user selected.
          */
-        displayCurrencyMenu(currencyArray, currencyArrayNum, coinsArraySizes, CURRENCY_TYPE_S);                                                  
-        userCurrencyType = getUserInt(CURR_SELECTION_MIN, currencyArrayNum, LOWEST_MULTIPLE, CURRENT_STEP_S[0]) - 1;   // Range min and max: (1, 3)  | -1 because array index starts at 0;
+        promptUserCurrency();
+        userCurrencyType = getUserInt(CURR_SELECTION_MIN, currencyArrayNum) - 1;   // Range min and max: (1, 3)  | -1 because array index starts at 0;
         printf("User selected: %s\n", CURRENCY_TYPE_S[userCurrencyType]);
-
 
         /** [Step 2] - Get user input for change value
          *      a. Prompt the user to enter an integer value between (x-95) inclusive.
          *      b. Get the user input and filter it for validity, returning a a valid change amount.
          *      c. Display the currency amount the user entered.
          */
-        printf("\n/// Enter change value ///");
-        userChange = getUserInt(USER_CHANGE_MIN, USER_CHANGE_MAX, currencyArray[userCurrencyType][currencyArrayNum], CURRENT_STEP_S[1]);                // (1, 95) -> the range min and max of whats valid
-        printf("User change amount: %i\n", userChange);
+        arraySize = coinsArraySizes[userCurrencyType] - 1; // will return size 4 but -1 to get actual index, otherwise we'll access memory where we shouldnt...
+        promptUserChange(currencyArray[userCurrencyType][arraySize], CHANGE_RANGE_MAX);
+        userChange = getUserInt(currencyArray[userCurrencyType][arraySize], CHANGE_RANGE_MAX);
+        printf("User change amount: %i\n\n", userChange);
 
-
-        /** [Step 3] - Calculate and display correct amount of change
+        /** [Step 3] - Calculate correct amount of coins
          *      a. Using the user selected currency type, and get the size of the array (number of available elements)
          *      b. Intialize the array sortedCoins with the number of elements equal to the arraySize of the currency type picked.
          *      c. Calculate the corrrect change amount (Technically we don't return anything with this process (void), however we insert the correct number of coins into the sortedCoins array)
-         *      d. Display the optimal number of coins required to meet change amount the user had inserted.
          */
         arraySize = coinsArraySizes[userCurrencyType];
-        int sortedCoins[arraySize]; 
-        calculateChange(userChange, currencyArray[userCurrencyType], coinsArraySizes[userCurrencyType], CURRENCY_TYPE_S[userCurrencyType], sortedCoins);
-        displayChange(userChange, sortedCoins, currencyArray[userCurrencyType], coinsArraySizes[userCurrencyType], CURRENCY_TYPE_S[userCurrencyType]);
+        int sortedCoins[arraySize];
+        calculateCoins(userChange, currencyArray[userCurrencyType], sortedCoins, arraySize);
+
+        /** [Step 4] - Display correct amount of coins
+         *  A. Display the calculated optimal number of coins required to meet change amount the user had inserted.
+         */
+        printf("\n/// Calculated Coins ///\n");
+        printf("Currency type selected: %s\n", CURRENCY_TYPE_S[userCurrencyType]);
+        printf("Change value inserted: %i cents\n", userChange);
+        displayCoins(sortedCoins, currencyArray[userCurrencyType], arraySize);
 
 
-        /** [Step 4] - Ask user to quit/retry
-         *      a. Display exit selection menu, prompt user to enter an integer value between 0 and 1 inclusive
+        /** [Step 5] - Ask user to quit/retry
+         *      a. Display exit selection menu prompting user to enter an integer value between 0 and 1 inclusive
          *      b. Exit/retry program based on selection.
          *          1. If exit  -> exit program
          *          2. If retry -> "wipe screen" and start again 
          */
-        printf("\n\n/// Retry or Exit ///\n");
-        printf("Would you like to try again or exit program?\n");
-        printf("[%i] - Exit program\n[%i] - Try again \n", PROG_EXIT, PROG_REPEAT);
-        exitProgram = getUserInt(PROG_EXIT, PROG_REPEAT, LOWEST_MULTIPLE, CURRENT_STEP_S[2]);
-
+        promptUserExit();
+        exitProgram = getUserInt(PROG_REPEAT, PROG_EXIT);
         if(exitProgram == PROG_REPEAT){
-            // Clears the screen but its the crude version. ANSI escape codes weren't working properly for me in CMD... it might be a GCC exclusive?
+            // Crude version of a screenwipe. 
+            // ANSI escape codes weren't working properly for me in CMD... it might be a GCC exclusive?
             printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }
 
