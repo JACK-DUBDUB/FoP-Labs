@@ -6,38 +6,41 @@ int getUserInt(int rangeMin, int rangeMax)
 {
     int userInput = 0;
     int valid = 0;
-
-    // Notify the user if a specified multiple is required
-    if(rangeMin != LOWEST_MULTIPLE){ // LOWEST_MULTIPLE = 1
-        printf("\nAllowable change amount must be a multiple of: %i\n", rangeMin);
-    }
-
-    do
-    {
+    do {
         printf("\nEnter a valid value: ");
-        valid = scanf("%d",&userInput);
+        valid = scanf("%i",&userInput);
 
-        // Filter validity of input
-        if (valid && getchar() != '\n'){
-            printf("User did not insert a valid integer value\n");
-            clearInputBuffer();
-            valid = 0;
-        }
-        else if (valid && (userInput < rangeMin || userInput > rangeMax)){
-            printf("User inserted a value outside of range.\n" );
-            valid = 0;
-        }
-        else if (valid &&  (userInput % rangeMin != 0)){
-            printf("Change value has to be a multiple of: %i\n", rangeMin); // Can only be triggered if lowestMultiple is not equal to 1
-            valid = 0;
-        }
+        valid = validateUserInput(valid, userInput, rangeMin, rangeMax);
 
-        if (!valid){
+        if (!valid) {
             printf("Please enter a valid value between (%i-%i) inclusive.\n", rangeMin, rangeMax);
         }
 
     } while (!valid);
     return userInput;
+}
+
+int validateUserInput(int valid, int userInput, int rangeMin, int rangeMax)
+{
+    if (!valid) {
+        printf("User did not enter an integer value.\n");
+        clearInputBuffer();
+        return 0;
+    } 
+    if (valid && getchar() != '\n') {
+        printf("User entered an integer value with a non-integer value.\n");
+        clearInputBuffer();
+        return 0;
+    } 
+    if (valid && (userInput < rangeMin || userInput > rangeMax)) {
+        printf("User entered a value outside of range.\n" );
+        return 0;
+    }
+    if (valid &&  (userInput % rangeMin != 0)) {
+        printf("Change value must be a multiple of: %i\n", rangeMin);
+        return 0;
+    }
+    return valid;
 }
 
 void pauseExitProgram()
@@ -58,7 +61,7 @@ void clearInputBuffer()
 
 void promptUserCurrency()
 {
-    printf("/// Currency Selection Menu ///");
+    printf("\n\n/// Currency Selection Menu ///");
     printf("\nCoin variants of currencies (cents)\n");
     printf("[1] $ USD: 50  25  10  1\n");
     printf("[2] $ AUD: 50  20  10  5\n");
@@ -67,10 +70,13 @@ void promptUserCurrency()
     return;     
 }
 
-void promptUserChange(int min, int max)
+void promptUserChange(int rangeMin, int rangeMax)
 {
     printf("\n/// Enter change value ///\n");
-    printf("Please enter change amount between: (%i-%i)", min, max);
+    printf("Please enter change amount between: (%i-%i)", rangeMin, rangeMax);
+    if(rangeMin != LOWEST_MULTIPLE){  // Notify the user if a specified multiple is required
+        printf("\nAllowable change amount must be a multiple of: %i\n", rangeMin);
+    }
     return;
 }
 
@@ -83,24 +89,32 @@ void promptUserExit()
     return;
 }
 
-void displayCoins(int sortedCoins[], const int currency[], int arraySize)
+void displayUserValues(const char *currency_str, int userChange)
+{
+    printf("\n/// Calculated Coins ///\n");
+    printf("Currency type selected: %s\n", currency_str);
+    printf("Change value inserted: %i cents\n", userChange);
+    return;
+}
+
+void displayCoins(int sortedCoins[], const int currencyCoins[])
 {
     // Display number of coins
-    printf("Coin variants: ");
-    for (int i = 0; i < arraySize; i++){
-        printf("[%d cent]: %i | ", currency[i], sortedCoins[i]);
+    printf("Coin variants: | ");
+    for (int i = 0; i < COIN_VARIANT_MAX; i++) {
+        printf("[%d cent]: %i | ", currencyCoins[i], sortedCoins[i]);    // value of coin, number of coin 
     }
     return;
 }
 
 // ---- calculation functions ---- 
 
-void calculateCoins(int change, const int currencyType[], int sortedcoins[], int arraySize)
+void calculateCoins(int userChange, const int currencyCoins[], int sortedCoins[])
 {
     // Sort the number of coin variants required
-    for (int i = 0; i < arraySize; i++){
-        sortedcoins[i] = change / currencyType[i];  // insert number of coins
-        change %= currencyType[i];                  // get remainder for next loop
+    for (int i = 0; i < COIN_VARIANT_MAX; i++) {
+        sortedCoins[i] = userChange / currencyCoins[i];  // insert number of coins
+        userChange %= currencyCoins[i];                  // get remainder for next loop
     }
     return;
 }
