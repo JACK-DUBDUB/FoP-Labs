@@ -8,20 +8,24 @@
 #define COIN_SORT_FUNC_H
 
 // ---- Numeric constants ---- 
-// Step 1: Currency selection 
-#define CURR_SELECTION_MIN  1
-#define CURR_SELECTION_MAX  3
+// Currency
+#define CURRENCY_USD        1
+#define CURRENCY_AUD        2
+#define CURRENCY_EUR        3
 
-// Step 2: Change range
+// Coins
+#define COIN_VAL_50         50
+#define COIN_VAL_25         25
+#define COIN_VAL_20         20
+#define COIN_VAL_10         10
+#define COIN_VAL_5          5
+#define COIN_VAL_1          1
+
+// Change
 #define CHANGE_RANGE_MAX    95
-#define LOWEST_MULTIPLE     1
 
-// Steps 3 and 4:
-#define COIN_LAST_INDEX     3
-#define COIN_VARIANT_MAX    4
-
-// Step 5: Cont/Exit program
-#define PROG_REPEAT         1
+// Exit/cont 
+#define PROG_CONT           1
 #define PROG_EXIT           2
 
 // ---- Declared functions ---- 
@@ -35,18 +39,18 @@ int validateUserInput(int valid, int userInput, int rangeMin, int rangeMax);
 // Clear input buffer -> user error issue
 void clearInputBuffer();                   
 
-// Calculates the number of coins from largest to smallest required, inserting coins into the sortedCoins array
-void calculateCoins(int userChange, const int currencyCoins[], int sortedCoins[]);
+// Get values
+int getCoinValue(int currencyType, int coinValue_1, int coinValue_2, int coinValue_3);  // Get the appropriate value based on currency type
+int getCoinAmount(int coinValue, int userChange);                                       // perform arithmetic to get number of coins
+int getChangeRemaining(int coinValue, int coinAmount, int userChange);                  // Reduce the user's change amount after calculation
 
 // Display user's input currency selection and change values
-void displayUserValues(const char *currency_str, int userChange); 
-
-// Displays the number of coins from largest to smallest that matches the user's change value
-void displayCoins(int sortedCoins[], const int currencyCoins[]);
+void displayUserValues(int currencyType, int userChange);
+void displayCoinResults(int coinValue, int coinAmount);
 
 // Prompts
-void promptUserCurrency();                                      // Prompt user for currency choice .
-void promptUserChange(int rangeMin, int rangeMax);              // Prompt user for change amount and range.
-void promptUserExit();                                          // Prompt user to retry/exit.
-void pauseExitProgram();                                        // Prompt user to hit enter to quit
+void promptUserCurrency();                                              // Prompt user for  acurrency choice.
+void promptUserChange(int rangeMin, int rangeMax, int currencyType);    // Prompt user for a change value, displaying the min/max range.
+void promptUserExit();                                                  // Prompt user to retry/exit.
+void pauseExitProgram();                                                // Prompt user to hit enter to quit.
 #endif

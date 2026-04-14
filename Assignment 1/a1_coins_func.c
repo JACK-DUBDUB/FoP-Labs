@@ -9,9 +9,7 @@ int getUserInt(int rangeMin, int rangeMax)
     do {
         printf("\nEnter a valid value: ");
         valid = scanf("%i",&userInput);
-
         valid = validateUserInput(valid, userInput, rangeMin, rangeMax);
-
         if (!valid) {
             printf("Please enter a valid value between (%i-%i) inclusive.\n", rangeMin, rangeMax);
         }
@@ -63,18 +61,18 @@ void promptUserCurrency()
 {
     printf("\n\n/// Currency Selection Menu ///");
     printf("\nCoin variants of currencies (cents)\n");
-    printf("[1] $ USD: 50  25  10  1\n");
-    printf("[2] $ AUD: 50  20  10  5\n");
-    printf("[3] $ EUR: 20  10   5  1\n");
+    printf("[1] $ USD: %i  %i  %i  %i\n", COIN_VAL_50, COIN_VAL_25, COIN_VAL_10, COIN_VAL_1);
+    printf("[2] $ AUD: %i  %i  %i  %i\n", COIN_VAL_50, COIN_VAL_20, COIN_VAL_10, COIN_VAL_5);
+    printf("[3] $ EUR: %i  %i   %i  %i\n", COIN_VAL_20, COIN_VAL_10, COIN_VAL_5, COIN_VAL_1);
     printf("Please select a currency type\n");
     return;     
 }
 
-void promptUserChange(int rangeMin, int rangeMax)
+void promptUserChange(int rangeMin, int rangeMax, int currencyType)
 {
     printf("\n/// Enter change value ///\n");
     printf("Please enter change amount between: (%i-%i)", rangeMin, rangeMax);
-    if(rangeMin != LOWEST_MULTIPLE){  // Notify the user if a specified multiple is required
+    if(CURRENCY_AUD == currencyType){
         printf("\nAllowable change amount must be a multiple of: %i\n", rangeMin);
     }
     return;
@@ -83,38 +81,58 @@ void promptUserChange(int rangeMin, int rangeMax)
 void promptUserExit()
 {
     printf("\n\n/// Retry or Exit ///\n");
-    printf("Would you like to try again or exit program?\n");
-    printf("[%i] - Try again \n[%i] - Exit program\n", PROG_REPEAT, PROG_EXIT);
+    printf("Would you like to exit program or try again?\n");
+    printf("[%i] - Try again \n", PROG_CONT);
+    printf("[%i] - Exit program\n", PROG_EXIT);
     printf("Please enter a selection\n");
     return;
 }
 
-void displayUserValues(const char *currency_str, int userChange)
+void displayUserValues(int currencyType, int userChange)
 {
     printf("\n/// Calculated Coins ///\n");
-    printf("Currency type selected: %s\n", currency_str);
+    printf("Currency type selected: ");
+    
+    if (CURRENCY_USD == currencyType) 
+        printf("$ USD\n");
+    else if (CURRENCY_AUD == currencyType) 
+        printf("$ AUD\n");
+    else 
+        printf("$ EUR\n");
+
     printf("Change value inserted: %i cents\n", userChange);
+    printf("| Value | Amount |\n");
     return;
 }
 
-void displayCoins(int sortedCoins[], const int currencyCoins[])
+void displayCoinResults(int coinValue, int coinAmount)
 {
-    // Display number of coins
-    printf("Coin variants: | ");
-    for (int i = 0; i < COIN_VARIANT_MAX; i++) {
-        printf("[%d cent]: %i | ", currencyCoins[i], sortedCoins[i]);    // value of coin, number of coin 
-    }
+    // Purely cosmetic
+    if(coinValue < 9) 
+        printf("|   %i   |    %i   |\n", coinValue, coinAmount);
+    else
+        printf("|  %i   |    %i   |\n", coinValue, coinAmount);
     return;
 }
 
 // ---- calculation functions ---- 
 
-void calculateCoins(int userChange, const int currencyCoins[], int sortedCoins[])
+int getCoinValue(int currencyType, int coinVal_1, int coinVal_2, int coinVal_3)
 {
-    // Sort the number of coin variants required
-    for (int i = 0; i < COIN_VARIANT_MAX; i++) {
-        sortedCoins[i] = userChange / currencyCoins[i];  // insert number of coins
-        userChange %= currencyCoins[i];                  // get remainder for next loop
-    }
-    return;
+    if (CURRENCY_USD == currencyType) return coinVal_1;
+    else if (CURRENCY_AUD == currencyType) return coinVal_2;
+    else return coinVal_3;
 }
+
+int getCoinAmount(int coinValue, int userChange)
+{
+    int coinAmount = userChange / coinValue;
+    return coinAmount;
+}
+
+int getChangeRemaining(int coinValue, int coinAmount, int userChange)
+{
+    int changeRem = userChange - (coinValue * coinAmount);
+    return changeRem; 
+}
+
