@@ -33,7 +33,7 @@
  * 
  */
 
-#include <stdio.h>
+// #include <stdio.h> /* NOT USED - SO DONT USE IT */
 #include "a1_coins_func.h"
 
 int main()
