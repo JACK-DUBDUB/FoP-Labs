@@ -4,6 +4,8 @@
 // Defined constants
 #define SIZE 10
 #define INPUT_ERROR -1.0
+#define FIND_MIN = 1
+#define FINX_MAX = 2
 
 // Declared functions
 float getUserFloatValue();

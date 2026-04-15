@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include "ex5_salaries_func.h"
 
-#pragma region User Inputs
 float getUserFloatValue()
 {
     float salaryInput = 0;
-    if(scanf("%f", &salaryInput) != 1)
-        salaryInput = INPUT_ERROR;
-
-    if(getchar() != '\n')
-    {
-        salaryInput = INPUT_ERROR;
-        while(getchar() != '\n');
+    if(scanf("%f", &salaryInput) != 1) {
+        return salaryInput = INPUT_ERROR;
     }
         
-    if(salaryInput <= 0)
-        salaryInput = INPUT_ERROR;
-
+    if(getchar() != '\n')
+    {
+        while(getchar() != '\n');
+        return salaryInput = INPUT_ERROR;
+    }
+        
+    if(salaryInput <= 0){
+        return salaryInput = INPUT_ERROR;
+    }
+        
     // Passed basic filter
     return salaryInput;
 }
@@ -120,6 +121,25 @@ void displaySearchResults(float salaries[])
 
     printf("User stopped search.\n\n");
     return;
+}
+
+float calculateAverage(float salaries[]){
+    int counter = 0;
+    float sum = 0;
+    float average = 0;
+
+    printf("\n-------- Average Of Salaries --------\n\n");
+    for (int i = 0; i < SIZE; i++)
+    {
+        if(salaries[i] != INPUT_ERROR)  // No addition of invalid values
+        {
+            counter++;                  // Required for the division of sum
+            sum += salaries[i];
+        }
+    }
+    // Get average
+    average = sum / counter;
+    return average;
 }
 
 void pauseContinueProgram()

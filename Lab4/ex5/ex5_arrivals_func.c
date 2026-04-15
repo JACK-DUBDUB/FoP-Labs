@@ -63,7 +63,7 @@ void pauseExitProgram()
     return;
 }
 
-int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
+int getTime(const char *CLOCKDISP_S[])
 {
     int inputHours, inputMinutes = 0;
     int time24h = 0;
@@ -73,6 +73,7 @@ int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
     if (scanf("%2d %2d", &inputHours, &inputMinutes) != 2)   // We are inputting values into two variables so... != 2 :^)
         return -1;
     
+    /// FILTER ///
     // If the buffer contains invalid values -> exit
     if (getchar() != '\n')  
         return -1;
@@ -84,7 +85,7 @@ int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
     // Makes all calculatiosn easier to manage
     time24h = (inputHours * SIXTY_M) + inputMinutes;    // <- You guys should reasonably explain why i should return it as its full value ***
     
-    // All filters passed. Change value to 12 hour time
+    // All filters passed. Change value to 12 hour time *** 1/04 just noticed I could have reused this for "calculations()" ***
     if((inputHours - TWELVE_H) >= 0)
     {
         if((inputHours - TWELVE_H) != 0)    // Why? Because 12 PM does not go to 00:00, it goes 12:00 pm to 12:59 pm
@@ -94,7 +95,8 @@ int getTime(const char *CLOCKDISP_S[], const char *KEYWORDS_S)
     }    
     
     // Display 12 hour time and return 24hr value
-    printf("The %s is: ", KEYWORDS_S);              // Ex: The "arrival time" is: "12:30 PM"
+    // Ex: The "arrival time" is: "12:30 PM"
+    printf("The arrival time is: ");
     displayTime(inputHours, inputMinutes, CLOCKDISP_S[ampm]);
     return time24h;
 }

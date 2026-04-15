@@ -16,12 +16,12 @@
  */
 
 #include <stdio.h>
-#define LIMIT 10
-#define ZERO_C -273.15  // = 0 k   WAter = 
-#define ZERO_F 32       // = 0 k
-#define MUL_C 1         // 
-#define MUL_F 1.8       // 9/5 = 1.8
-#define GAS 100
+#define LIMIT   10
+#define ZERO_C  -273.15  // = 0 k   
+#define ZERO_F  32       // = 0 k
+#define MUL_C   1        // 
+#define MUL_F   1.8      // 9/5 = 1.8
+#define GAS     100
 
 void getSamples(float kelvinSamples[]);
 void getState(float kelvinSamples[], float celsiusSamples[], float fahrenheitSamples[]);
@@ -41,10 +41,6 @@ int main()
     getConversions(kelvinSamples, celsiusSamples, MUL_C, ZERO_C);
     getConversions(celsiusSamples, fahrenheitSamples, MUL_F, ZERO_F);
 
-    // Min Max
-
-
-   
 
     // Min Max
     //getMinMax(celsiusSamples, kelvinSamples);

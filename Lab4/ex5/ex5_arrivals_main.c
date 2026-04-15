@@ -51,7 +51,9 @@ int main()
 
         // Get arrival
         if (i == 0)
-            arrivalTime = getTime(CLOCKDISP_S, KEYWORDS_S[0]);
+        {
+            arrivalTime = getTime(CLOCKDISP_S);
+        }
 
         /// Get distance
         if (i == 1)       
