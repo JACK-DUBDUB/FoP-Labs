@@ -8,7 +8,11 @@
 #define COIN_SORT_FUNC_H
 
 // ---- Numeric constants ---- 
-// Currency
+// Currency range
+#define CURRENCY_MIN        1
+#define CURRENCY_MAX        3
+
+// Currencies
 #define CURRENCY_USD        1
 #define CURRENCY_AUD        2
 #define CURRENCY_EUR        3
@@ -30,7 +34,7 @@
 
 // ---- Declared functions ---- 
 
-// Get a user input of type integer
+// Get a user input of type integer | Known values: rangeMin: (1, 5), rangeMax (3, 95, 2)
 int getUserInt(int rangeMin, int rangeMax);
 
 // Validates the user input - displays error messages of what went wrong
@@ -40,9 +44,9 @@ int validateUserInput(int valid, int userInput, int rangeMin, int rangeMax);
 void clearInputBuffer();                   
 
 // Get values
-int getCoinValue(int currencyType, int coinValue_1, int coinValue_2, int coinValue_3);  // Get the appropriate value based on currency type
-int getCoinAmount(int coinValue, int userChange);                                       // perform arithmetic to get number of coins
-int getChangeRemaining(int coinValue, int coinAmount, int userChange);                  // Reduce the user's change amount after calculation
+int getCoinValue(int currencyType, int usdVal, int audVal, int eurVal);                 // get the appropriate value based on currency type selected
+int getCoinAmount(int coinValue, int userChange);                                       // perform div calculation to get number of coins
+int getChangeRemaining(int coinValue, int coinAmount, int userChange);                  // Modify value of user's change amount after calculation
 
 // Display user's input currency selection and change values
 void displayUserValues(int currencyType, int userChange);

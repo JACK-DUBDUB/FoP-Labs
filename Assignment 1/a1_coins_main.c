@@ -14,7 +14,7 @@
  * ---- Program Flow ----
  *  [START]
  *  [Step 1] Get 1 input for choosing the currency type (US/AU/EU)
- *  [Step 2] Get the 4 values of coin values according to the currency type selected
+ *      -> [Step 2] Get the 4 values of coin values according to the currency type selected
  *  [Step 3] Get 1 input for the change value (1-95) 
  *      -> [Step 4] Program displays the user's values they've entered
  *      -> [Step 5] Program calculates the appropriate number of coins
@@ -29,6 +29,8 @@
  * 
  * ---- Compile and Run ----
  * gcc '.\a1_coins_main.c' '.\a1_coins_func.c' -o a1_coins
+ * gcc -Wall -Wextra -Wpedantic -std=c17 ".\a1_coins_main.c" ".\a1_coins_func.c" -o a1_coins.exe && .\a1_coins.exe
+ * 
  * 
  */
 
@@ -49,13 +51,13 @@ int main()
     do {
         // [Step 1] - Get user input for currency selection
         promptUserCurrency();                                                                          
-        userCurrencyType = getUserInt(CURRENCY_USD, CURRENCY_EUR);              
+        userCurrencyType = getUserInt(CURRENCY_MIN, CURRENCY_MAX);              
 
         // [Step 2] - Get the correct coin values according to currency type selected
-        coinValue_1 = getCoinValue(userCurrencyType, COIN_VAL_50, COIN_VAL_50, COIN_VAL_20); // USD, AUD, EUR
+        coinValue_1 = getCoinValue(userCurrencyType, COIN_VAL_50, COIN_VAL_50, COIN_VAL_20); 
         coinValue_2 = getCoinValue(userCurrencyType, COIN_VAL_25, COIN_VAL_20, COIN_VAL_10);
         coinValue_3 = getCoinValue(userCurrencyType, COIN_VAL_10, COIN_VAL_10, COIN_VAL_5);
-        coinValue_4 = getCoinValue(userCurrencyType, COIN_VAL_1,  COIN_VAL_5,  COIN_VAL_1);
+        coinValue_4 = getCoinValue(userCurrencyType, COIN_VAL_1,  COIN_VAL_5,  COIN_VAL_1); // Lowest coin values
 
         // [Step 3] - Get user input for change value                                   
         promptUserChange(coinValue_4, CHANGE_RANGE_MAX, userCurrencyType);           
@@ -75,7 +77,6 @@ int main()
         userChange = getChangeRemaining(coinValue_3, coinAmount_3, userChange);
         
         coinAmount_4 = getCoinAmount(coinValue_4, userChange);
-        userChange = getChangeRemaining(coinValue_4, coinAmount_4, userChange);
 
         // [Step 6] - Display the number of coins                            
         displayCoinResults(coinValue_1, coinAmount_1);
