@@ -17,9 +17,9 @@ int main()
     // 51 * 1 Byte = 51
 
     // Total memory / element memory = number of elements
-    unsigned short sizeInt = sizeof(arrayInt) / sizeof(arrayInt[0]);       // 400 / 4 = 100
-    unsigned short  sizeFloat = sizeof(arrayFloat) / sizeof(arrayFloat[0]); // 80 / 4 = 20
-    unsigned short  sizeChar = sizeof(arrayChar) / sizeof(arrayChar[0]);    // 51 / 1 = 51
+    unsigned short  sizeInt     = sizeof(arrayInt)   / sizeof(arrayInt[0]);     // 400 / 4 = 100
+    unsigned short  sizeFloat   = sizeof(arrayFloat) / sizeof(arrayFloat[0]);   // 80 / 4 = 20
+    unsigned short  sizeChar    = sizeof(arrayChar)  / sizeof(arrayChar[0]);    // 51 / 1 = 51
 
     printf("Size of int array: %hi\n", sizeInt);
     printf("Size of float array: %hi\n", sizeFloat);

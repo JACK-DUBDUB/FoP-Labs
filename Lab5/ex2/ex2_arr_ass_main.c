@@ -7,12 +7,12 @@ int main()
     int numbers[ARRAY_LIMIT];
     int half = ARRAY_LIMIT / 2;
 
-    // Assign values to specified indexes
+    // Assign element to specified index
     numbers[0] = 10, numbers[half] = 50, numbers[ARRAY_LIMIT] = 35;
 
     // Display values at indexes
-    displayValueAtElement(0, numbers[0]);
-    displayValueAtElement(half, numbers[half]);
-    displayValueAtElement(ARRAY_LIMIT, numbers[ARRAY_LIMIT]);
+    displayElementAtIndex(0, numbers[0]);
+    displayElementAtIndex(half, numbers[half]);
+    displayElementAtIndex(ARRAY_LIMIT, numbers[ARRAY_LIMIT]);
     return 0;
 }

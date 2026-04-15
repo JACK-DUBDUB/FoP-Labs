@@ -1,4 +1,6 @@
 /**
+ * 
+ * 
  * /// Compile and Run
  * gcc '.\ex6_a_count_main.c' '.\ex6_a_count_func.c'  -o ex6_a_count
  * .\ex5_salaries.exe

@@ -1,11 +1,11 @@
-#ifndef ___ARRAY_FUNCTIONS___
-#define ___ARRAY_FUNCTIONS___
+#ifndef ___EX2_ARRAY_FUNCTIONS___
+#define ___EX2_ARRAY_FUNCTIONS___
 
 // Array limit
-#define INT_LIMIT 21
+#define ARRAY_LIMIT 21
 
 // Functions
-void displayValueAtElement(int index, int value);
+void displayElementAtIndex(int index, int element);
 
 
 #endif
