@@ -44,7 +44,7 @@ int validateUserInput(int valid, int userInput, int rangeMin, int rangeMax);
 void clearInputBuffer();                   
 
 // Get values
-int getCoinValue(int currencyType, int usdVal, int audVal, int eurVal);                 // get the appropriate value based on currency type selected
+int getCoinValue(int currencyType, int coinVal_1, int coinVal_2, int coinVal_3);        // get the appropriate value based on currency type selected (CurrencyType, USD, AUD, EUR)
 int getCoinAmount(int coinValue, int userChange);                                       // perform div calculation to get number of coins
 int getChangeRemaining(int coinValue, int coinAmount, int userChange);                  // Modify value of user's change amount after calculation
 

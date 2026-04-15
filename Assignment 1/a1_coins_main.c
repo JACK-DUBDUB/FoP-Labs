@@ -31,7 +31,6 @@
  * gcc '.\a1_coins_main.c' '.\a1_coins_func.c' -o a1_coins
  * gcc -Wall -Wextra -Wpedantic -std=c17 ".\a1_coins_main.c" ".\a1_coins_func.c" -o a1_coins.exe && .\a1_coins.exe
  * 
- * 
  */
 
 #include <stdio.h>

@@ -50,8 +50,7 @@ void pauseExitProgram()
 
 void clearInputBuffer()
 {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF); //EOF -> end of file (macro)
+    while (getchar() != '\n');
     return;
 }
 
@@ -107,24 +106,24 @@ void displayUserValues(int currencyType, int userChange)
 
 void displayCoinResults(int coinValue, int coinAmount)
 {
-    // Purely cosmetic for coin values below 10
-    if(coinValue < COIN_VAL_10) // Corrected print statement for single digit values
+    // Purely cosmetic spacing changes for coin values below 10 ***
+    if(coinValue < COIN_VAL_10) 
         printf("|   %i   |    %i   |\n", coinValue, coinAmount);
     else
         printf("|  %i   |    %i   |\n", coinValue, coinAmount);
     return;
 }
 
-// ---- calculation functions ---- 
+// ---- get value functions ---- 
 
-int getCoinValue(int currencyType, int usdVal, int audVal, int eurVal)
+int getCoinValue(int currencyType, int coinVal_1, int coinVal_2, int coinVal_3)
 {
     if (currencyType == CURRENCY_USD) 
-        return usdVal;
+        return coinVal_1;
     else if (currencyType == CURRENCY_AUD) 
-        return audVal;
+        return coinVal_2;
     else 
-        return eurVal;
+        return coinVal_3;
 }
 
 int getCoinAmount(int coinValue, int userChange)
