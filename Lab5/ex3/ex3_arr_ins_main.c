@@ -1,4 +1,20 @@
-
+/**
+ * /// DATE ///
+ * 15/04/2026 - updated
+ * 
+ * /// AUTHOR ///
+ * Name: Jack du boulay 
+ * Student ID: 32712899 
+ * 
+ * /// ABOUT PROGRAM ///
+ * Exercise 3
+ * 
+ * Simple insertion of element value to a specified index
+ * 
+ * /// HOW TO COMPILE AND RUN ///
+ * To compile: gcc '.\ex3_arr_ins_main.c' '.\ex3_arr_ins_func.c' -o ex3_arr_ins
+ * To run: .\filename
+*/
 
 
 
