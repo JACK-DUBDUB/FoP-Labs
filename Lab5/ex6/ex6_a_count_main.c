@@ -14,7 +14,7 @@
  * search and count through the user string for values of a user specified char
  * 
  * /// Compile and Run
- * gcc '.\ex6_count_main.c' '.\ex6_count_func.c'  -o ex6
+ * gcc '.\ex6_count_main.c' '.\ex6_count_func.c' ..\LAB_5_LIB.c -o ex6
  * .\ex6.exe
  * 
  */

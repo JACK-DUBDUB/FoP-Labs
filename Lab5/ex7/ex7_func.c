@@ -1,7 +1,5 @@
-/**
- *
- */
 
+#include <ctype.h>
 #include <stdio.h>
 #include "ex7_const.h"
 #include "ex7_func.h"
@@ -147,10 +145,8 @@ void get_averages(float *tempSamples[], int sampleSize, float tempAvgs[], int av
 
 void handle_searchModule(float tempSample[], int arrSize)
 {
-    // Display averages
     printf("\n-------- Search for temperature values --------\n\n");
     char quit = 0;
-
     do 
     {
         // set search value
@@ -167,6 +163,7 @@ void handle_searchModule(float tempSample[], int arrSize)
             printf("\n---- Next Search ----\n");
         }
     } while (quit != 'Q');
+
     clear_input_buffer();
     return;
 }
@@ -211,8 +208,8 @@ char read_quitSearch()
     do {
         printf("Please enter a value (Q-R): ");
         valid = read_char(&c);
-        if (c >= 'a' && c <= 'z'){
-            c -= ('a' - 'A'); // - 32
+        if (islower(c)){
+            c = toupper(c);
         }
 
         if (c == 'Q' || c == 'R') {
