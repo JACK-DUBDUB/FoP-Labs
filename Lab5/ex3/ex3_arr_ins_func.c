@@ -3,7 +3,7 @@
 
 void displayElementAtIndex(int index, int element)
 {
-    printf("Value at element %d: %d\n", index, element);
+    printf("Element value at index %d: %d\n", index, element);
     return;
 }
 

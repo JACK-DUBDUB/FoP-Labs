@@ -1,6 +1,6 @@
 /**
  * /// DATE ///
- * 15/04/2026 - updated
+ * 17/04/2026
  * 
  * /// AUTHOR ///
  * Name: Jack du boulay 
@@ -8,37 +8,33 @@
  * 
  * /// ABOUT PROGRAM ///
  * Exercise 3
- * 
- * Simple insertion of element value to a specified index
+ * Initialize an array with a defined size
+ * Then insert element values at specified indexes
  * 
  * /// HOW TO COMPILE AND RUN ///
- * To compile: gcc '.\ex3_arr_ins_main.c' '.\ex3_arr_ins_func.c' -o ex3_arr_ins
- * To run: .\filename
+ * To compile: gcc '.\ex3_arr_ins_main.c' '.\ex3_arr_ins_func.c' -o ex3
+ * To run: .\ex3
 */
 
-
-
-
-
-
-
-
-#include <stdio.h>
 #include "ex3_arr_ins_func.h"
-
-#define SIZE 20
 
 int main()
 {
     // Declaration of arrays (values at all elements unassigned)
     int numbers[SIZE];
-    int half = SIZE / 2;
 
-    numbers[0] = 10, numbers[half] = 50, numbers[SIZE] = 35;
+    // Indexes
+    const int max = SIZE - 1;
+    const int mid = SIZE / 2;
+    const int min = 0;
 
-    displayElementAtIndex(0, numbers[0]);
-    displayElementAtIndex(half, numbers[half]);
-    displayElementAtIndex(SIZE, numbers[SIZE]);
+    // Insert element values
+    numbers[min] = 10, numbers[mid] = 50, numbers[max] = 35;
+
+    // Display element values
+    displayElementAtIndex(min, numbers[min]);
+    displayElementAtIndex(mid, numbers[mid]);
+    displayElementAtIndex(max, numbers[max]);
     return 0;
 }
 

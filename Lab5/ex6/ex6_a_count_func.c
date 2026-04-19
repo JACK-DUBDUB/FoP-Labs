@@ -1,47 +1,94 @@
-/**
- * 
- * 
- * /// Compile and Run
- * gcc '.\ex6_a_count_main.c' '.\ex6_a_count_func.c'  -o ex6_a_count
- * .\ex5_salaries.exe
- */
-
-#include <stdio.h>
 #include <ctype.h>
+#include <stdio.h>
 #include "ex6_a_count_func.h"
+#include "..\LAB_5_LIB.h"
 
-void getUserString(char *userString, int stringSize) // Pointer to char array
+void read_userString(char buffer[], int size )
 {
-    printf("Enter a string: ");
-
-    // fgets(destination, size, FILE* ) // File* is a pointer
-    // Where: stdin = standard input, stdout = standard ouput, stderr = stanndard error
-    fgets(userString, stringSize, stdin);  // https://www.w3schools.com/c/ref_stdio_fgets.php  <- This one is super important to know ***
-    
+    printf("Character limit: %i\n", size - 1);
+    printf("Please enter a string: ");
+    read_string(buffer, size);
     return;
 }
 
-char getUserChar() // Pointer to char array
+char read_searchChar()
 {
-    char searchVal;
-    printf("Enter a char value to search the string: ");
-    scanf("%c", &searchVal);
+    char cSearch = 0;
+    do {
+        // Prompt user
+        printf("\nEnter an alphabetical value to search the string (case-insensitive): ");
 
-    return searchVal;
+        // Read value
+        read_char(&cSearch);
+
+        printf("Char entered: %c \n", cSearch);
+
+        // isUpper
+        if(isalpha((cSearch))){
+            cSearch = toupper(cSearch);
+            break;
+        }
+
+        printf("\nUser did not enter an alphabetical letter.\n");
+
+    } while (1);
+
+    return cSearch;
 }
 
-void searchUserString(char *userString, int stringSize)
+void handle_searchModules(char userString[], int strlen)
 {
-    int counter = 0;
-    char searchVal = getUserChar();
+    // Part A: Case-sensitive count 'a'
+    char cSearch = 'a';
+    count_caseSensitive(userString, strlen, cSearch);
+    program_status_pause(CONTINUE);
 
-    for(int i = 0; i < stringSize; i++)
-    {
-        if(toupper(userString[i]) == toupper(searchVal))
-            counter++;
-        if(userString[i] == '\n' || userString[i] == '\0') // Next line or Null terminator
-            break;
+    // Part B: Case-insensitive count of 'A'
+    cSearch = 'A';
+    count_caseInsensitive(userString, strlen, cSearch); // Expects uppercase input
+    program_status_pause(CONTINUE);
+
+    // Part C: Case-insensitive specified user char search.
+    cSearch = read_searchChar();
+    count_caseInsensitive(userString, strlen, cSearch);
+
+    clear_input_buffer();
+    return;
+}
+
+// Case sensitive letter count
+void count_caseSensitive(char userString[], int strlen, char cSearch)
+{
+    int count = 0;
+
+    printf("\n---- Case sensitive search ----\n");
+    printf("\nFind number of '%c'", cSearch);
+
+    for (int i = 0; i < strlen; i++) {
+        if (userString[i] == cSearch) {
+            count++;
+        }
     }
-    printf("Total '%c's: %d", searchVal, counter);
+
+    printf("\nTotal: %i\n", count);
+    return;
+}
+
+// Case insensitive letter count
+void count_caseInsensitive(char userString[], int strlen, char cSearch)
+{
+    int count = 0;
+
+    printf("\n---- Case insensitive search ----\n");
+    printf("Find number of '%c' and '%c'", cSearch, tolower(cSearch));
+
+    // Get the number of values
+    for (int i = 0; i < strlen; i++)  {
+        if (toupper(userString[i]) == cSearch) {
+            count++;
+        }
+    }
+
+    printf("\nTotal: %i\n", count);
     return;
 }
