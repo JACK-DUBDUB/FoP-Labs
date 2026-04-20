@@ -4,7 +4,6 @@
 #include "ex2_func.h"
 #include "..\LAB_6_LIB.h"
 
-
 // -------- Menu for salary search --------
 
 void handle_controlSalariesSearch(float salaries[], const int salary_count)
@@ -42,7 +41,7 @@ char control_salariesSearch()
 }
 
 
-// -------- COUNT SALARIES BELOW --------
+// -------- count salaries below a value --------
 
 void handle_countSalariesBelow(float salaries[], const int salary_count)
 {
@@ -64,7 +63,7 @@ void handle_countSalariesBelow(float salaries[], const int salary_count)
         printf("\nNumber of employee salaries out of total: %i / %i", count, salary_count);
     }
     else {
-        printf("\nUser did not enter a valid value.");
+        printf("\nUser did not enter a valid float value.");
     }
 
     printf("\n\nReturning to menu.");
@@ -85,7 +84,7 @@ int count_salariesBelowSearch(float salaries[], const int salary_count, float se
 }
 
 
-// -------- EXACT SEARCH --------
+// -------- find salaries with an exact search --------
 
 void handle_searchExactSalary(float salaries[], const int salary_count)
 {
@@ -100,7 +99,7 @@ void handle_searchExactSalary(float salaries[], const int salary_count)
         printf("\nExactly %i / %i employees have a salary of: $ %.2f", count, salary_count, search_value);
     }
     else {
-        printf("\nUser did not enter a valid value.");
+        printf("\nUser did not enter a valid float value.");
     }
 
     printf("\n\nReturning to menu.");
