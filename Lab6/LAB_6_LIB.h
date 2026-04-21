@@ -66,14 +66,11 @@ bool read_char(char *out_value);
 //  READ INT FUNCTION - 19/04/2026
 //  @Brief: 
 //  - Reads a user input value of type integer 
-//
 //  @Func: 
 //  - Reads a user cli input using stdin to enter an int value
 //  - clears the input buffer if the user entered a non-integer value
-//
 //  @param: 
 //  - out_value: of type int -> must have a return address for the int value regardless of validity
-//
 //  @returns: 
 //  - out_value: the int value they inserted into the input buffer
 //  - boolean: the user input's validity 
@@ -82,14 +79,11 @@ bool read_int(int *out_value);
 //  READ FLOAT FUNCTION - 19/04/2026
 //  @Brief: 
 //  - Reads a user input value of type float
-//
 //  @Func: 
 //  - Reads a user cli input using stdin to enter an int value
 //  - clears the input buffer if the user entered a non-float/numeric value
-//
 //  @param: 
 //  - out_value: of type float -> must have a return address for the float value regardless of validity
-//
 //  @returns: 
 //  - out_value: the float value they inserted into the input buffer
 //  - boolean: the user input's validity 
@@ -121,4 +115,4 @@ void clear_input_buffer(void);
 //  @returns: - (void)
 void program_status_pause(enum PROGRAM_STATUS status);
 
-#endif /* LAB_5_MY_LIBRARY_H */
+#endif /* LAB_6_MY_LIBRARY_H */
