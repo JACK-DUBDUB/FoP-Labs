@@ -1,28 +1,27 @@
 #include "ex8_func.h"
+#include <ctype.h>
 
-void handle_convertCaps(char *userString)
+void handle_convertCaps(char *user_string)
 {
-    if (!userString) {
-        return;
-    }
-
-    // Base on the custom library function i made for this lab
-    // let userString   -> [a][b][c]
-    // *userString          ^
+    // Based on the custom library function i made for this lab
+    // let user_string   -> [a][b][c]
+    // *user_string          ^
     // 
-    // userString++
+    // user_string++
     // 
-    // userString       -> [a][b][c]
-    // *userString             ^
+    // user_string      -> [a][b][c]
+    // *user_string            ^
 
-    while(*userString){ // till '\0'
-        if (*userString >= 'A' && *userString <= 'Z'){
-            *userString += CONVERT_CAP ; // to lower
+    while(*user_string) // till '\0'
+    { 
+        if (isupper(*user_string)){
+            *user_string = tolower(*user_string) ; // to lower
         }
-        else if (*userString >= 'a' && *userString <= 'z'){
-            *userString -= CONVERT_CAP ; // to upper
+        else if (islower(*user_string)){
+            *user_string = toupper(*user_string);
         }
-        userString++; // Next index
+
+        user_string++; // Next index
     }
     
     return;

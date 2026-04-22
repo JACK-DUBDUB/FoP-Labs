@@ -12,9 +12,9 @@ enum TEMPERATURE_TYPES {
 #define TEMP_TYPES      3
 
 // Temperature conversion
-#define ZERO_C          273.15   
-#define ZERO_F          32       
-#define MUL_F           1.8    
+#define ZERO_C          273.15 // 0K = -273.15  
+#define ZERO_F          32     // Add + 32 for fahrenheit  
+#define MUL_F           1.8    // Multiply for fahrenheit
 
 // States
 #define GAS             100
