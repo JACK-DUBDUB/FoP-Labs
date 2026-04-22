@@ -26,11 +26,11 @@ int handle_readStringLength()
 
 bool read_stringLength(int *out_value)
 {
-    if((read_int(out_value) != true)) {
+    if ((read_int(out_value) != true)) {
         printf("\nUser did not enter a numerical value.\n");
         return false;
     }
-    if(*out_value > 0 && *out_value <= STRING_LENGTH_MAX) {
+    if (*out_value > 0 && *out_value <= STRING_LENGTH_MAX) {
         return true;
     }
     else {
@@ -55,7 +55,7 @@ void handle_readUserString(char user_string[], const int string_length)
 int handle_countVowels(const char user_string[], int total_vowels[])
 {
     int vowel_count = 0;
-    for (int i = 0; user_string[i] != '\0'; i++)
+    for (int i = 0; user_string[i] != '\0'; i++) 
     {
         switch(tolower(user_string[i])) {
             case 'a': total_vowels[VOWEL_A]++; vowel_count++; break; 
@@ -71,14 +71,14 @@ int handle_countVowels(const char user_string[], int total_vowels[])
 
 void handle_insertVowels(const char *user_string, char vowel_string[])
 {
-    if(!vowel_string){ // null pointer
+    if (!vowel_string){ // null pointer
         return;
     }
 
     int vowel_index = 0;
-    while(*user_string)
+    while (*user_string)
     {
-        switch (tolower(*user_string)) {
+        switch (tolower(*user_string)) { // Fall-through if vowel:
             case 'a': case 'e': case 'i': case 'o': case 'u': 
             vowel_string[vowel_index] = *user_string; vowel_index++; break;
             default: break;
@@ -93,7 +93,7 @@ void handle_insertVowels(const char *user_string, char vowel_string[])
 
 void handle_displayString(const char *user_string)
 {
-    if(!user_string) {
+    if (!user_string) {
         return;
     }
 
@@ -104,7 +104,7 @@ void handle_displayString(const char *user_string)
 
 void handle_displayVowels(const char *vowel_string, const char vowels[], int total_vowels[])
 {
-    if(!vowel_string) {
+    if (!vowel_string) {
         printf("\nString has no vowels.\n");
         return;
     }

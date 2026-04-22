@@ -7,7 +7,7 @@
  * Student ID: 32712899 
  * 
  * /// ABOUT PROGRAM ///
- * Exercise 2
+ * Exercise 2-5
  * 
  *
  * 
@@ -25,12 +25,10 @@ int main()
     const int salary_count = handle_readSalaryNumber();
     float salaries[salary_count];
 
-    if (salary_count) {
-        handle_readSalaries(salaries, salary_count);
-        handle_getSalaryMinMax(salaries, salary_count);
-        handle_getSalaryAverage(salaries, salary_count);
-        handle_controlSalariesSearch(salaries, salary_count);   
-    }
+    handle_readSalaries(salaries, salary_count);
+    handle_getSalaryMinMax(salaries, salary_count);
+    handle_getSalaryAverage(salaries, salary_count);
+    handle_controlSalariesSearch(salaries, salary_count);   
 
     return 0;
 }
