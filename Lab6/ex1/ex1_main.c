@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 
-
-
 int main()
 {
     int x, y, z;
@@ -17,8 +15,8 @@ int main()
 
     // Q1
     // x is assigned a value of 10
-    // ap is declared as a pointer type
-    // ap = &x: now stores the address of x
+    // *ap is declared as a pointer type
+    // *ap = &x: now stores the address of x
     // if *ap = 6, then the value at x = 6;
     // Why: because *ap dereferences the pointer to access the variable value of x, directly modifying it. 
 

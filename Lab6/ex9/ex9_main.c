@@ -8,7 +8,6 @@
 Compile: gcc ex9_main.c ex9_func.c ..\LAB_6_LIB.c -o ex9
 Run: .\ex9.exe
 
-
 */
 
 #include <stdbool.h>

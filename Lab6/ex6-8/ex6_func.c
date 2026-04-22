@@ -15,7 +15,7 @@ int handle_readStringLength()
     printf("\n-------- Enter length for a string --------\n");
     do
     {
-        printf("\nPlease enter a numerical length for a string between 1-100 ");
+        printf("\nPlease enter a numerical value to determine string length (1-100): ");
         valid  = read_stringLength(&string_length);
 
     } while(!valid);
@@ -41,7 +41,7 @@ bool read_stringLength(int *out_value)
 }
 
 
-void handle_readUserString(char user_string[], const int string_length)
+void handle_readUserString(char *user_string, const int string_length)
 {
     printf("Please enter a string: ");
     read_string(user_string, string_length);
@@ -49,63 +49,59 @@ void handle_readUserString(char user_string[], const int string_length)
     return;
 }
 
-void handle_convertToLower(char user_string[])
+void handle_convertToLower(char *user_string)
 {
-    if (!user_string){
-        return;
-    }
-
     for (int i = 0; user_string[i] != '\0'; i++)
     {
         user_string[i] = tolower(user_string[i]);
     }
-
     return;
 }
 
-int handle_countVowels(const char user_string[])
+int handle_countVowels(const char *user_string)
 {
     int  vowel_count = 0;
-
     for (int i = 0; user_string[i] != '\0'; i++)
     {
-        if(check_isVowel(user_string[i])) {
-            vowel_count++;
+        switch (user_string[i])
+        {
+            case 'a': case 'e': case 'i': case 'o': case 'u': // Fall-through
+            vowel_count++; break;
+            default: break;
         }
     }
-
     return vowel_count;
 }
 
-void handle_insertVowels(const char *user_string, char vowel_string[])
+void handle_insertVowels(const char *user_string, char *vowel_string)
 {
-    if(!vowel_string){
-        return;
-    }
-
     int vowel_index = 0;
 
     for (int i = 0; user_string[i] != '\0'; i++)
     {
-        if(check_isVowel(user_string[i])) {
-            vowel_string[vowel_index] = user_string[i];
-            vowel_index++;
+        switch (user_string[i])
+        {
+            case 'a': case 'e': case 'i': case 'o': case 'u': // Fall-through
+            vowel_string[vowel_index] = user_string[i]; vowel_index++; break;
+            default: break;
         }
+
     }
     vowel_string[vowel_index] = '\0';
     return;
 }
 
-bool check_isVowel(char c)
-{
-    if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u')
-        return true;
-    return false;
-}
 
-void handle_displayStrings(const char *user_string)
+void handle_displayStrings(const char *user_string, enum DISPLAY_STRING condition)
 {
-    printf("\n%s\n", user_string);
+    switch (condition) 
+    {
+        case ORIGINAL: printf("\nOriginal string: "); break;
+        case LOWER_CASE_ONLY: printf("\nLower case string: "); break;
+        case VOWEL_ONLY: printf("\nVowel only string: "); break;
+        default: break;
+    }
+    printf("%s\n", user_string);
     return;
 }
 
@@ -118,34 +114,31 @@ void handle_searchUserString(const char *user_string)
     {
         char search_value = read_searchValue();
         
-
-        if(isalpha(search_value)) {
-            int count = 0;
-            int first_occurence = -1;
-            search_userString(user_string, search_value, &first_occurence, &count);
-            if(count){
-                printf("\nFirst occurence: %i", first_occurence);
-                printf("\nNumber of '%c':  %i\n", search_value, count);
-            }
-            else{
-                printf("\nString did not contain any values of '%c\n", search_value);
-            }
-        }
-        else {
-            printf("\nUser chose to quit program.");
+        if(!isalpha(search_value))
             break;
-        }
+
+        int first_occurence = -1, letter_count = 0;
+        search_countAndOccurence(user_string, search_value, &first_occurence, &letter_count);
+
+        if(letter_count)
+            printf("\nFirst occurence: %i\nNumber of '%c':  %i\n", first_occurence, search_value, letter_count);
+        else
+            printf("\nString did not contain any values of '%c'\n", search_value);
+
+        display_eachOccurence(user_string, search_value); // ***Not needed
+        program_status_pause(CONTINUE);
     }while (1);
 
     program_status_pause(QUIT);
     return;
 }
 
+
 char read_searchValue()
 {
     printf("\n-------- Search for a character in the string--------");
-    printf("\n To search - Please enter a alphabetical character to search the string.");
-    printf("\n To quit   - Please enter any non alphabetical character.");
+    printf("\n To search - enter any alphabetical character to search the string.");
+    printf("\n To quit   - enter any non-alphabetical character.");
     printf("\n\nEnter a character: ");
 
     char selector;
@@ -155,19 +148,33 @@ char read_searchValue()
     return tolower(selector);
 }
 
-
-void search_userString(const char *user_string, char search_value, int *first_occurence, int *count)
+void search_countAndOccurence(const char *user_string, const char search_value, int *first_occurence, int *letter_count)
 {
-    for(int i = 0; user_string[i] != '\0'; i++)
+    for (int i = 0; user_string[i] != '\0'; i++)
     {
-        if(user_string[i] == search_value)
-            (*count)++;
+        if (*first_occurence >= 0 && user_string[i] == search_value) {
+            (*letter_count)++;
+            continue;
+        }
 
-        if(*first_occurence < 0 && user_string[i] == search_value)
+        if (*first_occurence < 0 && user_string[i] == search_value) {
             *first_occurence = i;
+            (*letter_count)++;
+        }
     }
-
     return;
+}
+
+void display_eachOccurence(const char *user_string, const char search_value) // ***Not needed
+{
+    printf("Each occurence of '%c': ", search_value);
+    for (int i = 0; user_string[i] != '\0'; i++)
+    {
+        if (user_string[i] == search_value)
+            printf("[%c]", user_string[i]);
+        else
+            printf("%c", user_string[i]);
+    }
 }
 
 
