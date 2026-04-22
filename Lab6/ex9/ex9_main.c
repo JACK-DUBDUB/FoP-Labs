@@ -37,7 +37,7 @@ int main ()
     handle_displayString(vowel_string);
     
     // Step 6
-    handle_displayVowels(user_string, user_string_vowels);
+    handle_displayVowels(user_string, vowels, user_string_vowels);
 
     return 0;
 }

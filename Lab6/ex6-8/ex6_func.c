@@ -85,18 +85,14 @@ void handle_insertVowels(const char *user_string, char vowel_string[])
 
     int vowel_index = 0;
 
-    while(*user_string)
+    for (int i = 0; user_string[i] != '\0'; i++)
     {
-        if(check_isVowel(*user_string)) {
-            vowel_string[vowel_index] = *user_string;
+        if(check_isVowel(user_string[i])) {
+            vowel_string[vowel_index] = user_string[i];
             vowel_index++;
         }
-
-        user_string++;
-        
-        if(!*user_string)
-            vowel_string[vowel_index] = '\0';
     }
+    vowel_string[vowel_index] = '\0';
     return;
 }
 
@@ -109,7 +105,7 @@ bool check_isVowel(char c)
 
 void handle_displayStrings(const char *user_string)
 {
-    printf("%s\n", user_string);
+    printf("\n%s\n", user_string);
     return;
 }
 

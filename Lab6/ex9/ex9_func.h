@@ -30,8 +30,8 @@ bool check_isVowel(char c);
 
 void handle_displayString(const char *user_string);
 
-void handle_displayVowels(const char *vowel_string, int total_vowels[]);
-void display_vowelTotals(const int vowels[], int total_vowels[]);
-void display_vowelFirstIndex(const char *vowel_string, const int vowels[], int total_vowels[]);
+void handle_displayVowels(const char *vowel_string, const char vowels[], int total_vowels[]);
+void display_vowelTotals(const char vowels[], int total_vowels[]);
+void display_vowelFirstIndex(const char *vowel_string, const char vowels[], int total_vowels[]);
 
 #endif

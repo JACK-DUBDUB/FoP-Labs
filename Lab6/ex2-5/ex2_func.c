@@ -28,9 +28,7 @@ bool read_salaryNumber(int *out_value)
         printf("\nUser did not enter a positive integer.\n");
         return false;
     } 
-    else {
-        return true;
-    }
+    return true;
 }
 
 // ---- salaries ---- 
@@ -68,9 +66,7 @@ bool read_userFloat(float *out_value)
         printf("\nUser did not enter a positive float value.\n");
         return false;
     } 
-    else {
-        return true;
-    }   
+    return true;  
 }
 
 
