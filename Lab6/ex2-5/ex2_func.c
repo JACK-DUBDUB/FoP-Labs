@@ -31,7 +31,7 @@ bool read_salaryNumber(int *out_value)
     return true;
 }
 
-// ---- salaries ---- 
+// ---- Read salary values ---- 
 
 void handle_readSalaries(float salaries[], const int salary_count)
 {
@@ -53,7 +53,7 @@ void handle_readSalaries(float salaries[], const int salary_count)
     return;
 }
 
-// ---- read user float ----
+// ---- Read user float ----
 
 bool read_userFloat(float *out_value)
 {
@@ -70,7 +70,7 @@ bool read_userFloat(float *out_value)
 }
 
 
-// ---- min max ----
+// ---- Get min max ----
 
 void handle_getSalaryMinMax(float salaries[], const int salary_count) 
 {

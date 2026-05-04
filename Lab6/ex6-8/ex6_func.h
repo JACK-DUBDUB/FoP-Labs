@@ -1,6 +1,8 @@
 #ifndef EX6_FUNC_H
 #define EX6_FUNC_H
 
+#include <stdbool.h>
+
 enum DISPLAY_STRING{
     ORIGINAL,
     LOWER_CASE_ONLY,
@@ -11,9 +13,11 @@ enum DISPLAY_STRING{
 // Constants
 #define STRING_LENGTH_MAX 100
 
+
+
 // Module handles the read of a user input of type int
 // Process will loop until a valid number has been entered (between 1-100)
-int handle_readStringLength();
+int handle_readStringLength(void);
 bool read_stringLength(int *out_value);
 
 // Module reads the user's string input
@@ -36,8 +40,6 @@ void handle_displayStrings(const char *user_string, enum DISPLAY_STRING conditio
 void handle_searchUserString(const char *user_string);
 char read_searchValue();
 void search_countAndOccurence(const char *user_string, const char search_value, int *first_occurence, int *letter_count);
-
-void display_eachOccurence(const char *user_string, const char search_value);
 
 
 

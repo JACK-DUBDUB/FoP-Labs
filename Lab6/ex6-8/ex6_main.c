@@ -8,8 +8,12 @@
  * 
  * /// ABOUT PROGRAM ///
  * Exercise 6-8
- * 
- *
+ * Program prompts the user to enter an integer value for a string length (1-100)
+ * Then the user may enter a string into the stdin input buffer, displaying the exact string back to the user.
+ * The program then converts the same string to lower case capitalization and displays the string back to the user
+ * Program then prompts the user to enter a character to:
+ *          - Enter any alphabetical value to search through the string
+ *          - Enter any non=alphabetial value to quit the program
  * 
  * /// Compile and Run
  * Compile: gcc .\ex6_main.c .\ex6_func.c ..\LAB_6_LIB.c -o ex6
@@ -17,12 +21,11 @@
  * 
  */
 
-//#include <stdbool.h>
-//#include <stdio.h>
 #include "ex6_func.h"
 
 int main ()
 {
+    // Read string length integer
     const int string_length = handle_readStringLength();
     char user_string[string_length];
 

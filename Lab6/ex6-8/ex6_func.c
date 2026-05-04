@@ -125,7 +125,6 @@ void handle_searchUserString(const char *user_string)
         else
             printf("\nString did not contain any values of '%c'\n", search_value);
 
-        display_eachOccurence(user_string, search_value); // ***Not needed
         program_status_pause(CONTINUE);
     }while (1);
 
@@ -164,17 +163,3 @@ void search_countAndOccurence(const char *user_string, const char search_value, 
     }
     return;
 }
-
-void display_eachOccurence(const char *user_string, const char search_value) // ***Not needed
-{
-    printf("Each occurence of '%c': ", search_value);
-    for (int i = 0; user_string[i] != '\0'; i++)
-    {
-        if (user_string[i] == search_value)
-            printf("[%c]", user_string[i]);
-        else
-            printf("%c", user_string[i]);
-    }
-}
-
-

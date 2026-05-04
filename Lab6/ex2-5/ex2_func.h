@@ -5,11 +5,11 @@
 
 // ---- Functions ----
 
-// reads the number of salaries the user wants to enter
-int handle_readSalaryNumber();
+// Reads the number of salaries the user wants to enter
+int handle_readSalaryNumber(void);
 bool read_salaryNumber(int *out_value);
 
-// 
+// Reads the salary values from the user - verifies the value using read_userFloat()
 void handle_readSalaries(float salaries[], const int salary_count);
 bool read_userFloat(float *out_value);
 

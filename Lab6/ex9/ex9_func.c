@@ -42,7 +42,7 @@ bool read_stringLength(int *out_value)
 
 // ---- Read string from user ----
 
-void handle_readUserString(char user_string[], const int string_length)
+void handle_readUserString(char *user_string, const int string_length)
 {
     printf("Please enter a string: ");
     read_string(user_string, string_length);
@@ -52,7 +52,7 @@ void handle_readUserString(char user_string[], const int string_length)
 
 // ---- Count the vowels of the string ----
 
-int handle_countVowels(const char user_string[], int total_vowels[])
+int handle_countVowels(const char *user_string, int total_vowels[])
 {
     int vowel_count = 0;
     for (int i = 0; user_string[i] != '\0'; i++) 
@@ -69,12 +69,8 @@ int handle_countVowels(const char user_string[], int total_vowels[])
     return vowel_count;
 }
 
-void handle_insertVowels(const char *user_string, char vowel_string[])
+void handle_insertVowels(const char *user_string, char *vowel_string)
 {
-    if (!vowel_string){ // null pointer
-        return;
-    }
-
     int vowel_index = 0;
     while (*user_string)
     {
@@ -91,31 +87,31 @@ void handle_insertVowels(const char *user_string, char vowel_string[])
 }
 
 
-void handle_displayString(const char *user_string)
+void handle_displayStrings(const char *user_string, enum DISPLAY_STRING condition)
 {
-    if (!user_string) {
-        return;
+    switch (condition) 
+    {
+        case ORIGINAL_STRING: printf("\nOriginal string: "); break;
+        case VOWEL_STRING: printf("\nVowel string: "); break;
+        default: break;
     }
-
-    printf("\n%s\n", user_string);
+    printf("%s\n", user_string);
     return;
 }
 
-
-void handle_displayVowels(const char *vowel_string, const char vowels[], int total_vowels[])
+void handle_displayVowels(const char *user_string, const char *vowels, int total_vowels[])
 {
-    if (!vowel_string) {
-        printf("\nString has no vowels.\n");
-        return;
-    }
+    program_status_pause(CONTINUE);
 
     display_vowelTotals(vowels, total_vowels);
-    display_vowelFirstIndex(vowel_string, vowels, total_vowels);
+    program_status_pause(CONTINUE);
 
+    display_vowelFirstIndex(user_string, vowels, total_vowels);
+    program_status_pause(QUIT);
     return; 
 }
 
-void display_vowelTotals(const char vowels[], int total_vowels[])
+void display_vowelTotals(const char *vowels, int total_vowels[])
 {
     printf("\n-------- Display Vowel Totals --------\n\n");
     for (int i = 0; vowels[i] != '\0'; i++)
@@ -128,11 +124,11 @@ void display_vowelTotals(const char vowels[], int total_vowels[])
     return;
 }
 
-void display_vowelFirstIndex(const char *vowel_string, const char vowels[], int total_vowels[])
+void display_vowelFirstIndex(const char *user_string, const char *vowels, int total_vowels[])
 {
     printf("\n-------- Display First Index Of Vowels --------\n\n");
 
-    for (int i = 0; vowels[i] != '\0'; i++)
+    for (int i = 0; vowels[i] != '\0'; i++) // {A, E, I, O, U, \0}
     {
         // If total is equal to 0
         if (!total_vowels[i]) {
@@ -141,9 +137,9 @@ void display_vowelFirstIndex(const char *vowel_string, const char vowels[], int 
         }
 
         // Else we find the first index
-        for(int j = 0; vowel_string[i] != '\0'; j++)
+        for(int j = 0; user_string[i] != '\0'; j++)
         {
-            if (tolower(vowel_string[j]) == vowels[i]) {
+            if (tolower(user_string[j]) == vowels[i]) {
                 printf("First index of vowel '%c': Index [%i]\n", vowels[i], j);
                 break;
             }

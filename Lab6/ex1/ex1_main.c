@@ -1,4 +1,19 @@
-
+/**
+ * /// DATE ///
+ * 17/04/2026
+ * 
+ * /// AUTHOR ///
+ * Name: Jack du boulay 
+ * Student ID: 32712899 
+ * 
+ * /// ABOUT PROGRAM ///
+ * Exercise 1 
+ *
+ * /// Compile and Run
+ * Compile: gcc .\ex1_main.c -o ex1
+ * Run: .\ex1.exe
+ * 
+ */
 
 #include <stdio.h>
 
