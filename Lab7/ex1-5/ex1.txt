@@ -1,0 +1,11 @@
+Ronald 30 32.50
+McDonald 31 33.50
+Joe 52 65.00
+Rogan 53 75.00
+Ullanor 41 66.66
+Armageddon 41 72.69
+Socrates 45 69.42
+Plato 47 65.20
+Diogenes 34 27.69
+Aristotle 67 42.69
+Ronald 31 24.29
