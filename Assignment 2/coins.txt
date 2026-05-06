@@ -1,0 +1,11 @@
+10
+Alpha 25 cents in $AUD
+Bravo 29 cents in $EUR
+Charlie 34 cents in $USD
+Delta 40 cents in $EUR
+Echo 95 cents in $AUD
+Foxtrot 54 cents in $USD
+Golf 89 cents in $EUR
+Hotel 94 cents in $USD
+India 36 cents in $EUR
+Juliette 5 cents in $AUD
