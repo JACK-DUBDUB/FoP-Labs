@@ -36,64 +36,102 @@
 
 #include "a2_func.h"
 #include "a2_crud.h"
+#include <stdbool.h>
 
-int main(int argc, char *argv[])
+void sort_coinVariants(int customer_change, int customer_currency[], const Currency currency_type);
+
+void search_customerData(Customer *customer_data, const int table_rows, const char *name_search, const Currency *currencies, enum DISPLAY_MODE search);
+
+void display_customerData(const Customer customer, const Currency *currencies);
+void display_customerDataValues(Customer customer, const int index, const int customer_coins[], const Currency currency_type);
+void free_customerData(Customer *customer_data, const int table_rows);
+
+
+int main(const int argument_count, const char *argument_values[])
 {
-    // Initialize array of customers
-    Customer *customer_data;
+    // Heap
+    Customer *customer_data; //   , Freed by free_customerData() 
 
-    switch(argc)
+    // Stack
+    Currency currencies[MAX_CURRENCY_TYPES] = {
+        USD,
+        AUD,
+        EUR
+    };
+
+    int table_rows = 0;
+    
+
+    switch(argument_count)
     {
-        case 1:     printf("ERROR - One argument is expected \n"); return 1;
-        case 2:     printf("The argument provided is '%s'\n", argv[1]); break;
+        case 1:     printf("ERROR - One additional argument was expected \n"); return 1;
+        case 2:     printf("The argument value provided is '%s'\n", argument_values[1]); break;
         default:    printf("ERROR = Too many arguments provided \n"); return 2;
     }
 
-    int table_rows = handle_fileCustomerData(argv[1], customer_data, "r", READ_ROWS);
+
+    handle_fileCustomerData(argument_values[1], customer_data, "r", READ_ROWS, &table_rows);
 
     switch(table_rows)
     {
         case -1:    printf("ERROR - Failed to open file in 'r' mode. Make sure its a .txt file \n"); return 3;
-        case 0:     printf("ERROR - Could not read lines of file '%s' in 'r' mode \n", argv[1]); return 4;
+        case 0:     printf("ERROR - Could not read lines of file '%s' in 'r' mode \n", argument_values[1]); return 4;
         default:    break;
     }
 
+    // Based on the number provided in the text file create table_rows number of customers
+    // Calloc intializes all bytes to zero (- which is a good thing!) 
+    customer_data = (Customer*) calloc(table_rows, sizeof(Customer)); // (Cast operator*)
 
-    customer_data = (Customer*) malloc(sizeof(Customer) * table_rows);
+    // Display initial line count
+    printf("Line count: %i\n\n", table_rows );
 
-    // Zero ALL variables
-    for (int i = 0; i < table_rows; i++)
+    /*//Proof that it works
+    for (int i = 0; i < CURRENCY_MAX; i++)
     {
-        customer_data[i].change_usd = 0;
-        customer_data[i].change_aud = 0;
-        customer_data[i].change_eur = 0;
-
+        printf("\n\nCurrency %i: ", i);
         for (int j = 0; j < MAX_COIN_VARIANTS; j++)
         {
-            customer_data[i].coins_usd[j] = 0;
-            customer_data[i].coins_aud[j] = 0;
-            customer_data[i].coins_eur[j] = 0;
+            printf("%i ", currencies[i].coins[j]);
+        }
+
+    }*/
+
+
+    // Read values from customers
+    handle_fileCustomerData(argument_values[1], customer_data, "r", READ_DATA, &table_rows);
+
+
+    
+    // Sort coins
+    for (int i = 0; i < table_rows; i++)
+    {
+        if (customer_data[i].change_values[CURRENCY_USD] > 0) {
+            sort_coinVariants(customer_data[i].change_values[CURRENCY_USD], customer_data[i].coins_usd, currencies[CURRENCY_USD]);
+        }
+            
+        if (customer_data[i].change_values[CURRENCY_AUD] >= MIN_AUD_LIMIT) {
+            sort_coinVariants(customer_data[i].change_values[CURRENCY_AUD], customer_data[i].coins_aud, currencies[CURRENCY_AUD]);
+        }
+
+        if (customer_data[i].change_values[CURRENCY_EUR] > 0) {
+            sort_coinVariants(customer_data[i].change_values[CURRENCY_EUR], customer_data[i].coins_eur, currencies[CURRENCY_EUR]);
         }
     }
 
-    printf("Line count: %i\n\n", table_rows );
 
+    // Search tests
+    search_customerData(customer_data, table_rows, NULL, currencies, DISPLAY_ALL);
+    search_customerData(customer_data, table_rows, "Eggsontoast", currencies, DISPLAY_ONLY);
 
-    handle_fileCustomerData(argv[1], customer_data, "r", READ_DATA);
+    // Write to file
+    handle_fileCustomerData("change.csv", customer_data, "w", CREATE_CSV, &table_rows);
+    
 
+    free_customerData(customer_data,  table_rows);
 
-    // Print contents
-    for (int i = 0; i < table_rows; i++)
-    {
-        printf("Index: %i\n", i+1);
-        printf("Customer Name: %s\n", customer_data[i].name);
-        printf("%u \n%u \n%u\n",customer_data[i].change_usd, customer_data[i].change_aud, customer_data[i].change_eur);
-        printf("Coin variants USD: %i, %i, %i, %i\n", customer_data[i].coins_usd[0], customer_data[i].coins_usd[1], customer_data[i].coins_usd[2], customer_data[i].coins_usd[3]);
-        printf("Coin variants AUD: %i, %i, %i, %i\n", customer_data[i].coins_aud[0], customer_data[i].coins_aud[1], customer_data[i].coins_aud[2], customer_data[i].coins_aud[3]);
-        printf("Coin variants EUR: %i, %i, %i, %i\n\n", customer_data[i].coins_eur[0], customer_data[i].coins_eur[1], customer_data[i].coins_eur[2], customer_data[i].coins_eur[3]);
-    }
-
-    free(customer_data);
+    pauseExitProgram();
+    //printf("%s, %i, Coins: %i, %i, %i, %i\n", currencies[0].currency_code, currencies[0].position, currencies[0].coins[0], currencies[0].coins[1], currencies[0].coins[2], currencies[0].coins[3]);
 
     /*
     // ==== COINS ====
@@ -150,4 +188,102 @@ int main(int argc, char *argv[])
     pauseExitProgram();
     */
     return 0;
+}
+
+
+void sort_coinVariants(const int customer_change, int customer_coins[], const Currency currencies)
+{
+    // Filter 
+    if (customer_change > 95) 
+        return;
+
+    if (currencies.position == CURRENCY_AUD && customer_change % MIN_AUD_LIMIT != 0) 
+        return;
+
+    // Insert number of coins based on customer change
+    int change = customer_change;
+    for (int i = 0; i < MAX_COIN_VARIANTS; i++)
+    {
+        customer_coins[i] =  getCoinAmount(currencies.coins[i], change);
+        change = getChangeRemaining(currencies.coins[i], customer_coins[i], change);
+    }
+
+    return;
+}
+
+void search_customerData(Customer *customer_data, const int table_rows, const char *name_search, const Currency *currencies, enum DISPLAY_MODE search)
+{
+    for (int i = 0; i < table_rows; i++)
+    {
+        if (customer_data[i].name == NULL)
+            break;
+
+        if (search == DISPLAY_ONLY) {
+
+            if (compare_nameCaseInsensitive(customer_data[i].name, name_search))
+                display_customerData(customer_data[i], currencies); 
+            else
+                printf("Name: %s\nNot found\n", name_search);
+        }
+
+        if (search == DISPLAY_ALL) {
+            display_customerData(customer_data[i], currencies);
+        }
+
+    }
+    return;
+}
+
+void display_customerData(const Customer customer, const Currency *currencies)
+{
+    printf("\nCustomer: %s\n", customer.name);
+    for (int i = 0; i < MAX_CURRENCY_TYPES; i++)
+    {
+        if (customer.change_values[i] > MAX_CHANGE_LIMIT) {
+            printf("%s change exceeded limit: %i cents\n", customer.name, MAX_CHANGE_LIMIT); 
+            continue;
+        }
+            
+
+        if (currencies[i].position == CURRENCY_AUD && customer.change_values[i] % MIN_AUD_LIMIT != 0 ) {
+            printf("%s change is not a multiple of %i\n", customer.name, MIN_AUD_LIMIT); 
+            continue;
+        }
+            
+
+        if (customer.change_values[i] > 0) // If customer has any valid USD/AUD/EUR
+        {
+            switch (i) 
+            {
+                case CURRENCY_USD: display_customerDataValues(customer,  i, customer.coins_usd, currencies[CURRENCY_USD]); break;
+                case CURRENCY_AUD: display_customerDataValues(customer,  i, customer.coins_aud, currencies[CURRENCY_AUD]); break;
+                case CURRENCY_EUR: display_customerDataValues(customer,  i, customer.coins_eur, currencies[CURRENCY_EUR]); break;
+                default: break;
+            }
+        }
+
+    }
+}
+
+void display_customerDataValues(Customer customer, const int index, const int customer_coins[], const Currency currencies)
+{
+    printf("Change in cents %s: %i\n", currencies.currency_code, customer.change_values[index]);
+    for (int i = 0; i < MAX_COIN_VARIANTS; i++)
+    {
+        if(customer_coins[i])
+            printf("%i cents: %i\n", currencies.coins[i], customer_coins[i]);
+    }
+    printf("\n");
+    return;
+}
+
+void free_customerData(Customer *customer_data, const int table_rows)
+{
+    if (!customer_data) return;
+
+    for (int i = 0; i < table_rows; i++)
+        free(customer_data[i].name);
+
+    free(customer_data); 
+    return;
 }

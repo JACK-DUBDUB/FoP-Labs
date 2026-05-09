@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "a2_func.h"
+#include "a2_crud.h"
 
 // ---- get user input functions ----
 int getUserInt(int rangeMin, int rangeMax) 
@@ -8,7 +9,7 @@ int getUserInt(int rangeMin, int rangeMax)
     int valid = 0;
     do {
         printf("\nEnter a valid value: ");
-        valid = scanf("%i",&userInput);
+        valid = scanf_s("%i", &userInput);
         valid = validateUserInput(valid, userInput, rangeMin, rangeMax);
         if (!valid) {
             printf("Please enter a valid value between (%i-%i) inclusive.\n", rangeMin, rangeMax);
@@ -125,6 +126,10 @@ int getCoinValue(int currencyType, int coinVal_1, int coinVal_2, int coinVal_3)
     else 
         return coinVal_3;
 }
+
+
+
+// CODE REUSE -> FUNCTIONS ACTUALLY BEING USED:
 
 int getCoinAmount(int coinValue, int userChange)
 {

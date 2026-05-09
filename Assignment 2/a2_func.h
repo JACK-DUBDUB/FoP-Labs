@@ -12,11 +12,6 @@
 #define CURRENCY_MIN        1
 #define CURRENCY_MAX        3
 
-// Currencies
-#define CURRENCY_USD        1
-#define CURRENCY_AUD        2
-#define CURRENCY_EUR        3
-
 // Coins
 #define COIN_VAL_50         50
 #define COIN_VAL_25         25
@@ -27,6 +22,8 @@
 
 // Change
 #define CHANGE_RANGE_MAX    95
+#define MIN_AUD_LIMIT 5
+#define MAX_CHANGE_LIMIT 95
 
 // Exit/cont 
 #define PROG_CONT           1
@@ -35,20 +32,6 @@
 // Structs
 
 #define MAX_NAME_LENGTH     128
-#define MAX_COIN_VARIANTS  4
-
-typedef struct {
-    char *name; // Calloc/Malloc
-
-    int change_usd;
-    int change_aud;
-    int change_eur;
-
-    int coins_usd[MAX_COIN_VARIANTS];
-    int coins_aud[MAX_COIN_VARIANTS];
-    int coins_eur[MAX_COIN_VARIANTS];
-} Customer;
-
 
 
 // ---- Declared functions ---- 
@@ -76,4 +59,6 @@ void promptUserCurrency();                                              // Promp
 void promptUserChange(int rangeMin, int rangeMax, int currencyType);    // Prompt user for a change value, displaying the min/max range.
 void promptUserExit();                                                  // Prompt user to retry/exit.
 void pauseExitProgram();                                                // Prompt user to hit enter to quit.
+
+
 #endif
