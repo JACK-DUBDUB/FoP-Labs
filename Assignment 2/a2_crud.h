@@ -20,8 +20,9 @@ enum CURRENCY_TYPES {
 };
 
 enum DISPLAY_MODE {
-    DISPLAY_ONLY = 0,
-    DISPLAY_ALL = 1
+    DISPLAY_SEARCH = 0,
+    DISPLAY_ALL = 1,
+    DISPLAY_NAMES = 2
 };
 
 #define MAX_CURRENCY_TYPES 3
@@ -38,10 +39,11 @@ typedef struct {
 
 typedef struct {
     char *name; // Calloc/Malloc
-    int change_values[CURRENCY_MAX], 
+    int change_values[MAX_CURRENCY_TYPES], 
     coins_usd[MAX_COIN_VARIANTS], 
     coins_aud[MAX_COIN_VARIANTS], 
-    coins_eur[MAX_COIN_VARIANTS];
+    coins_eur[MAX_COIN_VARIANTS],
+    *coins_ptr[MAX_CURRENCY_TYPES];
 } Customer;
 
 
@@ -56,6 +58,8 @@ void read_customerData(FILE *source_file, Customer *customer_data);
 int read_spacesCount(const char *line_buffer);
 
 
+bool filter_customerErrorLine(const int line_count, const int _change, const int _code, const int customer_change);
+
 void shift_NextToken(char **token, char *_string, const char *delimiter, char **_next_token);
 
 
@@ -66,4 +70,8 @@ int compare_currencyTypes(const char *_currency_type);
 
 void create_customerDataCSV(FILE *source_file, const Customer *customer_data, const int *table_rows);
 void write_customerData(FILE *output_file, const char *customer_name, const int change, const char *currency, const int coin_variants[]);
+
+
+
+
 #endif

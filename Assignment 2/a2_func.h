@@ -23,7 +23,9 @@
 // Change
 #define CHANGE_RANGE_MAX    95
 #define MIN_AUD_LIMIT 5
+#define MIN_CHANGE_LIMIT 1
 #define MAX_CHANGE_LIMIT 95
+
 
 // Exit/cont 
 #define PROG_CONT           1

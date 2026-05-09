@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "a2_crud.h"
+#include "a2_func.h"
 
 
 int handle_fileCustomerData(const char *file_name, Customer *customer_data, const char *mode, const enum OPTIONS option, int *table_rows)
@@ -43,38 +44,38 @@ int read_customerRowsNumber(FILE *source_file)
     return 0;
 }
 
+
+// Skip the garbage information in the text file
+// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/strtok-s-strtok-s-l-wcstok-s-wcstok-s-l-mbstok-s-mbstok-s-l?view=msvc-170
+// Frankensteined -> will refactor/simplify later
 void read_customerData(FILE *source_file, Customer *customer_data)
 {
     char line_buffer[512];
-    int data_row_count = 0;
+    int file_line_count = 0;
+    int new_customer_count = 0;
 
     while (fgets(line_buffer, 512, source_file) != NULL)
     {
-        // Skip the garbage information in the text file
-        // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/strtok-s-strtok-s-l-wcstok-s-wcstok-s-l-mbstok-s-mbstok-s-l?view=msvc-170
-        // Frankensteined -> will refactor/simplify later
-
+        file_line_count++;
+        
         int spaces_count = read_spacesCount(line_buffer);
         if (!spaces_count)
             continue;
 
         // Customer variables
         char *_name = NULL;
-        int _pos = 0, _change = 0, _code = 0; 
+        int _pos = 0, _change = -1, _code = -1; 
 
         // strtok variables
         const char *delimiter = " ,\t\n";
         char *token = NULL, *next_token = NULL;
 
-
-
         // Shift to first string 
         shift_NextToken(&token, line_buffer, delimiter, &next_token);
 
-
         // ==== NAME ====
         // Find the name position if it already exists
-        _pos = compare_existingNames(data_row_count, customer_data, token);
+        _pos = compare_existingNames(new_customer_count, customer_data, token);
         _name = token;
 
         // Shift to next string
@@ -85,7 +86,7 @@ void read_customerData(FILE *source_file, Customer *customer_data)
         // Get valid change value
         if (!sscanf_s(token, "%i", &_change)) {
             printf("ERROR - Could not read change value.\n");
-            printf("Going to next line...\n");
+            printf("Line: %i\nGoing to next line...\n", file_line_count);
             continue;
         }
 
@@ -101,18 +102,15 @@ void read_customerData(FILE *source_file, Customer *customer_data)
             shift_NextToken(&token, NULL, delimiter, &next_token);
         }
 
-        // Filter
-        if (_code < 0) {
-            printf("ERROR - Could not read currency code | may be undefined currency: %s \n", token);
-            printf("Going to next line...\n");
+        // Filter values
+        if(!filter_customerErrorLine(file_line_count, _change, _code, customer_data[_pos].change_values[_code])) {
+            printf("Line: %i\n\n", file_line_count);
             continue;
         }
-
-
+            
         // Finally enter values
-
         // If the name does not currently exist
-        if(_pos == data_row_count) {
+        if(_pos == new_customer_count) {
 
             int _size = strlen(_name) + 1; // Need Null term
 
@@ -120,16 +118,50 @@ void read_customerData(FILE *source_file, Customer *customer_data)
 
             strcpy_s(customer_data[_pos].name, _size, _name);
 
-            data_row_count++;
+            new_customer_count++;
         }
 
         customer_data[_pos].change_values[_code] += _change;
-
-        // printf("position: %i, name %s, change %i, code %i \n", _pos, customer_data[_pos].name, /*customer_data[_pos].change_values[_code]*/ _change, _code);
     }
 
     return;
 }
+
+
+
+// Filter known read file errors...
+bool filter_customerErrorLine(const int line_count, const int _change, const int _code, const int customer_change)
+{
+    if (_change <= MIN_CHANGE_LIMIT) {
+        printf("ERROR - Change value is less than or equal to: %i.\n", MIN_CHANGE_LIMIT); 
+        return false;
+    }
+
+    if (_change > 95) {
+        printf("ERROR - Change value is more than %i.\n", MAX_CHANGE_LIMIT); 
+        return false;
+    }
+
+    if (_code < 0) {
+        printf("ERROR - Unrecognised currency code\n"); 
+        return false;
+    }
+
+    if (customer_change + _change > MAX_CHANGE_LIMIT) {
+        printf("ERROR - Change value '%i' + '%i' exceeds %i.\n", customer_change, _change, MAX_CHANGE_LIMIT); 
+        return false;
+    }
+
+    if (_code == CURRENCY_AUD && (customer_change + _change) < CURRENCY_AUD) {
+        printf("ERROR - Change value '%i' + '%i' below %i.\n", customer_change, _change, MIN_AUD_LIMIT); 
+        return false;
+    }
+
+    return true;
+}
+
+
+
 
 void shift_NextToken(char **token, char *_string, const char *delimiter, char **_next_token)
 {
@@ -152,16 +184,15 @@ int read_spacesCount(const char *line_buffer)
     return count;
 }
 
-
 // Find and return name position if it exists, else return the row_count
-int compare_existingNames(const int data_row_count, const Customer *customer_data, const char *_name)
+int compare_existingNames(const int new_customer_count, const Customer *customer_data, const char *_name)
 {
-    for (int i = 0; i < data_row_count; i++)
+    for (int i = 0; i < new_customer_count; i++)
     {
         if (compare_nameCaseInsensitive(customer_data[i].name, _name))
             return i;
     }
-    return data_row_count;
+    return new_customer_count;
 }
 
 
