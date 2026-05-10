@@ -36,19 +36,21 @@
 
 #include "a2_func.h"
 #include "a2_crud.h"
+#include "a2_general.h"
 #include <stdbool.h>
 #include <stdio.h>
 
 void sort_coinVariants(int customer_change, int customer_currency[], const Currency currency_type);
 void handle_sortCoinVariants(Customer *customer_data, const Currency *currencies, const int table_rows);
-
-
-
-void search_customerData(Customer *customer_data, const int table_rows, const char *name_search, const Currency *currencies, enum DISPLAY_MODE search);
+void handle_searchCustomerData(const Customer *customer_data, const Currency *currencies,  const enum DISPLAY_MODES option, const int table_rows);
 void display_customerData(const Customer customer, const Currency *currencies);
-void display_customerDataValues(Customer customer, const int index, const int customer_coins[], const Currency currency_type);
 void free_customerData(Customer *customer_data, const int table_rows);
 
+
+bool handle_mainArgCount(const int arg_count, const char *arg_values[]);
+bool handle_readFileResult(const int number, const char *file_name);
+bool handle_createFileResult(const int number, const char *file_name);
+void display_errorMessage(const enum ERROR_MESSAGES error, const char *value);
 
 int main(const int argument_count, const char *argument_values[])
 {
@@ -56,155 +58,143 @@ int main(const int argument_count, const char *argument_values[])
     Customer *customer_data; //   , Freed by free_customerData() 
 
     // Stack
-    Currency currencies[MAX_CURRENCY_TYPES] = {USD, AUD,EUR };
+    Currency currencies[MAX_CURRENCY_TYPES] = { USD_DATA, AUD_DATA,EUR_DATA };
 
-    switch(argument_count)
-    {
-        case 1:     printf("ERROR - One additional argument was expected \n"); return 1;
-        case 2:     printf("The argument value provided is '%s'\n", argument_values[1]); break;
-        default:    printf("ERROR = Too many arguments provided \n"); return 2;
-    }
+    // Default strings
+    char *default_input = "coins.txt", *default_output = "changes.csv"; // ***************************
 
-    int table_rows = 0;
-    handle_fileCustomerData(argument_values[1], customer_data, "r", READ_ROWS, &table_rows);
+    if (!handle_mainArgCount(argument_count, argument_values))
+        return 1;
 
-    switch(table_rows)
-    {
-        case -1:    printf("ERROR - Failed to open file in 'r' mode. Make sure its a .txt file \n"); return 3;
-        case 0:     printf("ERROR - Could not read lines of file '%s' in 'r' mode \n", argument_values[1]); return 4;
-        default:    break;
-    }
+    // Read table rows from file
+    const int table_rows = handle_readFileCustomerData(argument_values[1], customer_data, FILE_READ_ROW);
 
-    const int rows = table_rows;
+    if (!handle_readFileResult(table_rows, argument_values[1])) 
+        return 2;
+
     // Based on the number provided in the text file create table_rows number of customers
     // Calloc intializes all bytes to zero (- which is a good thing!) 
     customer_data = (Customer*) calloc(table_rows, sizeof(Customer)); // (Cast operator*)
 
-    printf("Size of customer array: %i\n", (int) sizeof(*customer_data));
 
-    
-
-    // Point to arrays
-    for (int i = 0; i < rows; i++)
-    {
-        customer_data[i].coins_ptr[CURRENCY_USD] = customer_data[i].coins_usd;
-        customer_data[i].coins_ptr[CURRENCY_AUD] = customer_data[i].coins_aud;
-        customer_data[i].coins_ptr[CURRENCY_EUR] = customer_data[i].coins_eur;
-    }
 
 
     // Display initial line count
     printf("Line count: %i\n\n", table_rows );
 
     // Read values from customers
-    handle_fileCustomerData(argument_values[1], customer_data, "r", READ_DATA, &table_rows);
+    const int total_customers = handle_readFileCustomerData(argument_values[1], customer_data, FILE_READ_DATA);
 
-    for (int i = 0; i < table_rows; i++) 
-    {
-        if (customer_data[i].change_values[CURRENCY_AUD] % MIN_AUD_LIMIT)
-            customer_data[i].change_values[CURRENCY_AUD] = 0;
+    if (!handle_readFileResult(total_customers, argument_values[1])) 
+        return 3; 
 
-        for (int j = i; j < table_rows - 1; j++)
-        {
-            // Null the customer string as they have no values
-            if (!customer_data[i].change_values[CURRENCY_USD] && !customer_data[i].change_values[CURRENCY_AUD]  && !customer_data[i].change_values[CURRENCY_EUR])
-            {
-                customer_data[i].name = NULL;
-                Customer _temp = customer_data[i];
-                customer_data[i] = customer_data[j];
-                customer_data[j] = _temp; 
-            }
-        }
-    }
+    printf("Total unique customers: %i\n", total_customers);
 
-    // Sort customer coins
+
+    // Insert the correct number of coins for each customer
     handle_sortCoinVariants(customer_data, currencies, table_rows);
 
-    for (int i = 0; i < table_rows; i++)
-    {
-        printf("\n\nIndex: %i \nName: %s", i, customer_data[i].name);
-        for (int j = 0; j < MAX_CURRENCY_TYPES; j++)
-        {
-            printf("\nChange in %s: %i |", currencies[j].currency_code, customer_data[i].change_values[j]);
-
-            for (int k = 0; k < MAX_COIN_VARIANTS; k++)
-            {
-                printf("%i|", customer_data[i].coins_ptr[j][k]);
-            }
-        }
-    }
-
-
     // Search tests
-    search_customerData(customer_data, table_rows, NULL, currencies, DISPLAY_ALL);
-    //search_customerData(customer_data, table_rows, "Eggsontoast", currencies, DISPLAY_SEARCH);
-    search_customerData(customer_data, table_rows, NULL, currencies, DISPLAY_NAMES);
+    handle_searchCustomerData(customer_data, currencies, DISPLAY_ALL, table_rows);
+    handle_searchCustomerData(customer_data, currencies, DISPLAY_NAMES, table_rows);
+
+
 
     // Write to file
-    handle_fileCustomerData("change.csv", customer_data, "w", CREATE_CSV, &table_rows);
+    const int total_rows_printed = handle_createCustomerDataCSV(customer_data, currencies, default_output, table_rows);
+
+    if (!handle_createFileResult(total_rows_printed, default_output)) { return 3; }
+
+    printf("Total rows printed: %i\n", total_rows_printed);
     
+
     // Free customer_data
     free_customerData(customer_data,  table_rows);
 
+    // Exit
     pauseExitProgram();
-    //printf("%s, %i, Coins: %i, %i, %i, %i\n", currencies[0].currency_code, currencies[0].position, currencies[0].coins[0], currencies[0].coins[1], currencies[0].coins[2], currencies[0].coins[3]);
-
-    /*
-    // ==== COINS ====
-    int coinValue_1, coinValue_2, coinValue_3, coinValue_4;
-    int coinAmount_1, coinAmount_2, coinAmount_3, coinAmount_4;
-
-    // ==== VARIABLES ====
-    int userCurrencyType = 0;
-    int userChange = 0;  
-    int exitProgram = 0;
-
-    do {
-        // [Step 1] - Get user input for currency selection
-        promptUserCurrency();                                                                          
-        userCurrencyType = getUserInt(CURRENCY_MIN, CURRENCY_MAX);              
-
-        // [Step 2] - Get the correct coin values according to currency type selected
-        coinValue_1 = getCoinValue(userCurrencyType, COIN_VAL_50, COIN_VAL_50, COIN_VAL_20); 
-        coinValue_2 = getCoinValue(userCurrencyType, COIN_VAL_25, COIN_VAL_20, COIN_VAL_10);
-        coinValue_3 = getCoinValue(userCurrencyType, COIN_VAL_10, COIN_VAL_10, COIN_VAL_5);
-        coinValue_4 = getCoinValue(userCurrencyType, COIN_VAL_1,  COIN_VAL_5,  COIN_VAL_1); // Lowest coin values
-
-        // [Step 3] - Get user input for change value                                   
-        promptUserChange(coinValue_4, CHANGE_RANGE_MAX, userCurrencyType);           
-        userChange = getUserInt(coinValue_4, CHANGE_RANGE_MAX);
-        
-        // [Step 4] - Display user's values
-        displayUserValues(userCurrencyType, userChange);     
-
-        // [Step 5] - Calculate correct amount of coins
-        coinAmount_1 = getCoinAmount(coinValue_1, userChange);
-        userChange = getChangeRemaining(coinValue_1, coinAmount_1, userChange);
-
-        coinAmount_2 = getCoinAmount(coinValue_2, userChange);
-        userChange = getChangeRemaining(coinValue_2, coinAmount_2, userChange);
-
-        coinAmount_3 = getCoinAmount(coinValue_3, userChange);
-        userChange = getChangeRemaining(coinValue_3, coinAmount_3, userChange);
-        
-        coinAmount_4 = getCoinAmount(coinValue_4, userChange);
-
-        // [Step 6] - Display the number of coins                            
-        displayCoinResults(coinValue_1, coinAmount_1);
-        displayCoinResults(coinValue_2, coinAmount_2);
-        displayCoinResults(coinValue_3, coinAmount_3);                        
-        displayCoinResults(coinValue_4, coinAmount_4);   
-
-        // [Step 7] - Ask user to quit/retry
-        promptUserExit();                                                                               
-        exitProgram = getUserInt(PROG_CONT, PROG_EXIT);
-
-    } while (exitProgram != PROG_EXIT);
-
-    pauseExitProgram();
-    */
     return 0;
 }
+
+bool handle_mainArgCount(const int arg_count, const char *arg_values[])
+{   
+    if (arg_count < 2) {
+        display_errorMessage(ERR_PRGM_NO_ARG, NULL);
+        return false;
+    }
+    else if (arg_count > 2) {
+        display_errorMessage(ERR_PRGM_MANY_ARG, NULL);
+        return false;
+    }
+    printf("\nThe argument value provided is '%s'\n", arg_values[1]); 
+    return true;
+}
+
+bool handle_readFileResult(const int number, const char *file_name)
+{
+    if (number < 0) {
+        display_errorMessage(ERR_FILE_BAD_READ, file_name);
+        return false;
+    }
+    else if (!number){
+        display_errorMessage(ERR_FILE_NO_READ, file_name);
+        return false;
+    }
+    printf("Number read from file: %i\n", number); 
+    return true;
+}
+
+bool handle_createFileResult(const int number, const char *file_name)
+{
+    if (number < 0) {
+        display_errorMessage(ERR_FILE_BAD_CREATE, file_name);
+        return false;
+    }
+    else if (!number){
+        display_errorMessage(ERR_FILE_NO_WRITE, file_name);
+        return false;
+    }
+    printf("Lines printed to file '%s': %i\n", file_name, number);
+    return true;
+}
+
+void display_errorMessage(const enum ERROR_MESSAGES error, const char *value)
+{
+    switch (error) 
+    {   // -- Program args --
+        case ERR_PRGM_NO_ARG:   printf("ERROR - One additional argument was expected \n"); break;
+        case ERR_PRGM_MANY_ARG: printf("ERROR = Too many arguments provided \n"); break;
+
+        // -- Read file --
+        case ERR_FILE_BAD_READ: printf("ERROR - Failed to open file in 'r' mode. Make sure its a .txt file \n"); break;
+        case ERR_FILE_NO_READ:  printf("ERROR - Could not read lines of file '%s' in 'r' mode \n", value);
+
+        // -- Create file --
+        case ERR_FILE_BAD_CREATE: printf("ERROR - Failed to create file '%s' in 'w' mode. \nFile may still be open and/or missing permissions.\n", value); break;
+        case ERR_FILE_NO_WRITE: printf("ERROR - Program did not write any lines to output file '%s' \n", value); break;
+
+        default: break;
+    }
+
+    return;
+}
+
+/*
+int handle_userSelection(const int option)
+{
+    switch (option)
+    {
+        case
+
+
+    }
+
+
+    return 0;
+}*/
+
+
+
 
 // ---- HEAP ----
 
@@ -229,47 +219,51 @@ void sort_coinVariants(const int customer_change, int customer_coins[], const Cu
     int change = customer_change;
     for (int i = 0; i < MAX_COIN_VARIANTS; i++)
     {
-        customer_coins[i] =  getCoinAmount(currencies.coins[i], change);
-        change = getChangeRemaining(currencies.coins[i], customer_coins[i], change);
+        customer_coins[i] =  calculate_intDiv(change, currencies.coins[i]);
+        change = calculate_intMod(change, currencies.coins[i]);
     }
 
     return;
 }
 
-void search_customerData(Customer *customer_data, const int table_rows, const char *name_search, const Currency *currencies, enum DISPLAY_MODE search)
+
+
+
+
+
+void handle_searchCustomerData(const Customer *customer_data, const Currency *currencies,  const enum DISPLAY_MODES option, const int table_rows)
 {
-    switch (search) 
+    switch (option) 
     {
-        case DISPLAY_SEARCH: printf("---- %s Data ----\n", name_search); break;
-        case DISPLAY_ALL: printf("---- All Customer Data ----\n"); break;
-        case DISPLAY_NAMES: printf("---- All Customer names ----\n"); break;
+        case DISPLAY_SEARCH: printf("\n---- Search Customer By Name ----\n"); break;
+        case DISPLAY_ALL: printf("\n---- All Customer Data ----\n"); break;
+        case DISPLAY_NAMES: printf("\n---- All Customer names ----\n"); break;
         default: return;
     }   
 
-
+    const char *name;
 
     for (int i = 0; i < table_rows; i++)
     {
         if (customer_data[i].name == NULL)
             break;
 
-        if (search == DISPLAY_SEARCH) {
+        if (option == DISPLAY_SEARCH) {
 
-            if (compare_nameCaseInsensitive(customer_data[i].name, name_search))
+            if (compare_caseInsensitive(customer_data[i].name, name))
                 display_customerData(customer_data[i], currencies); 
             else
-                printf("Name: %s\nNot found\n", name_search);
+                printf("Name: %s\nNot found\n", name);
         }
 
-        if (search == DISPLAY_ALL) {
+        if (option == DISPLAY_ALL)
             display_customerData(customer_data[i], currencies);
-        }
 
-        if (search == DISPLAY_NAMES)
+        if (option == DISPLAY_NAMES)
             printf("- %s  \t[%i]\n", customer_data[i].name, i);
     }
-    printf("\n\n");
 
+    printf("\n\n");
     return;
 }
 
@@ -279,9 +273,9 @@ void display_customerData(const Customer customer, const Currency *currencies)
 
     for (int i = 0; i < MAX_CURRENCY_TYPES; i++)
     {
-        if (customer.change_values[i]) // If customer has any valid USD/AUD/EUR
+        if (customer.change_values[i]) // If customer has any non 0 valid USD/AUD/EUR
         {
-            printf("Change in cents %s: %i\n", currencies[i].currency_code, customer.change_values[i]);
+            printf("Change in cents %s: %i\n", currencies[i].code, customer.change_values[i]);
 
             for (int j = 0; j < MAX_COIN_VARIANTS; j++)
             {
@@ -292,18 +286,7 @@ void display_customerData(const Customer customer, const Currency *currencies)
             printf("\n");
         }
     }
-    return;
-}
 
-void display_customerDataValues(Customer customer, const int index, const int customer_coins[], const Currency currencies)
-{
-    printf("Change in cents %s: %i\n", currencies.currency_code, customer.change_values[index]);
-    for (int i = 0; i < MAX_COIN_VARIANTS; i++)
-    {
-        if(customer_coins[i])
-            printf("Cents %i: \t%i\n", currencies.coins[i], customer_coins[i]);
-    }
-    printf("\n");
     return;
 }
 
@@ -315,5 +298,6 @@ void free_customerData(Customer *customer_data, const int table_rows)
         free(customer_data[i].name);
 
     free(customer_data); 
+
     return;
 }

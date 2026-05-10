@@ -4,61 +4,42 @@
  * Student ID: 32712899
  */
 
-#ifndef COIN_SORT_FUNC_H
-#define COIN_SORT_FUNC_H
+#include "a2_crud.h"
 
-// ---- Numeric constants ---- 
-// Currency range
-#define CURRENCY_MIN        1
-#define CURRENCY_MAX        3
+#ifndef _A2_FUNCTIONS_
+#define _A2_FUNCTIONS_
 
-// Coins
-#define COIN_VAL_50         50
-#define COIN_VAL_25         25
-#define COIN_VAL_20         20
-#define COIN_VAL_10         10
-#define COIN_VAL_5          5
-#define COIN_VAL_1          1
+// ======= ENUMERATOR ========
 
-// Change
-#define CHANGE_RANGE_MAX    95
-#define MIN_AUD_LIMIT 5
-#define MIN_CHANGE_LIMIT 1
-#define MAX_CHANGE_LIMIT 95
+enum DISPLAY_MODES {
+    DISPLAY_SEARCH = 0,
+    DISPLAY_ALL = 1,
+    DISPLAY_NAMES = 2
+};
 
+// ======== CONSTANTS =========
+#define READ_INT_ERROR      -1
 
 // Exit/cont 
 #define PROG_CONT           1
 #define PROG_EXIT           2
 
-// Structs
+// ======== FUNCTIONS ========
 
-#define MAX_NAME_LENGTH     128
+// reads an integer input from stdin
+int read_intInRange(const int min, const int max);
+
+// Validates the user input - displays known errors
+int filter_intInRange(const int input, const int min, const int max);
 
 
-// ---- Declared functions ---- 
-
-// Get a user input of type integer | Known values: rangeMin: (1, 5), rangeMax (3, 95, 2)
-int getUserInt(int rangeMin, int rangeMax);
-
-// Validates the user input - displays error messages of what went wrong
-int validateUserInput(int valid, int userInput, int rangeMin, int rangeMax);
+// ---- Customer functions ----
+void init_customerPointers(Customer *customer_data, const int table_rows);
+void shift_nullCustomerData(Customer *customer_data, const int table_rows);
 
 // Clear input buffer -> user error issue
 void clearInputBuffer();                   
 
-// Get values
-int getCoinValue(int currencyType, int coinVal_1, int coinVal_2, int coinVal_3);        // get the appropriate value based on currency type selected (CurrencyType, USD, AUD, EUR)
-int getCoinAmount(int coinValue, int userChange);                                       // perform div calculation to get number of coins
-int getChangeRemaining(int coinValue, int coinAmount, int userChange);                  // Modify value of user's change amount after calculation
-
-// Display user's input currency selection and change values
-void displayUserValues(int currencyType, int userChange);
-void displayCoinResults(int coinValue, int coinAmount);
-
-// Prompts
-void promptUserCurrency();                                              // Prompt user for  acurrency choice.
-void promptUserChange(int rangeMin, int rangeMax, int currencyType);    // Prompt user for a change value, displaying the min/max range.
 void promptUserExit();                                                  // Prompt user to retry/exit.
 void pauseExitProgram();                                                // Prompt user to hit enter to quit.
 

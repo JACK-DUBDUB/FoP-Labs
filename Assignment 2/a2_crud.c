@@ -1,66 +1,106 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include <stdbool.h>
 #include "a2_crud.h"
-#include "a2_func.h"
+#include "a2_general.h"
 
+// ============ CREATE ============
 
-int handle_fileCustomerData(const char *file_name, Customer *customer_data, const char *mode, const enum OPTIONS option, int *table_rows)
+int handle_createCustomerDataCSV(const Customer *customer_data, const Currency *currencies, const char *file_name, const int table_rows)
 {
-    FILE *source_file;
-    int error_code = fopen_s(&source_file, file_name, mode);
+    FILE *output_file;
+    int out_value = 0, error_code = 0;
+
+    error_code = fopen_s(&output_file, file_name, "w");
 
     if (!!error_code) {
         printf("Error code: %i \n", error_code);
         return -1;
     }
 
-    switch (option) {
-        case READ_ROWS: *table_rows = read_customerRowsNumber(source_file); break; // Returns expected number of entries only
-        case READ_DATA: read_customerData(source_file, customer_data); break; // Inserts valid customer values into the customer_data array
-        case CREATE_CSV: create_customerDataCSV(source_file, customer_data, table_rows); break; // Creates the .csv file containing valid customer data
-        default: break;
-    }
+    out_value = create_customerDataCSV(output_file, customer_data, currencies, table_rows);
 
-    fclose(source_file);
-    return 1;
+    fclose(output_file);
+
+    return out_value;
 }
 
-// ---- READ ----
 
-int read_customerRowsNumber(FILE *source_file)
+int create_customerDataCSV(FILE *output_file, const Customer *customer_data, const Currency *currencies, const int table_rows)
 {
-    char line_buffer[512];
-    int rows = 0;
-
-    if(fgets(line_buffer, 512, source_file)) 
+    int rows_printed = 0;
+    for (int i = 0; i < table_rows; i++)
     {
-        if(sscanf_s(line_buffer, "%i", &rows)) 
+        if (customer_data[i].name == NULL)
+            break;
+
+        for (int j = 0; j < MAX_CURRENCY_TYPES; j++)
         {
-            return rows;
+            if (customer_data[i].change_values[j]) {
+                fprintf(output_file, "%s, the change for %i cents in %s is ", customer_data[i].name, customer_data[i].change_values[j], currencies[j].code);
+                fprintf(output_file, "%i,%i,%i,%i\n", customer_data[i].coins_ptr[j][0], customer_data[i].coins_ptr[j][1], customer_data[i].coins_ptr[j][2], customer_data[i].coins_ptr[j][3]);
+                rows_printed++;
+            }
         }
     }
+    return rows_printed;
+}
+
+
+// ============ READ ============
+
+
+int handle_readFileCustomerData(const char *file_name, Customer *customer_data, const enum READ_OPTIONS option)
+{
+    FILE *source_file;
+    int out_value = 0, error_code = 0;
+
+    error_code = fopen_s(&source_file, file_name, "r");
+    if (!!error_code) {
+        printf("Error code: %i \n", error_code);
+        return -1;
+    }
+
+    if (option == FILE_READ_ROW)
+        out_value = read_firstRowEntry(source_file);
+
+    if (option == FILE_READ_DATA)
+        out_value = read_customerData(source_file, customer_data);
+
+    fclose(source_file);
+    return out_value;
+}
+
+
+
+//  Return the first row value if it's an integer
+int read_firstRowEntry(FILE *source_file)
+{
+    char line_buffer[MAX_BUFFER_LENGTH];
+    int rows = 0;
+
+    if(fgets(line_buffer, MAX_BUFFER_LENGTH, source_file))
+        if(sscanf_s(line_buffer, "%i", &rows))
+            return rows;
+    
     return 0;
 }
 
-
-// Skip the garbage information in the text file
-// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/strtok-s-strtok-s-l-wcstok-s-wcstok-s-l-mbstok-s-mbstok-s-l?view=msvc-170
-// Frankensteined -> will refactor/simplify later
-void read_customerData(FILE *source_file, Customer *customer_data)
+// Inserts valid values into the customer array, returns the number of unique customers
+int read_customerData(FILE *source_file, Customer *customer_data)
 {
-    char line_buffer[512];
-    int file_line_count = 0;
-    int new_customer_count = 0;
+    char line_buffer[MAX_BUFFER_LENGTH];
+    int file_line_c = 0;
+    int unique_customer_c = 0;
 
-    while (fgets(line_buffer, 512, source_file) != NULL)
+    while (fgets(line_buffer, MAX_BUFFER_LENGTH, source_file) != NULL)
     {
-        file_line_count++;
-        
-        int spaces_count = read_spacesCount(line_buffer);
-        if (!spaces_count)
+        if (!file_line_c) { // Skip first line
+            file_line_c++;
             continue;
+        }
+        
+        file_line_c++;
 
         // Customer variables
         char *_name = NULL;
@@ -71,62 +111,74 @@ void read_customerData(FILE *source_file, Customer *customer_data)
         char *token = NULL, *next_token = NULL;
 
         // Shift to first string 
-        shift_NextToken(&token, line_buffer, delimiter, &next_token);
+        shift_toNextToken(&token, line_buffer, delimiter, &next_token);
 
-        // ==== NAME ====
+        // ---- NAME ----
         // Find the name position if it already exists
-        _pos = compare_existingNames(new_customer_count, customer_data, token);
+        _pos = compare_existingNames(unique_customer_c, customer_data, token);
         _name = token;
 
         // Shift to next string
-        shift_NextToken(&token, NULL, delimiter, &next_token);
+        shift_toNextToken(&token, NULL, delimiter, &next_token);
         
-
-        // ==== CHANGE ====
+        // ---- CHANGE ----
         // Get valid change value
         if (!sscanf_s(token, "%i", &_change)) {
             printf("ERROR - Could not read change value.\n");
-            printf("Line: %i\nGoing to next line...\n", file_line_count);
+            printf("Line: %i\n", file_line_c);
             continue;
         }
 
-        // ==== CURRENCY CODE ==== 
+        // ---- CURRENCY CODE ---- 
         // Where: -1 = INVALID, 0 = $USD, 1 = $AUD, 2 = $EUR
         while(*token)
         {
             if (*token == '$') { 
-                _code = compare_currencyTypes(token); 
+                _code = compare_currencyCode(token); 
                 break;
             }
 
-            shift_NextToken(&token, NULL, delimiter, &next_token);
+            shift_toNextToken(&token, NULL, delimiter, &next_token);
         }
 
-        // Filter values
-        if(!filter_customerErrorLine(file_line_count, _change, _code, customer_data[_pos].change_values[_code])) {
-            printf("Line: %i\n\n", file_line_count);
+        // Filter all values
+        if(!filter_customerErrorLine(file_line_c, _change, _code, customer_data[_pos].change_values[_code])) {
+            printf("Line: %i\n\n", file_line_c);
             continue;
         }
             
         // Finally enter values
         // If the name does not currently exist
-        if(_pos == new_customer_count) {
+        if(_pos == unique_customer_c) {
 
             int _size = strlen(_name) + 1; // Need Null term
 
             customer_data[_pos].name = (char*) calloc(_size, sizeof(char));
 
-            strcpy_s(customer_data[_pos].name, _size, _name);
+            customer_data[_pos].name = _name;
+            printf("Name: %s\n", customer_data[_pos].name);
 
-            new_customer_count++;
+            //strcpy_s(customer_data[_pos].name, _size, _name);
+
+            unique_customer_c++;
         }
 
         customer_data[_pos].change_values[_code] += _change;
     }
 
-    return;
+    if (!unique_customer_c)
+        return 0;
+
+
+    return unique_customer_c - 1;
 }
 
+// 
+void shift_toNextToken(char **token, char *_string, const char *delimiter, char **_next_token)
+{
+    *token = strtok_s(_string, delimiter, _next_token);
+    return;
+}
 
 
 // Filter known read file errors...
@@ -142,7 +194,7 @@ bool filter_customerErrorLine(const int line_count, const int _change, const int
         return false;
     }
 
-    if (_code < 0) {
+    if (_code < 0) { // -1 = error
         printf("ERROR - Unrecognised currency code\n"); 
         return false;
     }
@@ -152,7 +204,7 @@ bool filter_customerErrorLine(const int line_count, const int _change, const int
         return false;
     }
 
-    if (_code == CURRENCY_AUD && (customer_change + _change) < CURRENCY_AUD) {
+    if (_code == AUD_ID && (customer_change + _change) < AUD_ID) {
         printf("ERROR - Change value '%i' + '%i' below %i.\n", customer_change, _change, MIN_AUD_LIMIT); 
         return false;
     }
@@ -163,100 +215,25 @@ bool filter_customerErrorLine(const int line_count, const int _change, const int
 
 
 
-void shift_NextToken(char **token, char *_string, const char *delimiter, char **_next_token)
+int compare_currencyCode(const char *_code)
 {
-    *token = strtok_s(_string, delimiter, _next_token);
-    return;
-}
-
-int read_spacesCount(const char *line_buffer)
-{
-    int count = 0;
-    const char *string_ptr1 = line_buffer;
-
-    while(*string_ptr1)
-    {
-        if(*string_ptr1 == ' ')
-            count++;
-        string_ptr1++;
-    }
-
-    return count;
-}
-
-// Find and return name position if it exists, else return the row_count
-int compare_existingNames(const int new_customer_count, const Customer *customer_data, const char *_name)
-{
-    for (int i = 0; i < new_customer_count; i++)
-    {
-        if (compare_nameCaseInsensitive(customer_data[i].name, _name))
-            return i;
-    }
-    return new_customer_count;
-}
-
-
-// Assumption -> what if names are same but not same case
-bool compare_nameCaseInsensitive(const char *ptr_exist, const char *ptr_compr)
-{
-    // Sigh...
-    if (ptr_exist == NULL || ptr_compr == NULL)
-        return false;
-
-    // Compare length first before checking
-    if (strlen(ptr_exist) != strlen(ptr_compr))
-        return false;
-
-    // If the same length then check 
-    while (*ptr_exist && *ptr_compr)
-    {
-        if (tolower(*ptr_exist) != tolower(*ptr_compr))
-            return false;
-            
-        ptr_exist++, ptr_compr++;
-    }
-
-    return true;
-}
-
-int compare_currencyTypes(const char *_token)
-{
-    if (strcmp(_token, "$USD") == 0)
-        return CURRENCY_USD;
-
-    if (strcmp(_token, "$AUD") == 0)
-        return CURRENCY_AUD;
-
-    if (strcmp(_token, "$EUR") == 0)
-        return CURRENCY_EUR;
-
+    if (compare_caseInsensitive(_code, USD_S))
+        return USD_ID;
+    if (compare_caseInsensitive(_code, AUD_S))
+        return AUD_ID;
+    if (compare_caseInsensitive(_code, EUR_S))
+        return EUR_ID;
     return -1;
 }
 
-
-
-// ---- CREATE ----
-
-void create_customerDataCSV(FILE *output_file, const Customer *customer_data, const int *table_rows)
+// Find and return name position if it exists, else return the row_count
+int compare_existingNames(const int unique_customer_c, const Customer *customer_data, const char *_name)
 {
-    for (int i = 0; i < *table_rows; i++)
+    for (int i = 0; i < unique_customer_c; i++)
     {
-        if(customer_data[i].change_values[CURRENCY_USD])
-            write_customerData(output_file, customer_data[i].name, customer_data[i].change_values[CURRENCY_USD], "$USD", customer_data[i].coins_usd);
-
-        if(customer_data[i].change_values[CURRENCY_AUD])
-            write_customerData(output_file, customer_data[i].name, customer_data[i].change_values[CURRENCY_AUD], "$AUD", customer_data[i].coins_aud);
-
-        if(customer_data[i].change_values[CURRENCY_EUR])
-            write_customerData(output_file, customer_data[i].name, customer_data[i].change_values[CURRENCY_EUR], "$EUR", customer_data[i].coins_eur);
+        if (compare_caseInsensitive(customer_data[i].name, _name))
+            return i;
     }
-
-    return;
+    return unique_customer_c;
 }
 
-void write_customerData(FILE *output_file, const char *customer_name, const int change, const char *currency, const int coin_variants[])
-{   
-    fprintf(output_file, "%s, the change for %i cents in %s is ", customer_name, change, currency);
-    fprintf(output_file, "%i,%i,%i,%i\n",coin_variants[0], coin_variants[1], coin_variants[2], coin_variants[3]);
-    return;
-}

@@ -1,46 +1,92 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "a2_func.h"
 #include "a2_crud.h"
 
 // ---- get user input functions ----
-int getUserInt(int rangeMin, int rangeMax) 
+int read_intInRange(const int min, const int max) 
 {
-    int userInput = 0;
-    int valid = 0;
-    do {
+    int input = -1;
+    do 
+    {
         printf("\nEnter a valid value: ");
-        valid = scanf_s("%i", &userInput);
-        valid = validateUserInput(valid, userInput, rangeMin, rangeMax);
-        if (!valid) {
-            printf("Please enter a valid value between (%i-%i) inclusive.\n", rangeMin, rangeMax);
+
+        scanf_s("%i", &input);
+        input = filter_intInRange(input, min, max);
+
+    } while (input != READ_INT_ERROR );
+    return input;
+}
+
+int filter_intInRange(const int input, const int min, const int max)
+{
+    if (input == READ_INT_ERROR ) {
+        printf("\nUser did not enter an integer value.\n");
+        clearInputBuffer();
+        return READ_INT_ERROR ;
+    }
+
+    if (input == READ_INT_ERROR  && getchar() != '\n') {
+        printf("\nUser entered an integer value with a non-integer value.\n");
+        clearInputBuffer();
+        return READ_INT_ERROR;
+    }
+
+    if (input == -1 && (input < min || input > max)) {
+        printf("\nUser entered a value outside of range.\n" );
+        return READ_INT_ERROR;
+    }
+
+    return input;
+}
+
+void init_customerPointers(Customer *customer_data, const int table_rows)
+{
+    for (int i = 0; i < table_rows; i++)
+    {
+        customer_data[i].coins_ptr[USD_ID] = customer_data[i].coins_usd;
+        customer_data[i].coins_ptr[AUD_ID] = customer_data[i].coins_usd;
+        customer_data[i].coins_ptr[EUR_ID] = customer_data[i].coins_usd;
+    }
+    return;
+}
+
+void shift_nullCustomerData(Customer *customer_data, const int table_rows)
+{
+    for (int i = 0; i < table_rows; i++) 
+    {
+        if (customer_data[i].change_values[AUD_ID] % MIN_AUD_LIMIT)
+            customer_data[i].change_values[AUD_ID] = 0;
+
+        if (customer_data[i].change_values[USD_ID] || customer_data[i].change_values[AUD_ID] || customer_data[i].change_values[EUR_ID])
+            continue;
+        
+        // Thus implies that [i] has no values 
+        customer_data[i].name = NULL;
+
+        for (int j = i; j < table_rows; j++)
+        {
+            Customer _temp  =   customer_data[i];
+            customer_data[i] =  customer_data[j];
+            customer_data[j] =  _temp; 
         }
 
-    } while (!valid);
-    return userInput;
+        bool rest_null = true;
+        for (int j = i; j < table_rows; j++)
+        {
+            if(customer_data[j].name != NULL) {
+                rest_null = false;
+                break;
+            }
+        }
+
+        if (rest_null)
+            break;
+
+    }
+    return;
 }
 
-int validateUserInput(int valid, int userInput, int rangeMin, int rangeMax)
-{
-    if (!valid) {
-        printf("User did not enter an integer value.\n");
-        clearInputBuffer();
-        return 0;
-    } 
-    if (valid && getchar() != '\n') {
-        printf("User entered an integer value with a non-integer value.\n");
-        clearInputBuffer();
-        return 0;
-    } 
-    if (valid && (userInput < rangeMin || userInput > rangeMax)) {
-        printf("User entered a value outside of range.\n" );
-        return 0;
-    }
-    if (valid &&  (userInput % rangeMin != 0)) { // Possible values of rangeMin: (1, 5)
-        printf("Change value must be a multiple of: %i\n", rangeMin);
-        return 0;
-    }
-    return valid;
-}
 
 void pauseExitProgram()
 {
@@ -53,93 +99,5 @@ void clearInputBuffer()
 {
     while (getchar() != '\n');
     return;
-}
-
-// ---- display to user functions ----
-
-void promptUserCurrency()
-{
-    printf("\n\n/// Currency Selection Menu ///");
-    printf("\nCoin variants of currencies (cents)\n");
-    printf("[1] $ USD: %i  %i  %i  %i\n", COIN_VAL_50, COIN_VAL_25, COIN_VAL_10, COIN_VAL_1);
-    printf("[2] $ AUD: %i  %i  %i  %i\n", COIN_VAL_50, COIN_VAL_20, COIN_VAL_10, COIN_VAL_5);
-    printf("[3] $ EUR: %i  %i   %i  %i\n", COIN_VAL_20, COIN_VAL_10, COIN_VAL_5, COIN_VAL_1);
-    printf("Please select a currency type\n\n");
-    return;     
-}
-
-void promptUserChange(int rangeMin, int rangeMax, int currencyType)
-{
-    printf("\n/// Enter change value ///\n");
-    printf("Please enter change amount between: (%i-%i)", rangeMin, rangeMax);
-    if(currencyType == CURRENCY_AUD){
-        printf("\nAllowable change amount must be a multiple of: %i\n", rangeMin);
-    }
-    return;
-}
-
-void promptUserExit()
-{
-    printf("\n/// Retry or Exit ///\n");
-    printf("Would you like to exit program or try again?\n");
-    printf("[%i] - Try again \n", PROG_CONT);
-    printf("[%i] - Exit program\n", PROG_EXIT);
-    printf("Please enter a selection\n");
-    return;
-}
-
-void displayUserValues(int currencyType, int userChange)
-{
-    printf("\n/// Calculated Coins ///\n");
-    printf("Currency type selected: ");
-    
-    if (currencyType == CURRENCY_USD) 
-        printf("$ USD\n");
-    else if (currencyType == CURRENCY_AUD) 
-        printf("$ AUD\n");
-    else 
-        printf("$ EUR\n");
-
-    printf("Change value inserted: %i cents\n", userChange);
-    printf("| Value | Amount |\n");
-    return;
-}
-
-void displayCoinResults(int coinValue, int coinAmount)
-{
-    // Purely cosmetic spacing changes for coin values below 10 ***
-    if(coinValue < COIN_VAL_10) 
-        printf("|   %i   |    %i   |\n", coinValue, coinAmount);
-    else
-        printf("|  %i   |    %i   |\n", coinValue, coinAmount);
-    return;
-}
-
-// ---- get value functions ---- 
-
-int getCoinValue(int currencyType, int coinVal_1, int coinVal_2, int coinVal_3)
-{
-    if (currencyType == CURRENCY_USD) 
-        return coinVal_1;
-    else if (currencyType == CURRENCY_AUD) 
-        return coinVal_2;
-    else 
-        return coinVal_3;
-}
-
-
-
-// CODE REUSE -> FUNCTIONS ACTUALLY BEING USED:
-
-int getCoinAmount(int coinValue, int userChange)
-{
-    int coinAmount = userChange / coinValue;
-    return coinAmount;
-}
-
-int getChangeRemaining(int coinValue, int coinAmount, int userChange)
-{
-    int changeRem = userChange - (coinValue * coinAmount);
-    return changeRem; 
 }
 
