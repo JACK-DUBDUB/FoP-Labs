@@ -1,7 +1,7 @@
-29
+24
 Alpha 25 cents in $AUD
 Alpha 55 cents in $AUD
-Alpha 6 cents in $AUD
+Alpha 5 cents in $AUD
 Alpha 10 cents in $USD
 Alpha 15 cents in $USD
 Alpha 32 cents in $EUR
@@ -10,21 +10,16 @@ Bravo 29 cents in $EUR
 Charlie 34 cents in $USD
 Delta 40 cents in $EUR
 Echo 95 cents in $AUD
-Echo 1 cents in $AUD
 Foxtrot 54 cents in $USD
 Foxtrot 25 cents in $AUD
 Golf 89 cents in $EUR
 Hotel 94 cents in $USD
 India 36 cents in $EUR
 Juliette 5 cents in $AUD
-Juliette -10 cents in $AUD
+Juliette 10 cents in $AUD
 Kilo 7 cents in $AUD
 Kilo 3 cents in $AUD
-Lima 11 cents in $AUD
-Zulu 35 cents in $ZMB
-Whiskey 420 cents in $FRF
-Tango 69 cents in $420
-Tango 69 cents in $$420 $RDL
-Foxtrot 54 cents in $69420
+Lima 10 cents in $AUD
 Whiskey 90 cents in $AUD
 Tango 69 cents in $USD
+Yankee 95 cents in $AUD

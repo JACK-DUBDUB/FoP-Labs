@@ -1,4 +1,5 @@
-29
+123456
+Alpha 0 cents in $AUD
 Alpha 25 cents in $AUD
 Alpha 55 cents in $AUD
 Alpha 6 cents in $AUD
@@ -28,3 +29,6 @@ Tango 69 cents in $$420 $RDL
 Foxtrot 54 cents in $69420
 Whiskey 90 cents in $AUD
 Tango 69 cents in $USD
+                                    
+Yankee 95 cents in $AUD
+Zulu abc cents in eggs
