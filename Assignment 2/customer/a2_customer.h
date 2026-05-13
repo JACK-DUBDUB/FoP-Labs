@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include "../currency/a2_currency.h"
 
 #ifndef A2_CUSTOMER_H
@@ -32,10 +31,7 @@ typedef struct {
 } Customer;
 
 
-
-
 // ======== Customer functions ========
-
 
 // Iterates through all customers, intializing the pointer array, points to the customer's coins_(usd, aud, eur) arrays
 void customer_initPointers(Customer *customers, const int rows);

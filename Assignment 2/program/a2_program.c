@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include "../program/a2_program.h"
 #include "../general/a2_general.h"
 
@@ -45,37 +44,19 @@ int program_fileIOResult(const int value, const char *file_name, const int error
 void program_pipelineErrors(const enum PROGRAM_ERROR_MESSAGES error, const char *file_name)
 {
     switch (error) 
-    {   // -- Program args --
-        case ERR_PRGM_NO_ARG:       
-            printf("\nPROGRAM ERROR - Missing two argument values\n\n-> Using default input/output files: '%s', '%s'\n\n", DEFAULT_IN_FILE, DEFAULT_OUT_FILE); 
-            break;
-        case ERR_PRGM_NO_OUT:       
-            printf("\nPROGRAM ERROR - Missing argument output value\n\n-> Using default output file: '%s' \n\n", DEFAULT_OUT_FILE); 
-            break;
-        case ERR_PRGM_MANY_ARG:     
-            printf("\nERROR - Provided too many arguments\n-> Using first two arguments provided\n\n"); 
-            break;
-
+    {   
+        // -- Program args --
+        case ERR_PRGM_NO_ARG:       printf("\nPROGRAM ERROR - Missing two argument values\n\n-> Using default input/output files: '%s', '%s'\n\n", DEFAULT_IN_FILE, DEFAULT_OUT_FILE); break;
+        case ERR_PRGM_NO_OUT:       printf("\nPROGRAM ERROR - Missing argument output value\n\n-> Using default output file: '%s' \n\n", DEFAULT_OUT_FILE); break;
+        case ERR_PRGM_MANY_ARG:     printf("\nERROR - Provided too many arguments\n-> Using first two arguments provided\n\n"); break;
         // -- Read file --
-        case ERR_FILE_BAD_READ:     
-            printf("\nPROGRAM ERROR - Failed to open file '%s' in 'r' mode\n\n", file_name); 
-            break;
-         case ERR_FILE_BAD_FIRST:      
-            printf("\nPROGRAM ERROR - First row value of file '%s'could not be read as a valid positive integer \n\n", file_name); 
-            break;
-        case ERR_FILE_NO_READ:      
-            printf("\nPROGRAM ERROR - Could not parse any lines of file '%s' in 'r' mode \n\n", file_name); 
-            break;
-
+        case ERR_FILE_BAD_READ:     printf("\nPROGRAM ERROR - Failed to open file '%s' in 'r' mode\n\n", file_name); break;
+        case ERR_FILE_BAD_FIRST:    printf("\nPROGRAM ERROR - First row value of file '%s'could not be read as a valid positive integer \n\n", file_name); break;
+        case ERR_FILE_NO_READ:      printf("\nPROGRAM ERROR - Could not parse any lines of file '%s' in 'r' mode \n\n", file_name); break;
         // -- Create file --
-        case ERR_FILE_BAD_CREATE:   
-            printf("\nPROGRAM ERROR - Failed to create file '%s' in 'w' mode. \nFile may still be open and/or missing permissions.\n\n", file_name); 
-            break;
-        case ERR_FILE_NO_WRITE:     
-            printf("\nPROGRAM ERROR - Program did not write any lines to output file '%s' \n\n", file_name); 
-            break;
-        default: 
-            break;
+        case ERR_FILE_BAD_CREATE:   printf("\nPROGRAM ERROR - Failed to create file '%s' in 'w' mode. \nFile may still be open and/or missing permissions.\n\n", file_name); break;
+        case ERR_FILE_NO_WRITE:     printf("\nPROGRAM ERROR - Program did not write any lines to output file '%s' \n\n", file_name); break;
+        default: break;
     }
     return;
 }

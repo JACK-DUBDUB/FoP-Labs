@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include "../program/a2_program.h"
 #include "../customer/a2_customer.h"
 
@@ -28,10 +27,10 @@ int read_lineCount(FILE *source_file);
 int read_customerData(FILE *source_file, Customer *customer_data);
 
 // Reads the buffer line of the file being read, parse the customer data, returns the string token should parsing fail
-char* parse_customerLine(char *buffer, const Customer *customers, const int uniq_cust, char **name, int *pos, int *change, int *code);
+char* parse_customerLine(char *buffer, const Customer *customers, const int unique_customers, char **name, int *pos, int *change, int *code);
 
 // Compares the string token with any of the existing customers, returns uniq_cust or returns index (i)
-int compare_existingNames(const int uniq_cust, const Customer *customer_data, const char *token);
+int compare_existingNames(const int unique_customers, const Customer *customer_data, const char *token);
 
 // Compares the string token to existing currency codes
 int compare_currencyCode(const char *token);
@@ -39,7 +38,7 @@ int compare_currencyCode(const char *token);
 // Filters parsed customer values
 int filter_customerValues(const char *token, const char *name, const int cust_change, const int change, const int code);
 
-// Inserts the filtered customer values 
+// Inserts the filtered customer values  
 void insert_customerValues(Customer *customer, const char *name, const int change, const int code);
 
 #endif /* A2_READ_H */

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 #include "a2_read.h"
 #include "../general/a2_general.h"
 
@@ -96,6 +95,7 @@ int read_customerData(FILE *source_file, Customer *customer_data)
         
         // Insert successfully parsed customer data
         insert_customerValues(&customer_data[_pos], _name, _change, _code);
+        
         if(_pos == unique_customers) {
             unique_customers++;
         }
@@ -105,7 +105,7 @@ int read_customerData(FILE *source_file, Customer *customer_data)
 
 
 // Default values: name = null, pos = 0, change = -1, code = -1
-char* parse_customerLine(char *buffer, const Customer *customers, const int uniq_cust, char **name, int *pos, int *change, int *code)
+char* parse_customerLine(char *buffer, const Customer *customers, const int unique_customers, char **name, int *pos, int *change, int *code)
 {
     enum steps {READ_NAME, READ_CHANGE, READ_CODE};
     int current_step = READ_NAME;
@@ -123,7 +123,7 @@ char* parse_customerLine(char *buffer, const Customer *customers, const int uniq
         switch (current_step) 
         {
             case READ_NAME:
-                *pos = compare_existingNames(uniq_cust, customers, token);
+                *pos = compare_existingNames(unique_customers, customers, token);
                 *name = token;
                 current_step++;
                 break;
@@ -151,15 +151,15 @@ char* parse_customerLine(char *buffer, const Customer *customers, const int uniq
 }
 
 // Find and return name position if it exists, else return the row_count
-int compare_existingNames(const int uniq_cust, const Customer *customers, const char *token)
+int compare_existingNames(const int unique_customers, const Customer *customers, const char *token)
 {
-    for (int i = 0; i < uniq_cust; i++)
+    for (int i = 0; i < unique_customers; i++)
     {
         if (compare_caseInsensitive(customers[i].name, token)) {
             return i; // Found!
         }
     }
-    return uniq_cust;
+    return unique_customers;
 }
 
 // 

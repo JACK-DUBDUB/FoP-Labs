@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include "a2_create.h"
 
 // ============ CREATE ============
@@ -32,7 +31,6 @@ int create_customerDataOut(FILE *outfile, const Customer *customers, const Curre
         if (customers[i].name == NULL) {
              break;
         }
-           
         for (int j = 0; j < MAX_CURRENCY_TYPES; j++)
         {
             if (!customers[i].change_values[j]) {
@@ -45,11 +43,11 @@ int create_customerDataOut(FILE *outfile, const Customer *customers, const Curre
 
                 if (k + 1 == MAX_COIN_VARIANTS){
                     fprintf(outfile, "%i\n", customers[i].coins_ptr[j][k]);
-                } else {
+                } 
+                else {
                     fprintf(outfile, "%i,", customers[i].coins_ptr[j][k]);
                 }
             }
-
             rows_printed++;
         }
     }
