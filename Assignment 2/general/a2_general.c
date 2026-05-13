@@ -5,50 +5,51 @@
 #include <string.h>
 
 
-
-// ---- get user input functions ----
 int read_intInRange(const int min, const int max) 
 {
-    int input = -1;
+    int input;
     do 
     {
-        printf("\nEnter a valid integer value: ");
-        scanf_s("%i", &input);
-        input = filter_intInRange(input, min, max);
+        input = 0;
 
-    } while (input == -1);
+        printf("\nEnter a valid integer value: ");
+
+        input = filter_intInRange(input, min, max, scanf_s("%i", &input));
+
+    } while (!input);
+
     return input;
 }
 
-int filter_intInRange(const int input, const int min, const int max)
+int filter_intInRange(const int input, const int min, const int max, const int valid)
 {
-    if (input == READ_INT_ERROR ) {
+    if (!valid) {
         printf("\nUser did not enter an integer value.\n");
         program_clearInputBuffer();
-        return READ_INT_ERROR ;
+        return 0;
     }
 
-    if (input == READ_INT_ERROR  && getchar() != '\n') {
+    if (valid  && getchar() != '\n') {
         printf("\nUser entered an integer value with a non-integer value.\n");
         program_clearInputBuffer();
-        return READ_INT_ERROR;
+        return 0;
     }
 
     if (input < min || input > max) {
         printf("\nUser entered a value outside of range.\n" );
-        return READ_INT_ERROR;
+        return 0;
     }
 
     return input;
 }
+
+// ---- Read String ---- 
 
 void read_string(char *buffer, const int size)
 {
     if (size <= 0){
         return;
     }
-    
-    program_clearInputBuffer();
 
     // Empty string check
     if (fgets(buffer, size, stdin) == NULL) { 
@@ -60,41 +61,51 @@ void read_string(char *buffer, const int size)
     // If the chars inserted don't reach buffer limit
     if(length < size && buffer[length - 1] == '\n') {
         buffer[length - 1] = '\0'; // Replace '\n'
-    } else {
-        // Probably exceeded buffer limit so clear all
+    } 
+    else {  // Exceeded buffer limit
         program_clearInputBuffer();
     }
     return;
 }
 
 
-// Assumption -> what if names are same but not same case
-bool compare_caseInsensitive(const char *string1, const char *string2)
+// Assumption -> what if string is the same, but not same case
+int compare_caseInsensitive(const char *string1, const char *string2)
 {
-    // Filter
     if ((string1 == NULL || string2 == NULL) || (strlen(string1) != strlen(string2))) {
-         return false;
+         return 0;
     }
-       
-    // Compare each val
+
     while (*string1 && *string2)
     {
-        if (toupper(*string1) != toupper(*string2)) 
-            return false;
-
+        if (toupper(*string1) != toupper(*string2)) {
+             return 0;
+        }
         string1++, string2++;
     }
-    return true;
+    return 1;
 }
 
 int calculate_intDiv(const int dividend, const int divisor)
 {
-    int quotient = dividend / divisor;
-    return quotient;
+    if (divisor) {
+        int quotient = dividend / divisor;
+        return quotient;
+    }
+    else {
+        printf("Cannot divide by 0\n");
+        return 0;
+    }
 }
 
 int calculate_intMod(const int dividend, const int divisor)
 {
-    int remainder = dividend % divisor;
-    return remainder; 
+    if (divisor) {
+        int remainder = dividend % divisor;
+        return remainder;
+    }
+    else {
+        printf("Cannot modulus by 0\n");
+        return 0;
+    }
 }

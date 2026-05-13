@@ -8,7 +8,7 @@
 
 // ============ READ ============
 
-int read_handleCustomerDataIn(const char *file_name, Customer *customer_data, const enum READ_OPTIONS option)
+int read_handleDataIn(const char *file_name, Customer *customer_data, const enum READ_OPTIONS option)
 {
     FILE *source_file;
     int error_code = fopen_s(&source_file, file_name, "r");
@@ -21,8 +21,8 @@ int read_handleCustomerDataIn(const char *file_name, Customer *customer_data, co
     int out_value = 0;
     switch (option)
     {
-        case R_FIRST_ROW: 
-            out_value = read_expectedLines(source_file);
+        case R_FIRST_LINE: 
+            out_value = read_firstLine(source_file);
             break;
         case R_LINE_COUNT:
             out_value = read_lineCount(source_file);
@@ -38,11 +38,10 @@ int read_handleCustomerDataIn(const char *file_name, Customer *customer_data, co
 }
 
 //  Return the first row value if it's an integer
-int read_expectedLines(FILE *source_file)
+int read_firstLine(FILE *source_file)
 {
     char line_buffer[MAX_BUFFER_LENGTH];
     int lines = 0;
-
     if(fgets(line_buffer, MAX_BUFFER_LENGTH, source_file)) {
         if(sscanf_s(line_buffer, "%i", &lines) && lines > 0) {
             return lines;
@@ -67,10 +66,13 @@ int read_customerData(FILE *source_file, Customer *customer_data)
     char line_buffer[MAX_BUFFER_LENGTH];
     int current_row = 0;
     int unique_customers = 0;
+    int error_count = 0;
+
+    printf("---- Reading Customer Data File ----\n\n");
 
     while ((fgets(line_buffer, MAX_BUFFER_LENGTH, source_file) != NULL))
     {
-        if(!current_row) {
+        if(!current_row) { // Skip first line
             current_row++;
             continue;
         }
@@ -88,6 +90,7 @@ int read_customerData(FILE *source_file, Customer *customer_data)
         if(!filter_customerValues(current_token, _name,customer_data[_pos].change_values[_code] ,_change, _code)) {
             printf("Line: %i\n", current_row);
             printf("Rejected entry\n\n");
+            error_count++;
             continue;
         }
         
@@ -160,52 +163,51 @@ int compare_existingNames(const int uniq_cust, const Customer *customers, const 
 }
 
 // 
-int compare_currencyCode(const char *code)
+int compare_currencyCode(const char *token)
 {
     // Where: -1 = INVALID, 0 = $USD, 1 = $AUD, 2 = $EUR
-    if (compare_caseInsensitive(code, USD_S)) {
+    if (compare_caseInsensitive(token, USD_S)) {
         return USD_ID;
     }
-    if (compare_caseInsensitive(code, AUD_S)) {
+    if (compare_caseInsensitive(token, AUD_S)) {
         return AUD_ID;
     }
-    if (compare_caseInsensitive(code, EUR_S)) {
+    if (compare_caseInsensitive(token, EUR_S)) {
         return EUR_ID;
-    }   
+    }
     return -1;
 }
 
 // Parsed data must go through further filtering
-bool filter_customerValues(const char *token, const char *name, const int cust_change, const int change, const int code)
+int filter_customerValues(const char *token, const char *name, const int cust_change, const int change, const int code)
 {
     if (name == NULL) {
         printf("ERROR - Line missing single word string for name \n"); 
-        return false;
+        return 0;
     }
     if (change == -1) { // -1 = error
         printf("ERROR - Could not parse string '%s' as integer\n",token);
-        return false;
+        return 0;
     }
     if (change < MIN_CHANGE_LIMIT) {
         printf("ERROR - Change value is less than %i.\n", MIN_CHANGE_LIMIT);
-        return false;
+        return 0;
     }
     if (code < 0) { // -1 = error
         printf("ERROR - Unrecognised currency code: %s\n", token);
-        return false;
+        return 0;
     }
     if (change > MAX_CHANGE_LIMIT) {
         printf("ERROR - Change value '%i' exceeds %i.\n",  change, MAX_CHANGE_LIMIT); 
-        return false;
+        return 0;
     }
     if (cust_change + change > MAX_CHANGE_LIMIT) {
         printf("ERROR - Change value '%i' + '%i' exceeds %i.\n", cust_change, change, MAX_CHANGE_LIMIT); 
-        return false;
+        return 0;
     }
-    return true;
+    return 1;
 }
 
-// *** Tricky!!! ***
 // Pointer passing for a single struct
 // Need to use -> to access the specific pointer otherwise i'll be editing a copy which is not what i want
 void insert_customerValues(Customer *customer, const char *name, const int change, const int code)

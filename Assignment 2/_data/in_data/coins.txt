@@ -1,7 +1,7 @@
 24
 Alpha 25 cents in $AUD
 Alpha 55 cents in $AUD
-Alpha 6 cents in $AUD
+Alpha 5 cents in $AUD
 Alpha 10 cents in $USD
 Alpha 15 cents in $USD
 Alpha 32 cents in $EUR
@@ -19,7 +19,7 @@ Juliette 5 cents in $AUD
 Juliette 10 cents in $AUD
 Kilo 7 cents in $AUD
 Kilo 3 cents in $AUD
-Lima 11 cents in $AUD
+Lima 10 cents in $AUD
 Whiskey 90 cents in $AUD
 Tango 69 cents in $USD
 Yankee 95 cents in $AUD

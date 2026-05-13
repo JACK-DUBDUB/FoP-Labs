@@ -4,7 +4,7 @@
 
 // ============ CREATE ============
 
-int create_handleCustomerDataOut(const Customer *customers, const Currency *currencies, const char *file_name, const int rows)
+int create_handleDataOut(const Customer *customers, const Currency *currencies, const char *file_name, const int rows)
 {
     FILE *outfile;
     int out_value = 0, error_code = 0;
@@ -25,7 +25,7 @@ int create_handleCustomerDataOut(const Customer *customers, const Currency *curr
 
 int create_customerDataOut(FILE *outfile, const Customer *customers, const Currency *currencies, const int rows)
 {
-    // Example print: "'name', the change for 'X' cents in '$XYZ' is 'a,b,c,d'\n"
+    // Example print: "'name', the change for 'x' cents in '$XYZ' is 'a,b,c,d'\n"
     int rows_printed = 0;
     for (int i = 0; i < rows; i++)
     {
@@ -49,6 +49,7 @@ int create_customerDataOut(FILE *outfile, const Customer *customers, const Curre
                     fprintf(outfile, "%i,", customers[i].coins_ptr[j][k]);
                 }
             }
+
             rows_printed++;
         }
     }

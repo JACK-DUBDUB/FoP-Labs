@@ -3,8 +3,8 @@
 
 // ======= ENUMS ========
 
-enum PROGRAM_STATUS { CONTINUE, QUIT };
-enum ERROR_MESSAGES 
+enum PROGRAM_STATUS {CONTINUE, QUIT};
+enum PROGRAM_ERROR_MESSAGES 
 {
     // Program
     ERR_PRGM_NO_ARG     = 0, // No arguments
@@ -20,7 +20,7 @@ enum ERROR_MESSAGES
 };
 
 // File strings
-#define DEFAULT_IN_FILE     "./_data/in_data/coins_g.txt"
+#define DEFAULT_IN_FILE     "./_data/in_data/coins.txt"
 #define DEFAULT_OUT_FILE    "./_data/out_data/change.csv"
 
 
@@ -31,18 +31,14 @@ enum ERROR_MESSAGES
 // Checks if the user included any args when they launched program
 void program_handleArgs(const int arg_count, const char *arg_values[], char **infile, char **outfile);
 
-// Post file process value is checked if(val < 1), errors indicate what can go wrong for each read/write process
-// If number calls displayErrors()
-bool program_fileProcessResult(const int value, const char *file_name, const int error1, const int error2);
+// Post file process value is checked if(val < 1), errors indicate what can go wrong for each read/write process, selects which error to display (if any)
+int program_fileIOResult(const int value, const char *file_name, const int error1, const int error2);
 
 // Displays the exact error of what went wrong
-void program_displayErrors(const enum ERROR_MESSAGES error, const char *file_name);
+void program_pipelineErrors(const enum PROGRAM_ERROR_MESSAGES error, const char *file_name);
 
 // Displays all the program values received from each major process of the program
 void program_displayPipelineValues(const int expected_l, const int counted_l, const int uniq_c, const int valid_c, const int printed_c);
-
-
-// ---- Helpers ---- //
 
 // Clears the input buffer
 void program_clearInputBuffer(void);
