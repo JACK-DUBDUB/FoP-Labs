@@ -1,7 +1,7 @@
 #ifndef A2_CURRENCY_H
 #define A2_CURRENCY_H
 
-enum CURRENCY_TYPES {USD_ID = 0, AUD_ID = 1, EUR_ID = 2};
+enum CURRENCY_TYPES {USD_ID, AUD_ID, EUR_ID};
 
 // ---- Currency Values ----
 #define MAX_CURRENCY_TYPES  3   // USD, AUD, EUR
@@ -22,7 +22,7 @@ typedef struct
 } Currency;
 
 
-// ---- Declare currency types ----
+// ---- Declared Currencies ----
 extern const Currency USD_DATA;
 extern const Currency AUD_DATA;
 extern const Currency EUR_DATA;
@@ -30,7 +30,5 @@ extern const Currency EUR_DATA;
 // NOTES:
 // The last array in a struct can be flexible
 // But its a bitch to sort that out as i won't know the exact size without memory use
-//
-
 
 #endif /* A2_CURRENCY_H */

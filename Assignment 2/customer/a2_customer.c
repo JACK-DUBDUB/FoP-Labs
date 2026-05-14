@@ -1,7 +1,5 @@
-#include "a2_customer.h"
-#include "../general/a2_general.h"
+
 #include "../program/a2_program.h"
-#include <stdio.h>
 
 void customer_initPointers(Customer *customers, const int rows)
 {
@@ -16,7 +14,7 @@ void customer_initPointers(Customer *customers, const int rows)
 
 void customer_filterData(Customer *customers, const int rows)
 {
-    printf("---- Filtering Customer values ----\n\n");
+    printf("---- Filtering Customer Values ----\n\n");
     int customers_removed = 0;
     for (int i = 0; i < rows; i++)
     {
@@ -28,7 +26,7 @@ void customer_filterData(Customer *customers, const int rows)
             customers[i].change_values[AUD_ID] = 0;
         }
 
-        // If customer has any change, then check next customer 
+        // If customer has any change -> go to next customer 
         if (customers[i].change_values[USD_ID] || customers[i].change_values[AUD_ID] || customers[i].change_values[EUR_ID]) 
         {
             continue;
@@ -44,18 +42,21 @@ void customer_filterData(Customer *customers, const int rows)
         }
     }
 
+    // Feedback 
     if (customers_removed) 
     {
         printf("Total customers removed: %i\n\n", customers_removed);
     }
     else 
     {
-        printf("All customers valid: %i\n\n", customers_removed);
+        printf("All customers valid \n\n");
     }
 }
 
-void customer_sortNull(Customer *customers, const int rows)
+int customer_sortNull(Customer *customers, const int rows)
 {
+    int customer_count = 0;
+
     // Swap invalid customers (left), with valid customers (right)
     for (int i = 0; i < rows; i++) 
     {  
@@ -79,8 +80,15 @@ void customer_sortNull(Customer *customers, const int rows)
             customers[j] =  _temp;
             break;
         }
+
+        // Didn't swap with a valid customer?
+        if (customers[i].name == NULL)
+        {
+            customer_count = i;
+            break;
+        }
     }
-    return;
+    return customer_count;
 }
 
 void customer_handleInsertCoins(Customer *customers, const Currency *currencies, const int rows)
@@ -113,19 +121,7 @@ void customer_insertCoins(const int customer_change, int customer_coins[], const
     return;
 }
 
-int customer_count(Customer *customers, const int rows)
-{
-    int count = 0;
-    for (int i = 0; i < rows; i++)
-    {
-        if(customers[i].name != NULL)
-        {
-            count++;
-        }
-    }
-    //printf("Total customers after filter: %i\n\n", count);
-    return count;
-}
+// ---- MENU ----
 
 void customer_handleMenu(const Customer *customers, const Currency *currencies, const int rows)
 {
@@ -246,6 +242,7 @@ void customer_displayData(const Customer customer, const Currency *currencies)
     return;
 }
 
+// ---- MEMORY ----
 
 void customer_freeMemory(Customer *customer_data, const int table_rows)
 {

@@ -1,8 +1,7 @@
-#include <stdbool.h>
-
 #ifndef A2_GENERAL_H
 #define A2_GENERAL_H
 
+// ======== General Functions ========
 
 // Reads an integer input from stdin
 int read_intInRange(const int min, const int max);
@@ -19,6 +18,5 @@ int compare_caseInsensitive(const char *string1, const char *string2);
 // Int Arithmetic
 int calculate_intDiv(const int dividend, const int divisor);
 int calculate_intMod(const int dividend, const int divisor);
-
 
 #endif

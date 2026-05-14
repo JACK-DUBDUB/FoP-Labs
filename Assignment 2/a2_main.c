@@ -1,6 +1,3 @@
-#include "customer/a2_customer.h"
-#include "currency/a2_currency.h"
-#include "general/a2_general.h"
 #include "program/a2_program.h"
 #include "crud/a2_create.h"
 #include "crud/a2_read.h"
@@ -11,7 +8,8 @@
 * ID:       32712899
 * DATE:     09/05/2026 - 13/05/2026
 
- ========= About Program ========
+========= About Program ========
+* OS: Windows 
 * CLI program
 * Program expects the user to include argument values {program name} {file in} {file out}
 *       - If user does not include a {file in} and/or {file out} 
@@ -71,9 +69,9 @@ Bravo, the change for 85 cents in $EUR is 1,1,1,1   // Coins: 20, 10,  5, 1
 *   gcc .\a2_main.c .\program\a2_program.c .\general\a2_general.c .\customer\a2_customer.c .\currency\a2_currency.c .\crud\a2_create.c .\crud\a2_read.c -o a2.exe
 * 
 * Run:
-*   .\a2.exe
-*   .\a2.exe .\_data\in_data\coins_g.txt .\_data\out_data\change.csv
-*   .\a2.exe .\_data\in_data\coins_b.txt .\_data\out_data\change.csv
+*   .\a2.exe                                                         // Default: Good data set
+*   .\a2.exe .\_data\in_data\coins_g.txt .\_data\out_data\change.csv // Good data set
+*   .\a2.exe .\_data\in_data\coins_b.txt .\_data\out_data\change.csv // Bad data set
 * 
 */
 
@@ -83,9 +81,11 @@ int program_pipeline(const int argc, const char *argv[])
     Customer *customer_data;
     char *infile = NULL, *outfile = NULL;
 
+
     // Check user argument count first - if one or more values are missing, use defaults
     program_handleArgs(argc, argv, &infile, &outfile);
-        
+    
+
     // We assume that we can read the file, read first line as an integer value
     const int expected_lines = read_handleDataIn(infile, NULL, R_FIRST_LINE);
     if (!program_fileIOResult(expected_lines, infile, ERR_FILE_BAD_READ, ERR_FILE_BAD_FIRST)) 
@@ -93,6 +93,7 @@ int program_pipeline(const int argc, const char *argv[])
         program_pauseStatus(QUIT);
         return 1;
     }
+
 
     // We assume that the expected entry value may be wrong so we count the actual number of lines
     const int line_count = read_handleDataIn(infile, NULL, R_LINE_COUNT);
@@ -102,9 +103,11 @@ int program_pipeline(const int argc, const char *argv[])
         return 2;
     }
 
+
     // Allocate memory for customers then initialize pointer array for each customer
     customer_data = (Customer*) calloc(line_count, sizeof(Customer));
     customer_initPointers(customer_data, line_count);
+
 
     // Read customer data values from file
     const int unique_customers = read_handleDataIn(infile, customer_data, R_CUST_DATA);
@@ -120,28 +123,35 @@ int program_pipeline(const int argc, const char *argv[])
     // Filter customers with illegitimate values
     customer_filterData(customer_data, line_count);
 
-    // Filter customers with null values (shifting all null customers to the right)
-    customer_sortNull(customer_data, line_count);
+    // Sort the customers, returning the number of non-null customers
+    const int valid_customers = customer_sortNull(customer_data, line_count);
 
-    // Count number of valid customers after sorting
-    const int valid_customers = customer_count(customer_data, line_count);
 
     // Insert coins based on customer's currency values
     customer_handleInsertCoins(customer_data, currency_data, valid_customers);
     program_pauseStatus(CONTINUE);
 
+
     // Prompt customer menu -> [1]search, [2]display names, [3]display all, [4]quit
     customer_handleMenu(customer_data, currency_data, valid_customers);
 
+
     // Write valid customers to file
     const int printed_customers = create_handleDataOut(customer_data, currency_data, outfile, line_count);
-    program_fileIOResult(line_count, infile, ERR_FILE_BAD_CREATE, ERR_FILE_NO_WRITE);
+    if(!program_fileIOResult(printed_customers, infile, ERR_FILE_BAD_CREATE, ERR_FILE_NO_WRITE))
+    {
+        customer_freeMemory(customer_data,  line_count);
+        program_pauseStatus(QUIT);
+        return 4;
+    }
 
     // Free customers
     customer_freeMemory(customer_data,  line_count);
 
+
     // Display pipeline results:
     program_displayPipelineValues(expected_lines, line_count, unique_customers, valid_customers, printed_customers);
+
 
     // Press enter to quit (getchar())
     program_pauseStatus(QUIT);

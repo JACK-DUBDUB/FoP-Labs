@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <sys/types.h>
 #include "a2_create.h"
 
 // ============ CREATE ============
@@ -34,7 +32,7 @@ int create_customerDataOut(FILE *outfile, const Customer *customers, const Curre
         {
              break;
         }
-        
+
         for (int j = 0; j < MAX_CURRENCY_TYPES; j++)
         {
             if (customers[i].change_values[j]) 
@@ -43,13 +41,13 @@ int create_customerDataOut(FILE *outfile, const Customer *customers, const Curre
                     customers[i].name, 
                     customers[i].change_values[j], 
                     currencies[j].code, 
-                    customers[i].coins_ptr[j][0], // coin 0 -> coin 4
+                    // Coin amount
+                    customers[i].coins_ptr[j][0],
                     customers[i].coins_ptr[j][1],
                     customers[i].coins_ptr[j][2],
                     customers[i].coins_ptr[j][3]
                 );
 
-                // Increment rows printed
                 rows_printed++;
             }
         }

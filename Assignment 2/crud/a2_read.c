@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
 #include "a2_read.h"
-#include "../general/a2_general.h"
-
-
+#include <ctype.h>
 
 // ============ READ ============
 
@@ -102,6 +97,7 @@ int read_customerData(FILE *source_file, Customer *customers)
             continue;
         }
         
+
         // Insert successfully parsed customer data, useful function -> atoi(); = ASCII to int
         insert_customerValues(&customers[t_pos], t_name, atoi(t_change), compare_currencyCode(t_code)); 
 
@@ -129,6 +125,7 @@ int extract_customerTokens(char *buffer, char **t_name, char **t_code, char **t_
     {
         if(isalpha(*token1) && !*t_name) // ALWAYS use first string as name IF first leter is alphabetical
         {
+            *token1 = toupper(*token1);
             *t_name = token1;
             field_count++;
         }
@@ -160,7 +157,7 @@ int compare_existingNames(const int unique_customers, const Customer *customers,
     return unique_customers;
 }
 
-// 
+// Return the currency code ID
 int compare_currencyCode(const char *token)
 {
     // Where: -1 = INVALID, 0 = $USD, 1 = $AUD, 2 = $EUR
@@ -229,7 +226,7 @@ int filter_customerValues(const Customer customer, const char *t_name,  const ch
 }
 
 // Pointer passing for a single struct
-// Need to use -> to access the specific pointer otherwise i'll be editing a copy which is not what i want
+// Need to use -> to access the specific pointer, OTHERWISE i'll be editing a copy which is not what i want!!!
 void insert_customerValues(Customer *customer, const char *name, const int change, const int code)
 {
     int _size = strlen(name) + 1;                                        // Make calculation once

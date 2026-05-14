@@ -1,9 +1,7 @@
 #include "../program/a2_program.h"
-#include "../customer/a2_customer.h"
 
 #ifndef A2_READ_H
 #define A2_READ_H
-
 
 
 enum READ_OPTIONS {R_FIRST_LINE, R_LINE_COUNT, R_CUST_DATA};

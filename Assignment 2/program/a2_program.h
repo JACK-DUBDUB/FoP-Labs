@@ -1,5 +1,10 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include "../customer/a2_customer.h"
 #include "../currency/a2_currency.h"
+#include "../general/a2_general.h"
 
 #ifndef A2_PROGRAM_H
 #define A2_PROGRAM_H
@@ -27,9 +32,7 @@ enum PROGRAM_ERROR_MESSAGES
 #define DEFAULT_OUT_FILE    "./_data/out_data/change.csv"
 
 
-// ======== FUNCTIONS ======== //
-
-// ---- Program flow ---- //
+// ======== PROGRAM FLOW FUNCTIONS ======== //
 
 // Checks if the user included any args when they launched program
 void program_handleArgs(const int arg_count, const char *arg_values[], char **infile, char **outfile);
@@ -42,6 +45,8 @@ void program_pipelineErrors(const enum PROGRAM_ERROR_MESSAGES error, const char 
 
 // Displays all the program values received from each major process of the program
 void program_displayPipelineValues(const int expected_l, const int counted_l, const int uniq_c, const int valid_c, const int printed_c);
+
+// ---- FLOW CONTROL ----
 
 // Clears the input buffer
 void program_clearInputBuffer(void);

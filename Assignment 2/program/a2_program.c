@@ -1,7 +1,4 @@
-#include <stdio.h>
 #include "../program/a2_program.h"
-#include "../general/a2_general.h"
-#include "../crud/a2_read.h"
 
 void program_handleArgs(const int arg_count, const char *arg_values[], char **infile, char **outfile)
 {   
@@ -91,6 +88,8 @@ void program_displayPipelineValues(const int expected_l, const int counted_l, co
     printf("Printed entries: \t%i\n", printed_c);
     return;
 }
+
+// ---- FLOW CONTROL ----
 
 void program_clearInputBuffer()
 {

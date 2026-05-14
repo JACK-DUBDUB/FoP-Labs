@@ -1,9 +1,6 @@
-#include <ctype.h>
-#include "a2_general.h"
 #include "../program/a2_program.h"
-#include <stdio.h>
-#include <string.h>
 
+// ---- READ INT ----
 
 int read_intInRange(const int min, const int max) 
 {
@@ -46,7 +43,7 @@ int filter_intInRange(const int input, const int min, const int max, const int v
     return input;
 }
 
-// ---- Read String ---- 
+// ---- READ STRING ---- 
 
 void read_string(char *buffer, const int size)
 {
@@ -75,8 +72,8 @@ void read_string(char *buffer, const int size)
     return;
 }
 
+// ---- CASE INSENSITIVE COMPARISON ----
 
-// Assumption -> what if string is the same, but not same case
 int compare_caseInsensitive(const char *string1, const char *string2)
 {
     if ((string1 == NULL || string2 == NULL) || (strlen(string1) != strlen(string2))) 
@@ -94,6 +91,8 @@ int compare_caseInsensitive(const char *string1, const char *string2)
     }
     return 1;
 }
+
+// ---- ARITHMETIC ----
 
 int calculate_intDiv(const int dividend, const int divisor)
 {

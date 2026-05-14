@@ -1,6 +1,5 @@
 #include "a2_currency.h"
 
-// Known currency types
 const Currency USD_DATA = 
 {
     .code = USD_S,
