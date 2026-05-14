@@ -1,3 +1,6 @@
+#include "../customer/a2_customer.h"
+#include "../currency/a2_currency.h"
+
 #ifndef A2_PROGRAM_H
 #define A2_PROGRAM_H
 

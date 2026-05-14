@@ -1,23 +1,26 @@
 #include <stdio.h>
 #include "../program/a2_program.h"
 #include "../general/a2_general.h"
-
+#include "../crud/a2_read.h"
 
 void program_handleArgs(const int arg_count, const char *arg_values[], char **infile, char **outfile)
 {   
-    if (arg_count <= 1) {
+    if (arg_count <= 1) 
+    {
         program_pipelineErrors(ERR_PRGM_NO_ARG, NULL);
         *infile = DEFAULT_IN_FILE;
         *outfile = DEFAULT_OUT_FILE;
         return;
     }
-    else if (arg_count == 2) {
+    else if (arg_count == 2) 
+    {
         program_pipelineErrors(ERR_PRGM_NO_OUT, NULL);
         *infile = (char*)arg_values[1];
         *outfile = DEFAULT_OUT_FILE;
         return;
     }
-    else if (arg_count > 3) {
+    else if (arg_count > 3) 
+    {
         program_pipelineErrors(ERR_PRGM_MANY_ARG, NULL);
     }
 
@@ -46,17 +49,34 @@ void program_pipelineErrors(const enum PROGRAM_ERROR_MESSAGES error, const char 
     switch (error) 
     {   
         // -- Program args --
-        case ERR_PRGM_NO_ARG:       printf("\nPROGRAM ERROR - Missing two argument values\n\n-> Using default input/output files: '%s', '%s'\n\n", DEFAULT_IN_FILE, DEFAULT_OUT_FILE); break;
-        case ERR_PRGM_NO_OUT:       printf("\nPROGRAM ERROR - Missing argument output value\n\n-> Using default output file: '%s' \n\n", DEFAULT_OUT_FILE); break;
-        case ERR_PRGM_MANY_ARG:     printf("\nERROR - Provided too many arguments\n-> Using first two arguments provided\n\n"); break;
+        case ERR_PRGM_NO_ARG:       
+            printf("\nPROGRAM ERROR - Missing two argument values\n\n-> Using default input/output files: '%s', '%s'\n\n", DEFAULT_IN_FILE, DEFAULT_OUT_FILE); 
+            break;
+        case ERR_PRGM_NO_OUT:       
+            printf("\nPROGRAM ERROR - Missing argument output value\n\n-> Using default output file: '%s' \n\n", DEFAULT_OUT_FILE); 
+            break;
+        case ERR_PRGM_MANY_ARG:     
+            printf("\nERROR - Provided too many arguments\n-> Using first two arguments provided\n\n"); 
+            break;
         // -- Read file --
-        case ERR_FILE_BAD_READ:     printf("\nPROGRAM ERROR - Failed to open file '%s' in 'r' mode\n\n", file_name); break;
-        case ERR_FILE_BAD_FIRST:    printf("\nPROGRAM ERROR - First row value of file '%s'could not be read as a valid positive integer \n\n", file_name); break;
-        case ERR_FILE_NO_READ:      printf("\nPROGRAM ERROR - Could not parse any lines of file '%s' in 'r' mode \n\n", file_name); break;
+        case ERR_FILE_BAD_READ:     
+            printf("\nPROGRAM ERROR - Failed to open file '%s' in 'r' mode\n\n", file_name); 
+            break;
+        case ERR_FILE_BAD_FIRST:    
+            printf("\nPROGRAM ERROR - First row value of file '%s'could not be read as a valid positive integer \n\n", file_name); 
+            break;
+        case ERR_FILE_NO_READ:      
+            printf("\nPROGRAM ERROR - Could not parse any lines of file '%s' in 'r' mode \n\n", file_name); 
+            break;
         // -- Create file --
-        case ERR_FILE_BAD_CREATE:   printf("\nPROGRAM ERROR - Failed to create file '%s' in 'w' mode. \nFile may still be open and/or missing permissions.\n\n", file_name); break;
-        case ERR_FILE_NO_WRITE:     printf("\nPROGRAM ERROR - Program did not write any lines to output file '%s' \n\n", file_name); break;
-        default: break;
+        case ERR_FILE_BAD_CREATE:   
+            printf("\nPROGRAM ERROR - Failed to create file '%s' in 'w' mode. \nFile may still be open and/or missing permissions.\n\n", file_name); 
+            break;
+        case ERR_FILE_NO_WRITE:     
+            printf("\nPROGRAM ERROR - Program did not write any lines to output file '%s' \n\n", file_name); 
+            break;
+        default: 
+            break;
     }
     return;
 }
@@ -84,8 +104,12 @@ void program_pauseStatus(const enum PROGRAM_STATUS status)
     char *prompt;
     switch (status) 
     {
-        case CONTINUE: prompt = "continue"; break; 
-        case QUIT: prompt = "quit"; break;
+        case CONTINUE:
+            prompt = "continue"; 
+            break; 
+        case QUIT: 
+            prompt = "quit"; 
+            break;
     }
     printf("\nPress enter to %s program...", prompt);
     getchar();

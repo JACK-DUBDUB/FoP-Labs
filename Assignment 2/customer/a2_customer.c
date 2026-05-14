@@ -21,32 +21,37 @@ void customer_filterData(Customer *customers, const int rows)
     for (int i = 0; i < rows; i++)
     {
         // Invalidate AUD change value indivisible by 5
-        if (customers[i].change_values[AUD_ID] % MIN_AUD_LIMIT) {
+        if (customers[i].change_values[AUD_ID] % MIN_AUD_LIMIT) 
+        {
             printf("Customer: %s\n", customers[i].name);
             printf("Invalid AUD value: %i is not divisible by %i\n\n",customers[i].change_values[AUD_ID], MIN_AUD_LIMIT);
             customers[i].change_values[AUD_ID] = 0;
         }
+
         // If customer has any change, then check next customer 
-        if (customers[i].change_values[USD_ID] || customers[i].change_values[AUD_ID] || customers[i].change_values[EUR_ID]) {
+        if (customers[i].change_values[USD_ID] || customers[i].change_values[AUD_ID] || customers[i].change_values[EUR_ID]) 
+        {
             continue;
         }
+
         // Customer has no change values -> set name to NULL, thus invalidating the customer
-        if(customers[i].name != NULL) {
-            printf("Removing: %s\n", customers[i].name);
-            printf("Reason: No change values\n\n");
+        if(customers[i].name != NULL) 
+        {
+            printf("REMOVED CUSTOMER: %s\n", customers[i].name);
+            printf("Reason: No valid change values\n\n");
             customers[i].name = NULL;
             customers_removed++;
         }
     }
 
-    if (customers_removed) {
+    if (customers_removed) 
+    {
         printf("Total customers removed: %i\n\n", customers_removed);
     }
-    else {
+    else 
+    {
         printf("All customers valid: %i\n\n", customers_removed);
     }
-
-    program_pauseStatus(CONTINUE);
 }
 
 void customer_sortNull(Customer *customers, const int rows)
@@ -54,7 +59,8 @@ void customer_sortNull(Customer *customers, const int rows)
     // Swap invalid customers (left), with valid customers (right)
     for (int i = 0; i < rows; i++) 
     {  
-        if(customers[i].name != NULL){
+        if(customers[i].name != NULL)
+        {
             continue;
         }
 
@@ -62,7 +68,8 @@ void customer_sortNull(Customer *customers, const int rows)
         for (int j = i + 1; j < rows; j++)
         {
             // A customer with no name is NULL/empty
-            if (customers[j].name == NULL) {
+            if (customers[j].name == NULL) 
+            {
                 continue;
             }
 
@@ -82,9 +89,11 @@ void customer_handleInsertCoins(Customer *customers, const Currency *currencies,
     {
         for (int j = 0; j < MAX_CURRENCY_TYPES; j++)
         {
-            if (!customers[i].change_values[j])
+            if (!customers[i].change_values[j]) 
+            {
                 continue;
-
+            }
+                
             customer_insertCoins(customers[i].change_values[j], customers[i].coins_ptr[j], currencies[j]);
         }
     }
@@ -109,7 +118,8 @@ int customer_count(Customer *customers, const int rows)
     int count = 0;
     for (int i = 0; i < rows; i++)
     {
-        if(customers[i].name != NULL){
+        if(customers[i].name != NULL)
+        {
             count++;
         }
     }
@@ -120,13 +130,11 @@ int customer_count(Customer *customers, const int rows)
 void customer_handleMenu(const Customer *customers, const Currency *currencies, const int rows)
 {
     int selection;
-    do {
-
+    do 
+    {
         customer_displayMenu();
 
         selection = read_intInRange(C_SEARCH, C_QUIT);
-        
-        //program_clearInputBuffer();
 
         switch (selection) 
         {
@@ -145,10 +153,10 @@ void customer_handleMenu(const Customer *customers, const Currency *currencies, 
             case C_QUIT:
                 return;
             default:
-                break;
+                continue;
         }
-        program_pauseStatus(CONTINUE);
 
+        program_pauseStatus(CONTINUE);
     } while(selection != C_QUIT);
     return;
 }
@@ -165,18 +173,21 @@ void customer_displayMenu()
 
 int customer_nameSearch(const Customer *customers, const Currency *currencies, const int rows, const int selection)
 {
-    char search[MAX_SEARCH_BUFFER];
-
+    printf("\n---- Customer Name Search ----\n");
     printf("\nPlease enter a name: ");
+
+    char search[MAX_SEARCH_BUFFER];
     read_string(search, sizeof(search));
 
     int index = customer_handleDisplayOptions(customers, currencies, rows, search, selection);
 
-    if (index >= 0){
+    if (index >= 0)
+    {
         customer_displayData(customers[index], currencies);
         return 1;
     }
-    else {
+    else 
+    {
         printf("Name: %s\nNot found\n", search);
         return 0;
     }
@@ -190,7 +201,8 @@ int customer_handleDisplayOptions(const Customer *customers, const Currency *cur
         switch (option) 
         {
             case C_SEARCH:
-                if (!compare_caseInsensitive(customers[i].name, search)) {
+                if (!compare_caseInsensitive(customers[i].name, search)) 
+                {
                     break;
                 }
                 return i;
@@ -215,7 +227,8 @@ void customer_displayData(const Customer customer, const Currency *currencies)
 
     for (int i = 0; i < MAX_CURRENCY_TYPES; i++)
     {   
-        if(!customer.change_values[i]){
+        if(!customer.change_values[i])
+        {
             continue;
         }
 
@@ -223,7 +236,8 @@ void customer_displayData(const Customer customer, const Currency *currencies)
 
         for (int j = 0; j < MAX_COIN_VARIANTS; j++)
         {
-            if(customer.coins_ptr[i][j]) {
+            if(customer.coins_ptr[i][j])
+            {
                 printf("Cents %i: \t%i\n", currencies[i].coins[j], customer.coins_ptr[i][j]);
             }
         }
@@ -235,12 +249,16 @@ void customer_displayData(const Customer customer, const Currency *currencies)
 
 void customer_freeMemory(Customer *customer_data, const int table_rows)
 {
-    if (!customer_data) return;
+    if (!customer_data) // Empty? -> Return
+    {
+        return;
+    }
 
     for (int i = 0; i < table_rows; i++)
+    {
         free(customer_data[i].name);
+    } 
 
     free(customer_data); 
-
     return;
 }

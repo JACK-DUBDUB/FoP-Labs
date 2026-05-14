@@ -27,16 +27,16 @@ int read_lineCount(FILE *source_file);
 int read_customerData(FILE *source_file, Customer *customer_data);
 
 // Reads the buffer line of the file being read, parse the customer data, returns the string token should parsing fail
-char* parse_customerLine(char *buffer, const Customer *customers, const int unique_customers, char **name, int *pos, int *change, int *code);
+int extract_customerTokens(char *buffer, char **t_name, char **t_code, char **t_change);
 
 // Compares the string token with any of the existing customers, returns uniq_cust or returns index (i)
-int compare_existingNames(const int unique_customers, const Customer *customer_data, const char *token);
+int compare_existingNames(const int unique_customers, const Customer *customers, const char *token);
 
 // Compares the string token to existing currency codes
 int compare_currencyCode(const char *token);
 
 // Filters parsed customer values
-int filter_customerValues(const char *token, const char *name, const int cust_change, const int change, const int code);
+int filter_customerValues(const Customer customer, const char *t_name,  const char *t_change, const char *t_code);
 
 // Inserts the filtered customer values  
 void insert_customerValues(Customer *customer, const char *name, const int change, const int code);

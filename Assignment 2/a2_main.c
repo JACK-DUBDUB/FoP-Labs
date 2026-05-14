@@ -6,7 +6,7 @@
 #include "crud/a2_read.h"
 
 
-/* ASSIGNMENT 2 - FILE IO CHANGE & COIN PROCESSING
+/* ASSIGNMENT 2 - FILE I/O CUSTOMER CHANGE & COIN PROCESSING
 * NAME:     JACK DU BOULAY
 * ID:       32712899
 * DATE:     09/05/2026 - 13/05/2026
@@ -88,14 +88,16 @@ int program_pipeline(const int argc, const char *argv[])
         
     // We assume that we can read the file, read first line as an integer value
     const int expected_lines = read_handleDataIn(infile, NULL, R_FIRST_LINE);
-    if (!program_fileIOResult(expected_lines, infile, ERR_FILE_BAD_READ, ERR_FILE_BAD_FIRST)) {
+    if (!program_fileIOResult(expected_lines, infile, ERR_FILE_BAD_READ, ERR_FILE_BAD_FIRST)) 
+    {
         program_pauseStatus(QUIT);
         return 1;
     }
 
     // We assume that the expected entry value may be wrong so we count the actual number of lines
     const int line_count = read_handleDataIn(infile, NULL, R_LINE_COUNT);
-    if (!program_fileIOResult(line_count, infile, ERR_FILE_BAD_READ, ERR_FILE_NO_READ)) {
+    if (!program_fileIOResult(line_count, infile, ERR_FILE_BAD_READ, ERR_FILE_NO_READ)) 
+    {
         program_pauseStatus(QUIT);
         return 2;
     }
@@ -106,11 +108,14 @@ int program_pipeline(const int argc, const char *argv[])
 
     // Read customer data values from file
     const int unique_customers = read_handleDataIn(infile, customer_data, R_CUST_DATA);
-    if (!program_fileIOResult(unique_customers, infile, ERR_FILE_BAD_READ, ERR_FILE_NO_READ)) {
+    if (!program_fileIOResult(unique_customers, infile, ERR_FILE_BAD_READ, ERR_FILE_NO_READ)) 
+    {
         customer_freeMemory(customer_data,  line_count);
         program_pauseStatus(QUIT);
         return 3;
     }
+    program_pauseStatus(CONTINUE);
+
 
     // Filter customers with illegitimate values
     customer_filterData(customer_data, line_count);
@@ -123,8 +128,9 @@ int program_pipeline(const int argc, const char *argv[])
 
     // Insert coins based on customer's currency values
     customer_handleInsertCoins(customer_data, currency_data, valid_customers);
+    program_pauseStatus(CONTINUE);
 
-    // *** Prompt user menu -> [1]search, [2]display names, [3]display all, [4]quit ***
+    // Prompt customer menu -> [1]search, [2]display names, [3]display all, [4]quit
     customer_handleMenu(customer_data, currency_data, valid_customers);
 
     // Write valid customers to file
