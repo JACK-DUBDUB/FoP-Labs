@@ -15,8 +15,4 @@ void read_string(char *buffer, const int size);
 // Compares each char value of each string to check if they are equal (toupper)
 int compare_caseInsensitive(const char *string1, const char *string2);
 
-// Int Arithmetic
-int calculate_intDiv(const int dividend, const int divisor);
-int calculate_intMod(const int dividend, const int divisor);
-
 #endif

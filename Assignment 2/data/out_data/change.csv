@@ -1,0 +1,13 @@
+Dummy_6, the change for 10 cents in $USD is 0,0,1,0
+Dummy_6, the change for 15 cents in $AUD is 0,0,1,1
+Dummy_6, the change for 20 cents in $EUR is 1,0,0,0
+Dummy_7, the change for 1 cents in $USD is 0,0,0,1
+Dummy_7, the change for 5 cents in $AUD is 0,0,0,1
+Dummy_7, the change for 1 cents in $EUR is 0,0,0,1
+Dummy_8, the change for 95 cents in $USD is 1,1,2,0
+Dummy_8, the change for 95 cents in $AUD is 1,2,0,1
+Dummy_8, the change for 95 cents in $EUR is 4,1,1,0
+Dummy_9, the change for 5 cents in $AUD is 0,0,0,1
+Dummy_10, the change for 86 cents in $USD is 1,1,1,1
+Dummy_10, the change for 85 cents in $AUD is 1,1,1,1
+Dummy_10, the change for 36 cents in $EUR is 1,1,1,1

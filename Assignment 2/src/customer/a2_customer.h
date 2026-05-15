@@ -41,11 +41,9 @@ void customer_filterData(Customer *customers, const int rows);
 // Iterates through all customers, check if name is null (invalid customer), if null, swap null customer with next non-null customer, returns number of non-null customers
 int customer_sortNull(Customer *customers, const int rows);
 
-// Iterates through all customers, check for each customer change value (valid), then insert coins
-void customer_handleInsertCoins(Customer *customers, const Currency *currencies, const int rows);
+// Iterates through all customers, check each customer for a positive change value, then insert coins
+void customer_insertCoins(Customer *customers, const Currency *currencies, const int rows);
 
-// If the customer has a positive change amount, calculate number of coins from largest to smallest
-void customer_insertCoins(const int customer_change, int customer_coins[], const Currency currencies);
 
 // ---- Menu ----
 
@@ -55,11 +53,11 @@ void customer_handleMenu(const Customer *customers, const Currency *currencies, 
 // Displays the option menu: [1] search by name, [2] display customer names, [3] display all customer data, [4] quit program
 void customer_displayMenu(void);
 
-// Searches the customers to find matching name (case insensitive), returns {index if found} or {-1 if not found}
-int customer_nameSearch(const Customer *customers, const Currency *currencies, const int rows, const int selection);
+// Searches the customers to find matching name (case insensitive)
+void customer_nameSearch(const Customer *customers, const Currency *currencies, const int rows);
 
 // Picks which result to display based on the option selected
-int customer_handleDisplayOptions(const Customer *customers, const Currency *currencies, const int rows, const char *search, const int option);
+void customer_handleDisplayData(const Customer *customers, const Currency *currencies, const int rows, const int selection);
 
 // Displays the specific customer's data values: name, currency type values: change value and coins (if any)
 void customer_displayData(const Customer customer, const Currency *currencies);

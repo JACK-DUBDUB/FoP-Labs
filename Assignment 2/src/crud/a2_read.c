@@ -3,35 +3,40 @@
 
 // ============ READ ============
 
-int read_handleDataIn(const char *file_name, Customer *customers, const enum READ_OPTIONS option)
+/*
+    My VSCode indicates the fopen func has security vulnerabilities and recommends to use fopen_s instead
+        Expected to use: File *stream = fopen(infile, "r");
+*/
+int read_handleDataIn(const char *infile, Customer *customers, const enum READ_OPTIONS option, int *out_value)
 {
     FILE *source_file;
-    int error_code = fopen_s(&source_file, file_name, "r"); //"r", r+" (file must exist)
+    
+    int error_code = fopen_s(&source_file, infile, "r"); //"r", r+" (file must exist)
 
-    if (!!error_code) 
+    if(error_code) 
     {
         printf("Error code: %i \n", error_code);
-        return -1;
+        printf("PROGRAM ERROR - The file '%s' could not be opened\n", infile);
+        return 0;
     }
-
-    int out_value = 0;
 
     switch (option)
     {
         case R_FIRST_LINE: 
-            out_value = read_firstLine(source_file);
+            *out_value = read_firstLine(source_file);
             break;
         case R_LINE_COUNT:
-            out_value = read_lineCount(source_file);
+            *out_value = read_lineCount(source_file);
             break;
         case R_CUST_DATA:
-            out_value = read_customerData(source_file, customers);
+            *out_value = read_customerData(source_file, customers);
             break;
         default: break;
     }
 
     fclose(source_file);
-    return out_value;
+
+    return 1;
 }
 
 //  Return the first row value if it's an integer
@@ -39,9 +44,9 @@ int read_firstLine(FILE *source_file)
 {
     char line_buffer[MAX_BUFFER_LENGTH];
     int lines = 0;
-    if(fgets(line_buffer, MAX_BUFFER_LENGTH, source_file)) 
+    if(fgets(line_buffer, sizeof(line_buffer), source_file)) 
     {
-        if(sscanf_s(line_buffer, "%i", &lines) && lines > 0) 
+        if(sscanf_s(line_buffer, "%i", &lines) && lines >= 0) 
         {
             return lines;
         }   
@@ -55,6 +60,10 @@ int read_lineCount(FILE *source_file)
     int lines = -1; // "There can be 0 and up to 'N' input lines"
     while ((fgets(line_buffer, sizeof(line_buffer), source_file) != NULL)) 
     {
+        if(*line_buffer == '/' || *line_buffer == '\n')
+        {
+            continue;
+        }
         lines++;
     }
     return lines;
@@ -71,8 +80,8 @@ int read_customerData(FILE *source_file, Customer *customers)
 
     while ((fgets(line_buffer, sizeof(line_buffer), source_file) != NULL))
     {
-        // Skip first line
-        if(!current_row) 
+        // Skip first line and other char vals
+        if(!current_row || *line_buffer == '/' || *line_buffer == '\n') 
         { 
             current_row++;
             continue;
@@ -97,7 +106,6 @@ int read_customerData(FILE *source_file, Customer *customers)
             continue;
         }
         
-
         // Insert successfully parsed customer data, useful function -> atoi(); = ASCII to int
         insert_customerValues(&customers[t_pos], t_name, atoi(t_change), compare_currencyCode(t_code)); 
 
@@ -112,64 +120,61 @@ int read_customerData(FILE *source_file, Customer *customers)
 
 // Extracts each customer token required for filtering and parsing for each customer field
 // Parameter values: buffer = {file line}, t_name = {NULL}, t_code = {NULL}, t_change = {NULL}
-int extract_customerTokens(char *buffer, char **t_name, char **t_code, char **t_change)
+void extract_customerTokens(char *buffer, char **t_name, char **t_code, char **t_change)
 {
     // string token variables
-    const char *delimiter = " ,\t\n";
+    const char *delimiter = " ,.\t\n";
     char *token1 = NULL, *token2 = NULL;
 
     token1 = strtok_s(buffer, delimiter, &token2);
 
-    int field_count = 0;
     while(token1)
     {
         if(isalpha(*token1) && !*t_name) // ALWAYS use first string as name IF first leter is alphabetical
         {
             *token1 = toupper(*token1);
             *t_name = token1;
-            field_count++;
         }
-        else if(isdigit(*token1) && !*t_change) // Find a number
+        else if((isdigit(*token1) || *token1 == '-') && !*t_change) // Find a number [+/-] (Required for better feedback) 
         {
             *t_change = token1;
-            field_count++;
         }
         else if(*token1 == '$' && !*t_code) // Find a dollar sign
         {
             *t_code = token1;
-            field_count++;
         }
         token1 = strtok_s(NULL, delimiter, &token2);
     }
-    return field_count;
 }
 
 // Find and return name position if it exists, else return the row_count
 int compare_existingNames(const int unique_customers, const Customer *customers, const char *token)
 {
+    int index = unique_customers;
     for (int i = 0; i < unique_customers; i++)
     {
         if (compare_caseInsensitive(customers[i].name, token)) 
         {
-            return i; // Found!
+            index = i; // Found!
+            break;
         }
     }
-    return unique_customers;
+    return index;
 }
 
 // Return the currency code ID
-int compare_currencyCode(const char *token)
+int compare_currencyCode(const char *t_code)
 {
     // Where: -1 = INVALID, 0 = $USD, 1 = $AUD, 2 = $EUR
-    if (compare_caseInsensitive(token, USD_S)) 
+    if (compare_caseInsensitive(t_code, USD_S)) 
     {
         return USD_ID;
     }
-    if (compare_caseInsensitive(token, AUD_S)) 
+    if (compare_caseInsensitive(t_code, AUD_S)) 
     {
         return AUD_ID;
     }
-    if (compare_caseInsensitive(token, EUR_S)) 
+    if (compare_caseInsensitive(t_code, EUR_S)) 
     {
         return EUR_ID;
     }
@@ -207,19 +212,19 @@ int filter_customerValues(const Customer customer, const char *t_name,  const ch
         printf("ERROR - Change value '%i' less than %i.\n", change, MIN_CHANGE_LIMIT);
         return 0;
     }
+    if (change > MAX_CHANGE_LIMIT)
+    {
+        printf("ERROR - Change value '%i' exceeds %i.\n", change, MAX_CHANGE_LIMIT); 
+        return 0;
+    }
     if (code < 0)
     {
         printf("ERROR - Unrecognised currency code: %s\n", t_code);
         return 0;
     }
-    if (change > MAX_CHANGE_LIMIT)
-    {
-        printf("ERROR - Change value '%i' exceeds %i.\n",  change, MAX_CHANGE_LIMIT); 
-        return 0;
-    }
     if ((customer.change_values[code] + change) > MAX_CHANGE_LIMIT) 
     {
-        printf("ERROR - Change value '%i' + '%i' exceeds %i.\n", customer.change_values[code], change, MAX_CHANGE_LIMIT); 
+        printf("ERROR - %s change value '%i' + '%i' exceeds %i.\n", t_code, customer.change_values[code], change, MAX_CHANGE_LIMIT); 
         return 0;
     }
     return 1;

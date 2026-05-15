@@ -28,7 +28,6 @@ extern const Currency AUD_DATA;
 extern const Currency EUR_DATA;
 
 // NOTES:
-// The last array in a struct can be flexible
-// But its a bitch to sort that out as i won't know the exact size without memory use
-
+// -> The last array in a struct can be flexible but its a bitch to sort that out as i won't know the exact size without memory implementation
+// -> We can safely add additional currency types ASSUMING that it also has a maximum of 4 coin variants
 #endif /* A2_CURRENCY_H */

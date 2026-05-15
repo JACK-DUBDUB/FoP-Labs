@@ -2,24 +2,24 @@
 
 // ============ CREATE ============
 
-int create_handleDataOut(const Customer *customers, const Currency *currencies, const char *file_name, const int rows)
+int create_handleDataOut(const Customer *customers, const Currency *currencies, const char *file_name, const int rows, int *out_value)
 {
     FILE *outfile;
-    int out_value = 0, error_code = 0;
 
-    error_code = fopen_s(&outfile, file_name, "w");
+    int error_code = fopen_s(&outfile, file_name, "w");
 
-    if (!!error_code) 
+    if (error_code) 
     {
         printf("Error code: %i \n", error_code);
-        return -1;
+        printf("\nPROGRAM ERROR - Failed to create file '%s' in 'w' mode. \nFile may still be open and/or missing permissions.\n\n", file_name);
+        return 0;
     }
 
-    out_value = create_customerDataOut(outfile, customers, currencies, rows);
+    *out_value = create_customerDataOut(outfile, customers, currencies, rows);
 
     fclose(outfile);
 
-    return out_value;
+    return 1;
 }
 
 int create_customerDataOut(FILE *outfile, const Customer *customers, const Currency *currencies, const int rows)
@@ -47,7 +47,6 @@ int create_customerDataOut(FILE *outfile, const Customer *customers, const Curre
                     customers[i].coins_ptr[j][2],
                     customers[i].coins_ptr[j][3]
                 );
-
                 rows_printed++;
             }
         }

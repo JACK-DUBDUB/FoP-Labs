@@ -91,7 +91,7 @@ int customer_sortNull(Customer *customers, const int rows)
     return customer_count;
 }
 
-void customer_handleInsertCoins(Customer *customers, const Currency *currencies, const int rows)
+void customer_insertCoins(Customer *customers, const Currency *currencies, const int rows)
 {
     for (int i = 0; i < rows; i++)
     {
@@ -101,23 +101,15 @@ void customer_handleInsertCoins(Customer *customers, const Currency *currencies,
             {
                 continue;
             }
-                
-            customer_insertCoins(customers[i].change_values[j], customers[i].coins_ptr[j], currencies[j]);
+
+            int temp_change = customers[i].change_values[j];
+            for (int k = 0; k < MAX_COIN_VARIANTS; k++)
+            {
+                customers[i].coins_ptr[j][k] = temp_change / currencies[j].coins[k];
+                temp_change = temp_change % currencies[j].coins[k];
+            }
         }
     }
-    return;
-}
-
-void customer_insertCoins(const int customer_change, int customer_coins[], const Currency currencies)
-{
-    // Insert number of coins based on customer change
-    int change = customer_change;
-    for (int i = 0; i < MAX_COIN_VARIANTS; i++)
-    {
-        customer_coins[i] =  calculate_intDiv(change, currencies.coins[i]);
-        change = calculate_intMod(change, currencies.coins[i]);
-    }
-
     return;
 }
 
@@ -128,6 +120,7 @@ void customer_handleMenu(const Customer *customers, const Currency *currencies, 
     int selection;
     do 
     {
+        program_pause(MSG_CONTINUE);
         customer_displayMenu();
 
         selection = read_intInRange(C_SEARCH, C_QUIT);
@@ -135,24 +128,24 @@ void customer_handleMenu(const Customer *customers, const Currency *currencies, 
         switch (selection) 
         {
             case C_SEARCH:
-                customer_nameSearch(customers, currencies, rows, selection);
+                printf("\n---- Customer Name Search ----\n");
+                printf("\nPlease enter a name: ");
+                customer_nameSearch(customers, currencies, rows);
                 break;
             case C_DISP_NAMES:
                 printf("\n---- Customer Names ----\n");
-                printf("ID   \tName\n");
-                customer_handleDisplayOptions(customers, currencies, rows, NULL, selection);
+                printf("ID   \tNAME\n");
+                customer_handleDisplayData(customers, currencies, rows, selection);
                 break;
             case C_DISP_ALL:
                 printf("\n---- Customer Data ----\n");
-                customer_handleDisplayOptions(customers, currencies, rows, NULL, selection);
+                customer_handleDisplayData(customers, currencies, rows, selection);
                 break;
             case C_QUIT:
                 return;
             default:
                 continue;
         }
-
-        program_pauseStatus(CONTINUE);
     } while(selection != C_QUIT);
     return;
 }
@@ -167,54 +160,45 @@ void customer_displayMenu()
     return;
 }
 
-int customer_nameSearch(const Customer *customers, const Currency *currencies, const int rows, const int selection)
+void customer_nameSearch(const Customer *customers, const Currency *currencies, const int rows)
 {
-    printf("\n---- Customer Name Search ----\n");
-    printf("\nPlease enter a name: ");
-
     char search[MAX_SEARCH_BUFFER];
     read_string(search, sizeof(search));
 
-    int index = customer_handleDisplayOptions(customers, currencies, rows, search, selection);
-
-    if (index >= 0)
-    {
-        customer_displayData(customers[index], currencies);
-        return 1;
-    }
-    else 
-    {
-        printf("Name: %s\nNot found\n", search);
-        return 0;
-    }
-}
-
-int customer_handleDisplayOptions(const Customer *customers, const Currency *currencies, const int rows, const char *search, const int option)
-{
-    int processed = -1;
+    int found = 0;
     for (int i = 0; i < rows; i++)
     {
-        switch (option) 
+        if (compare_caseInsensitive(customers[i].name, search)) 
         {
-            case C_SEARCH:
-                if (!compare_caseInsensitive(customers[i].name, search)) 
-                {
-                    break;
-                }
-                return i;
+            customer_displayData(customers[i], currencies);
+            found = 1;
+            break;
+        }
+    }
+    if(!found)
+    {
+        printf("Name: %s\nNot found\n", search);
+    }
+    return;
+}
 
-            case C_DISP_NAMES: 
+void customer_handleDisplayData(const Customer *customers, const Currency *currencies, const int rows, const int selection)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        switch (selection) 
+        {
+            case C_DISP_NAMES:
                 printf("[%i]\t%s\n", i, customers[i].name); 
-                processed = 1;
                 break;
 
             case C_DISP_ALL:
                 customer_displayData(customers[i], currencies);
-                processed = 1;
+                break;
             default: break;
         }
     }
-    return processed;
+    return;
 }
 
 void customer_displayData(const Customer customer, const Currency *currencies)
