@@ -1,0 +1,4 @@
+3
+Alpha 86 cents in US$
+Bravo 85 cents in AU$
+Charlie 36 cents in EUR

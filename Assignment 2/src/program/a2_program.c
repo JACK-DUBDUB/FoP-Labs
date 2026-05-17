@@ -12,14 +12,7 @@ int program_fileRead(const int argc, const char **argv, char **infile, char **ou
     program_handleArgs(argc, argv, infile, outfile);
 
     // We assume that we can read the file, read first line as an integer value
-    if (!read_handleDataIn(*infile, NULL, R_FIRST_LINE, expected_lines))
-    {
-        if(!*expected_lines)
-        {
-            printf("\nPROGRAM ERROR - First row value of file '%s'could not be read as a valid positive integer \n\n", *infile);
-        }
-        return 0;
-    }
+    read_handleDataIn(*infile, NULL, R_FIRST_LINE, expected_lines);
 
     // We assume that the expected entry value may be wrong so we count the actual number of lines before allocating any memory
     read_handleDataIn(*infile, NULL, R_LINE_COUNT, line_count);

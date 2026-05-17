@@ -18,7 +18,6 @@ int create_handleDataOut(const Customer *customers, const Currency *currencies, 
     *out_value = create_customerDataOut(outfile, customers, currencies, rows);
 
     fclose(outfile);
-
     return 1;
 }
 

@@ -103,9 +103,7 @@ int main(const int argument_count, const char *argument_values[])
     char *infile = NULL, *outfile = NULL;
 
     // Process result values
-    int expected_lines = -1;
-    int line_count = -1;            // <- Used for memory allocation for customers
-    int unique_customers, customer_count, printed_customers;
+    int expected_lines, line_count, unique_customers, customer_count, printed_customers;
 
     // Attempt to read the file
     if(!program_fileRead(argument_count, argument_values, &infile, &outfile, &expected_lines, &line_count))

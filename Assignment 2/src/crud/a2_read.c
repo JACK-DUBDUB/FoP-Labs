@@ -12,7 +12,6 @@ int read_handleDataIn(const char *infile, Customer *customers, const enum READ_O
     FILE *source_file;
     
     int error_code = fopen_s(&source_file, infile, "r"); //"r", r+" (file must exist)
-
     if(error_code) 
     {
         printf("Error code: %i \n", error_code);
@@ -43,7 +42,7 @@ int read_handleDataIn(const char *infile, Customer *customers, const enum READ_O
 int read_firstLine(FILE *source_file)
 {
     char line_buffer[MAX_BUFFER_LENGTH];
-    int lines = 0;
+    int lines = -1;
     if(fgets(line_buffer, sizeof(line_buffer), source_file)) 
     {
         if(sscanf_s(line_buffer, "%i", &lines) && lines >= 0) 
@@ -51,19 +50,17 @@ int read_firstLine(FILE *source_file)
             return lines;
         }   
     }
-    return 0;
+    
+
+    return lines;
 }
 
 int read_lineCount(FILE *source_file) 
 {
     char line_buffer[MAX_BUFFER_LENGTH];
-    int lines = -1; // "There can be 0 and up to 'N' input lines"
+    int lines = 0; // "There can be 0 and up to 'N' input lines"
     while ((fgets(line_buffer, sizeof(line_buffer), source_file) != NULL)) 
     {
-        if(*line_buffer == '/' || *line_buffer == '\n')
-        {
-            continue;
-        }
         lines++;
     }
     return lines;

@@ -1,4 +1,4 @@
-100000000                               /  NUMBER OF EXPECTED ENTRIES
+3                                     /  NUMBER OF EXPECTED ENTRIES
 
 // -------- FAIL TEST CASES ----------  /  -----------------------------------------
 _Dummy_0    _________       ________    /  _NO_NAME_TEST_
@@ -13,11 +13,11 @@ Dummy_3     100             $EUR        /  ""       ""      ""
 Dummy_4     5               $BAD_SIGN   /  BAD SIGN TEST
 Dummy_5     3               $AUD        /  AUD INDIVISIBLE BY 5
 Dummy_6     10              $USD        /  EXCEED USD MAX TEST  *VALID
-Dummy_6     86              $USD        /  ""       ""      ""  (5 + 86 > 95)
+Dummy_6     86              $USD        /  ""       ""      ""  (10 + 86 > 95)
 Dummy_6     15              $AUD        /  EXCEED AUD MAX TEST  *VALID
-Dummy_6     86              $AUD        /  ""       ""      ""  (10 + 86 > 95)
+Dummy_6     86              $AUD        /  ""       ""      ""  (15 + 86 > 95)
 Dummy_6     20              $EUR        /  EXCEED EUR MAX TEST  *VALID
-Dummy_6     86              $EUR        /  ""       ""      ""  (15 + 86 > 95)
+Dummy_6     86              $EUR        /  ""       ""      ""  (20 + 86 > 95)
 
 // -------- VALID TEST CASES ---------  /  -----------------------------------------
 Dummy_7     1               $USD        /  MIN USD TEST 
