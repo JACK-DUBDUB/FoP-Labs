@@ -2,12 +2,8 @@
 #include "../customer/a2_customer.h"
 #include <stdio.h>
 
-
-// ======== CONSTANTS ========
-
 #define READ_FILE_BUFFER_LIMIT 256
 
-// ============================================== F U N C T I O N S ===========================================================
 
 // -------- READ FROM FILE ----------------------------------------------------------------------------------------------------
 
@@ -19,6 +15,8 @@ int file_readFirstLine(const char *infile, int *first_value);
 
 // Reads by line from file till customer count reached or EOF
 int file_readCustomerData(CustomerArray *customers, const CurrencyArray *currencies, const char *infile);
+
+// -------- CUSTOMER LINE PROCESSING  -----------------------------------------------------------------------------------------
 
 // Handles the customer line tokenization for filtering and parsing for the customer
 int process_customerLine(CustomerArray *customers, const CurrencyArray *currencies, char *buffer, const int line_count);

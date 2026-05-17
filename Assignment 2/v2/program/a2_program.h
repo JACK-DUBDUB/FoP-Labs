@@ -11,7 +11,7 @@
 
 enum PROGRAM_PAUSE  {MSG_CONTINUE, MSG_QUIT};
 
-#define DEFAULT_IN_FILE     "data/coins.txt"
+#define DEFAULT_IN_FILE     "_data/coins.txt"
 #define DEFAULT_OUT_FILE    "change.csv"
 
 // -------- CHECK ARGUMENTS ---------------------------------------------------------------------------------------------------

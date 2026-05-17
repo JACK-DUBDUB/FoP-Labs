@@ -15,18 +15,15 @@
 // ======== STRUCTS ========
 
 // ---- CUSTOMER INFO ----
-// Memory allocated in main
-// Memory freed in customer_freeMemory()
+// Memory allocated in main/program_process()
+// Memory freed with customer_freeMemory()
 // Calloc preferred -> change_values need to be zeroed
 
 typedef struct 
 { 
     char *name;
     int values[MAX_CURRENCY_TYPES];
-    int c_usd[MAX_COIN_VARIANTS];
-    int c_aud[MAX_COIN_VARIANTS];
-    int c_eur[MAX_COIN_VARIANTS];
-    int *c_ptr[MAX_CURRENCY_TYPES];     // To point to -> c_usd, c_aud, c_eur
+    int coins[MAX_CURRENCY_TYPES][MAX_COIN_VARIANTS];
 } Customer;
 
 typedef struct 
@@ -36,13 +33,6 @@ typedef struct
     int max;            // Maximum Customer entries possible
 } CustomerArray;
 
-
-// ============================================== F U N C T I O N S ===========================================================
-
-// -------- INITIALIZE CUSTOMER POINTERS --------------------------------------------------------------------------------------
-
-// Iterates through all customers, initializing the pointer array, points to the customer's c_(usd, aud, eur) arrays
-void customer_initPointers(CustomerArray *customers);
 
 // -------- FILTER CUSTOMER VALUES --------------------------------------------------------------------------------------------
 

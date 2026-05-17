@@ -8,16 +8,16 @@
 #ifndef A2_PROGRAM_H
 #define A2_PROGRAM_H
 
-// ======== CONSTANTS ========
 
 enum PROGRAM_PAUSE  {MSG_CONTINUE, MSG_QUIT};
 
-// ============================================== F U N C T I O N S ===========================================================
+#define DEFAULT_IN_FILE     "../_data/coins.txt"
+#define DEFAULT_OUT_FILE    "../change.csv"
 
 // -------- CHECK ARGUMENTS ---------------------------------------------------------------------------------------------------
 
-// Checks if user included 2 additional arguments : ass2.exe {filein} {fileout}
-int program_checkArgs(const int argument_count, const char *argument_values[]);
+// Checks if user included 2 additional arguments : ass2.exe {filein} {fileout} , else use defaults
+int program_checkArgs(const int argument_count, char *argument_values[]);
 
 
 // -------- COMPARE TO --------------------------------------------------------------------------------------------------------

@@ -23,10 +23,7 @@ typedef struct
 { 
     char *name;
     int values[MAX_CURRENCY_TYPES];
-    int c_usd[MAX_COIN_VARIANTS];       // Why not just use a 2D array?
-    int c_aud[MAX_COIN_VARIANTS];       // Scope increase... WHAT IF: EURO gets 5 coins instead of 4?
-    int c_eur[MAX_COIN_VARIANTS];       
-    int *c_ptr[MAX_CURRENCY_TYPES];     // To point to -> c_usd, c_aud, c_eur
+    int coins[MAX_CURRENCY_TYPES][MAX_COIN_VARIANTS];
 } Customer;
 
 typedef struct 
@@ -36,11 +33,6 @@ typedef struct
     int max;            // Maximum Customer entries possible
 } CustomerArray;
 
-
-// -------- INITIALIZE CUSTOMER POINTERS --------------------------------------------------------------------------------------
-
-// Iterates through all customers, initializing the pointer array, points to the customer's c_(usd, aud, eur) arrays
-void customer_initPointers(CustomerArray *customers);
 
 // -------- FILTER CUSTOMER VALUES --------------------------------------------------------------------------------------------
 

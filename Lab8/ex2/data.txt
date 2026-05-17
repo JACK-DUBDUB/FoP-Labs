@@ -1,0 +1,10 @@
+Alpha 20 10.05
+Bravo 21 11.15
+Charlie 22 12.2
+Delta 23 13.35
+Echo 24 14.4
+Foxtrot 25 15.55
+Golf 26 16.6
+Hotel 27 17.75
+India 28 18.8
+Juliette 29 19.95
