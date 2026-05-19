@@ -1,5 +1,4 @@
-#include "program.h"
-#include <stdio.h>
+#include "includes.h"
 
 int file_write(const EmployeeArray *emparr, const char *fname)
 {
@@ -76,7 +75,7 @@ int read_intInRange(const int min, const int max)
             }
             printf("User entered an integer out of range (%i - %i)!\n",min, max);
         }
-        printf("Please enter a valid value\n\n");
+        printf("Please enter a valid value!!!\n\n");
     }while (1);
     return 0;
 }
@@ -87,8 +86,9 @@ void handle_menu(const EmployeeArray emparr)
     int selection;
     do 
     {
+        printf("\n-------- MENU --------\n");
         printf("[1] - Search name\n");
-        printf("[2] - Exit program\n");
+        printf("[2] - Exit program\n\n");
         selection = read_intInRange(1, 2);
         switch (selection) 
         {
@@ -109,12 +109,12 @@ void search_employees(const EmployeeArray emparr)
     int found = 0;
     char search[LINE_BUFFER_MAX];
 
-    printf("Please enter a name: ");
+    printf("\nPlease enter a name: ");
     read_string(search, LINE_BUFFER_MAX);
 
     for (int i = 0; i < emparr.count; i++)
     {
-        if (string_compare_insensitive(emparr.data[i].name, search) == 0)
+        if (strcmp_insensitive(emparr.data[i].name, search) == 0)
         {
             display_employee(emparr.data[i]);
             found = 1;
@@ -127,7 +127,7 @@ void search_employees(const EmployeeArray emparr)
     return;
 }
 
-int string_compare_insensitive(const char *string1, const char *string2)
+int strcmp_insensitive(const char *string1, const char *string2)
 {
     if ((string1 == NULL || string2 == NULL)) 
     {
@@ -147,5 +147,27 @@ int string_compare_insensitive(const char *string1, const char *string2)
         }
         string1++, string2++;
     }
+    return 0;
+}
+
+int program_argCheck(const int argc, char *argv[])
+{
+    if (argc == 3 && strcmp_insensitive(argv[1], argv[2]) == 0)
+    {
+        printf("PROGRAM ERROR - Input file is the same as the output file!\n");
+        getchar();
+        return 1;
+    }
+
+    if (argc < 2)
+    {
+        argv[1] = "data.txt";
+    }
+
+    if (argc < 3)
+    {
+        argv[2] = "output.csv";
+    }
+
     return 0;
 }

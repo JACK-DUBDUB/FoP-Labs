@@ -16,7 +16,7 @@ enum PROGRAM_STATUS {
 
 //  GET LENGTH OF STRING - 19/08/2026
 //  @foreword
-//  - First of all - I'm well aware strlen() already exists -> in fact I checked out the source code for it 
+//  - First of all - I'm well aware strlen() already exists -> in fact I checked out the source code for it!
 //  - BUT this doesn't mean I can't design my own basic version of it!
 //  @Brief: 
 //  - This is a simple linear search "0(n)" that looks for a value of 0 or '\0' null term

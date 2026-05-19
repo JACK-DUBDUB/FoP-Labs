@@ -1,114 +1,177 @@
-#include "../program/a2_program.h"
-#include "../crud/a2_read.h"
-#include "../crud/a2_create.h"
+#include "../a2_includes.h"
 
 
+// -------- CHECK ARGUMENTS ---------------------------------------------------------------------------------------------------
 
-// ---- PIPELINE PHASES ---- //
-
-int program_fileRead(const int argc, const char **argv, char **infile, char **outfile, int *expected_lines, int *line_count)
+int program_checkArgs(int argument_count, char *argument_values[])
 {
-    // Check user argument count first - if one or more values are missing, use defaults
-    program_handleArgs(argc, argv, infile, outfile);
-
-    // We assume that we can read the file, read first line as an integer value
-    read_handleDataIn(*infile, NULL, R_FIRST_LINE, expected_lines);
-
-    // We assume that the expected entry value may be wrong so we count the actual number of lines before allocating any memory
-    read_handleDataIn(*infile, NULL, R_LINE_COUNT, line_count);
-
-    return 1;
-}
-
-
-int program_loadData(Customer *customers, const Currency *currencies, const int rows, const char *infile, int *unique_customers, int *valid_customers)
-{
-    // Read customer data values from file
-    if(!read_handleDataIn(infile, customers, R_CUST_DATA, unique_customers))
+    if (argument_count == 3 && strcmp(argument_values[1], argument_values[2]) == 0)
     {
-        if (!*unique_customers)
-        {
-            printf("\nPROGRAM ERROR - Could not parse any lines of file '%s' in 'r' mode \n\n", infile); 
-        }
-         return 0;
+        printf("\nInput file should not be the same as the output file!\n");
+        return 1;
     }
 
-    // Filter customers with illegitimate values
-    customer_filterData(customers, rows);
-
-    // Sort the customers, returning the number of non-null customers
-    *valid_customers = customer_sortNull(customers, rows);
-
-    if(!*valid_customers)
+    if (argument_count == 1)
     {
-        printf("No valid customers remaining\n");
+        printf("\nMissing {Input File} AND {Output File} -> Using defaults\n");
+        argument_values[1] = DEFAULT_IN_FILE;
+        argument_values[2] = DEFAULT_OUT_FILE;
+        return 0;
+    }
+    if (argument_count == 2)
+    {
+        printf("\nMissing {Output File} -> Using default\n");
+        argument_values[2] = DEFAULT_OUT_FILE;;
         return 0;
     }
 
-    // Insert coins based on customer's currency values
-    customer_insertCoins(customers, currencies, *valid_customers);
+    if (argument_count > 3)
+    {
+        printf("\nIncluded too many args -> Using first two provided\n");
+    }
 
-    return 1;
+    return 0;
 }
 
+// -------- COMPARE TO --------------------------------------------------------------------------------------------------------
 
-int program_fileWrite(const Customer *customers, const Currency *currencies, const int rows, const char *outfile, int *printed_customers)
+int compare_currencyCode(const CurrencyArray *currencies, const char *t_code)
 {
-    if(!create_handleDataOut(customers,currencies, outfile, rows, printed_customers))
+    // Where: -1 = INVALID, 0 = $USD, 1 = $AUD, 2 = $EUR
+    int found = -1;
+    for (int i = 0; i < currencies->max; i++)
     {
-        if (!*printed_customers)
-        { 
-            printf("\nPROGRAM ERROR - Program did not write any lines to output file '%s' \n\n", outfile);
-            return 0;
+        if (compare_caseInsensitive(currencies->data[i].code, t_code) == 0)
+        {
+            found = i;
+            break;
         }
     }
-    return 1;
+    return found;
 }
 
-
-// ---- PROCESSES ---- //
-
-void program_handleArgs(const int argc, const char **argv, char **infile, char **outfile)
-{   
-    if (argc <= 1) 
-    {
-        printf("\nPROGRAM ERROR - Missing two argument values\n\n-> Using default input/output files: '%s', '%s'\n\n", DEFAULT_IN_FILE, DEFAULT_OUT_FILE); 
-        *infile = DEFAULT_IN_FILE;
-        *outfile = DEFAULT_OUT_FILE;
-        
-        return;
-    }
-    else if (argc == 2) 
-    {
-        printf("\nPROGRAM ERROR - Missing argument output value\n\n-> Using default output file: '%s' \n\n", DEFAULT_OUT_FILE); 
-        *infile = (char*)argv[1];
-        *outfile = DEFAULT_OUT_FILE;
-        return;
-    }
-    else if (argc > 3) 
-    {
-        printf("\nERROR - Provided too many arguments\n-> Using first two arguments provided\n\n"); 
-    }
-
-    // Using user provided values
-    *infile = (char*)  argv[1]; 
-    *outfile = (char*) argv[2];
-    return;
-}
-
-
-void program_displayResults(const int expected_l, const int counted_l, const int uniq_c, const int valid_c, const int printed_c)
+// Find and return name position if it exists
+int compare_existingNames(const CustomerArray customers, const char *t_name)
 {
-    printf("\n\n---- Program Feedback ----\n");
-    printf("Expected lines:  \t%i\n", expected_l);
-    printf("Counted lines:   \t%i\n", counted_l);
-    printf("Unique customer: \t%i\n", uniq_c);
-    printf("Valid customers: \t%i\n", valid_c);
-    printf("Printed entries: \t%i\n", printed_c);
+    for (int i = 0; i < customers.count ; i++)
+    {
+        if (compare_caseInsensitive(customers.data[i].name, t_name) == 0) 
+        {
+            return i;
+        }
+    }
+    return customers.count;
+}
+
+int compare_caseInsensitive(const char *string1, const char *string2)
+{
+    if ((string1 == NULL || string2 == NULL)) 
+    {
+         return 1;
+    }
+
+    if(strlen(string1) != strlen(string2))
+    {
+        return 1;
+    }
+
+    while (*string1 && *string2)
+    {
+        if (toupper(*string1) != toupper(*string2)) 
+        {
+             return 1;
+        }
+        string1++, string2++;
+    }
+    return 0;
+}
+
+// -------- SEARCH MENU HANDLER -----------------------------------------------------------------------------------------------
+
+void program_handleSearchMenu(const CustomerArray customers, const CurrencyArray currencies)
+{
+    enum MENU_OPTIONS   {PROGRAM_SEARCH = 1, PROGRAM_QUIT = 2};
+    int selection;
+    do 
+    {
+        program_pause(MSG_CONTINUE); // Pause to show filtered 
+
+        customer_displayNames(customers);
+
+        printf("\n-------- MENU --------\n");
+        printf("[1] - Enter name\n");
+        printf("[2] - Quit program\n");
+
+        selection = read_intInRange(PROGRAM_SEARCH, PROGRAM_QUIT);
+
+        switch (selection) 
+        {
+            case PROGRAM_SEARCH:
+                printf("\n---- Customer Name Search ----\n");
+                printf("\nPlease enter a name: ");
+                customer_nameSearch(customers, currencies);
+                break;
+            case PROGRAM_QUIT:
+                break;
+        }
+    } while(selection != PROGRAM_QUIT);
     return;
 }
 
-// ---- CONTROL---- //
+// -------- READ VALUE FROM STDIN ---------------------------------------------------------------------------------------------
+
+int read_intInRange(const int min, const int max)
+{
+    int int_value = min - 1;
+    do 
+    {
+        printf("Please enter an integer value: ");
+        if (scanf("%i", &int_value) && getchar() == '\n')
+        {   
+            if (int_value < min || int_value > max)
+            {
+                printf("User entered an integer out of range (%i - %i)!\n",min, max);
+                int_value = min - 1;
+            }
+        } 
+        else 
+        {
+            while(getchar() != '\n');
+            int_value = min - 1;
+            printf("Please enter a valid value!!!\n\n");
+        }
+    } while (int_value < min);
+    return int_value;
+}
+
+void read_string(char *buffer, const int size)
+{
+    if (size <= 0)
+    {
+        return;
+    }
+
+    // Empty string check
+    if (fgets(buffer, size, stdin) == NULL) 
+    { 
+        buffer[0] = '\0'; // Cut it short
+    }
+
+    int length = strlen(buffer);
+
+    // If the chars inserted don't reach buffer limit
+    if(length < size && buffer[length - 1] == '\n') 
+    {
+        buffer[length - 1] = '\0'; // Replace '\n'
+    } 
+    else 
+    {  // Exceeded buffer limit (probably)
+        program_clearInputBuffer();
+    }
+    return;
+}
+
+// -------- PROGRAM HELPERS ---------------------------------------------------------------------------------------------------
 
 void program_clearInputBuffer()
 {
@@ -132,3 +195,9 @@ void program_pause(const enum PROGRAM_PAUSE msg)
     printf("\n");
     return;
 }
+
+
+
+
+
+

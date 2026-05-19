@@ -1,52 +1,52 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include "../customer/a2_customer.h"
 #include "../currency/a2_currency.h"
-#include "../general/a2_general.h"
+#include "../customer/a2_customer.h"
 
 #ifndef A2_PROGRAM_H
 #define A2_PROGRAM_H
 
-// ======= ENUMS ========
 
 enum PROGRAM_PAUSE  {MSG_CONTINUE, MSG_QUIT};
-enum PROGRAM_STATUS {PRGRM_SUCCESS, ERR_FILE_READ, ERR_DATA_LOAD};
 
-// File strings
-#define DEFAULT_IN_FILE     "../data/in_data/coins.txt"
-#define DEFAULT_OUT_FILE    "../data/out_data/change.csv"
+#define DEFAULT_IN_FILE     "data/coins.txt"
+#define DEFAULT_OUT_FILE    "change.csv"
+
+// -------- CHECK ARGUMENTS ---------------------------------------------------------------------------------------------------
+
+// Checks if user included 2 additional arguments : ass2.exe {filein} {fileout} , else use defaults
+int program_checkArgs(const int argument_count, char *argument_values[]);
 
 
-// ======== PROGRAM FLOW FUNCTIONS ======== //
+// -------- COMPARE TO --------------------------------------------------------------------------------------------------------
 
-// Checks user args -> both empty? -> use defaults for IO files
-// Reads first line of file -> did not parse int value? -> Exit
-//      -> continue
-// Reads number of lines of file -> did not read any lines? -> Exit
-//      -> continue
-int program_fileRead(const int argc, const char **argv, char **infile, char **outfile, int *expected_lines, int *line_count);
+// Compares the two string lengths then compares each char value of each string to check if they are equal (toupper)
+int compare_caseInsensitive(const char *string1, const char *string2);
 
-// Reads each customer entry and validates -> no read or no customers? -> Exit
-//      -> continue
-// Customer values are filtered further, customers with no values are nullified 
-//      -> continue
-// Shuffle customers from left (non-null customers) to right (null customers) -> no valid customers? -> Exit
-// Inserts customer coins
-int program_loadData(Customer *customers, const Currency *currencies, const int rows, const char *infile, int *unique_customers, int *valid_customers);
+// Compares each customer's name to the temp name provided, returns the index if found a name matches
+int compare_existingNames(const CustomerArray customers, const char *t_name);
 
-// Writes customer data to file
-// Records each line printed -> no write or no lines printed? -> thats okay, continue                        
-int program_fileWrite(const Customer *customers, const Currency *currencies, const int rows, const char *outfile, int *printed_customers);
+// Compares the the temp code provided, returns an id value if the code matches {-1, 0, 1, 2}
+int compare_currencyCode(const CurrencyArray *currencies, const char *t_code);
 
-// ---- PROCESSES ----
 
-// Checks if the user included any args when they launched program
-void program_handleArgs(const int arg_count, const char **arg_values, char **infile, char **outfile);
+// -------- SEARCH MENU HANDLER -----------------------------------------------------------------------------------------------
 
-// Displays all the program results received from each major process of the program
-void program_displayResults(const int expected_l, const int counted_l, const int uniq_c, const int valid_c, const int printed_c);
+// Handles and displays the program options menu: [1] search by name, [2] quit program, 
+void program_handleSearchMenu(const CustomerArray customers, const CurrencyArray currencies);
+
+
+// -------- READ VALUE FROM STDIN ---------------------------------------------------------------------------------------------
+
+// Reads an integer input from stdin
+int read_intInRange(const int min, const int max);
+
+// Filters the integer input
+int filter_intInRange(const int input, const int min, const int max, const int valid);
+
+// Reads a string from stdin, (removes '\n') 
+void read_string(char *buffer, const int size);
+
+
+// -------- PROGRAM HELPERS ---------------------------------------------------------------------------------------------------
 
 // Clears the input buffer
 void program_clearInputBuffer(void);
@@ -54,5 +54,4 @@ void program_clearInputBuffer(void);
 // Pauses the program with a getchar()
 void program_pause(enum PROGRAM_PAUSE msg);
 
-
-#endif
+#endif /* A2_PROGRAM_H */

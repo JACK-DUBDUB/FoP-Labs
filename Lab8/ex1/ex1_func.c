@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
-#include "ex5_salaries_func.h"
+#include "ex1_func.h"
 
 // ---- salaries ---- 
 

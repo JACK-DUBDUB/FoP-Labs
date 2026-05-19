@@ -1,180 +1,108 @@
-
+#include "../currency/a2_currency.h"
 #include "../program/a2_program.h"
 
-void customer_initPointers(Customer *customers, const int rows)
-{
-    for (int i = 0; i < rows; i++)
-    {
-        customers[i].coins_ptr[USD_ID] = customers[i].coins_usd;
-        customers[i].coins_ptr[AUD_ID] = customers[i].coins_aud;
-        customers[i].coins_ptr[EUR_ID] = customers[i].coins_eur;
-    }
-    return;
-}
+// -------- FILTER CUSTOMER VALUES POST READ ----------------------------------------------------------------------------------
 
-void customer_filterData(Customer *customers, const int rows)
+void customer_filterValues(CustomerArray *customers, const CurrencyArray currencies)
 {
-    printf("---- Filtering Customer Values ----\n\n");
-    int customers_removed = 0;
-    for (int i = 0; i < rows; i++)
-    {
-        // Invalidate AUD change value indivisible by 5
-        if (customers[i].change_values[AUD_ID] % MIN_AUD_LIMIT) 
-        {
-            printf("Customer: %s\n", customers[i].name);
-            printf("Invalid AUD value: %i is not divisible by %i\n\n",customers[i].change_values[AUD_ID], MIN_AUD_LIMIT);
-            customers[i].change_values[AUD_ID] = 0;
-        }
+    printf("\n---- Filtering Customer Data ----\n");
 
-        // If customer has any change -> go to next customer 
-        if (customers[i].change_values[USD_ID] || customers[i].change_values[AUD_ID] || customers[i].change_values[EUR_ID]) 
+    int old_count = customers->count;
+
+    for (int i = 0; i < customers->max; i++)
+    {
+        // Skippo!
+        if (!customers->data[i].name)
         {
             continue;
         }
-
-        // Customer has no change values -> set name to NULL, thus invalidating the customer
-        if(customers[i].name != NULL) 
+            
+        int valid_customer = 0;
+        for (int j = 0; j < currencies.max; j++)
         {
-            printf("REMOVED CUSTOMER: %s\n", customers[i].name);
-            printf("Reason: No valid change values\n\n");
-            customers[i].name = NULL;
-            customers_removed++;
+            // Logic:
+            // -> USD & EURO last coin = 1
+            // -> This will remove invalid AUD values by dividing its last coin (5 cents)
+            // -> Last coin index for all coins = .count - 1
+            if ((customers->data[i].values[j] % currencies.data[j].coins[currencies.data[j].count - 1]) != 0)
+            {
+                customers->data[i].values[j] = 0;
+            }
+
+            if (customers->data[i].values[j])
+            {
+                valid_customer++;
+                break;
+            }
+        }
+
+        // Set name to null
+        if (!valid_customer)
+        {
+            printf("\nRemoved: %s\nReason: missing valid change values\n", customers->data[i].name);
+            customers->data[i].name = NULL;
+            customers->count--;
         }
     }
 
-    // Feedback 
-    if (customers_removed) 
-    {
-        printf("Total customers removed: %i\n\n", customers_removed);
-    }
-    else 
-    {
-        printf("All customers valid \n\n");
-    }
+    // Feedback
+    if(customers->count != old_count)
+        printf("\nTotal customers removed: %i\n\n", old_count - customers->count);
+    else if(!customers->count)
+        printf("\nNo customers to filter!\n\n");
+    else
+        printf("\nAll customers valid!\n\n");
+    
+    return;
 }
 
-int customer_sortNull(Customer *customers, const int rows)
+// -------- INSERT CUSTOMER COINS ---------------------------------------------------------------------------------------------
+
+void customer_insertCoins(CustomerArray *customers, const CurrencyArray currencies)
 {
-    int customer_count = 0;
-
-    // Swap invalid customers (left), with valid customers (right)
-    for (int i = 0; i < rows; i++) 
-    {  
-        if(customers[i].name != NULL)
+    for (int i = 0; i < customers->max; i++)
+    {
+        for (int j = 0; j < currencies.max; j++)
         {
-            continue;
-        }
-
-        // Swap NULL customer [i] with the next VALID customer[j] if they exist
-        for (int j = i + 1; j < rows; j++)
-        {
-            // A customer with no name is NULL/empty
-            if (customers[j].name == NULL) 
+            // Skippo!
+            if (!customers->data[i].values[j]) 
             {
                 continue;
             }
 
-            // Swapping with a valid customer
-            Customer _temp   =  customers[i];
-            customers[i] =  customers[j];
-            customers[j] =  _temp;
-            break;
-        }
+            int temp_change = customers->data[i].values[j];
 
-        // Didn't swap with a valid customer?
-        if (customers[i].name == NULL)
-        {
-            customer_count = i;
-            break;
-        }
-    }
-    return customer_count;
-}
-
-void customer_insertCoins(Customer *customers, const Currency *currencies, const int rows)
-{
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < MAX_CURRENCY_TYPES; j++)
-        {
-            if (!customers[i].change_values[j]) 
+            for (int k = 0; k < currencies.data[j].count; k++)
             {
-                continue;
-            }
-
-            int temp_change = customers[i].change_values[j];
-            for (int k = 0; k < MAX_COIN_VARIANTS; k++)
-            {
-                customers[i].coins_ptr[j][k] = temp_change / currencies[j].coins[k];
-                temp_change = temp_change % currencies[j].coins[k];
+                customers->data[i].coins[j][k] = temp_change / currencies.data[j].coins[k]; // Int division: Customer change / Coin Value 
+                temp_change = temp_change % currencies.data[j].coins[k];    // Int modulus: Customer change % Coin value
             }
         }
+        
     }
     return;
 }
 
-// ---- MENU ----
 
-void customer_handleMenu(const Customer *customers, const Currency *currencies, const int rows)
+// -------- HANDLE CUSTOMER SEARCH --------------------------------------------------------------------------------------------
+
+void customer_nameSearch(const CustomerArray customers, const CurrencyArray currencies)
 {
-    int selection;
-    do 
-    {
-        program_pause(MSG_CONTINUE);
-        customer_displayMenu();
-
-        selection = read_intInRange(C_SEARCH, C_QUIT);
-
-        switch (selection) 
-        {
-            case C_SEARCH:
-                printf("\n---- Customer Name Search ----\n");
-                printf("\nPlease enter a name: ");
-                customer_nameSearch(customers, currencies, rows);
-                break;
-            case C_DISP_NAMES:
-                printf("\n---- Customer Names ----\n");
-                printf("ID   \tNAME\n");
-                customer_handleDisplayData(customers, currencies, rows, selection);
-                break;
-            case C_DISP_ALL:
-                printf("\n---- Customer Data ----\n");
-                customer_handleDisplayData(customers, currencies, rows, selection);
-                break;
-            case C_QUIT:
-                return;
-            default:
-                continue;
-        }
-    } while(selection != C_QUIT);
-    return;
-}
-
-void customer_displayMenu()
-{
-    printf("\n-------- Customer Menu --------\n");
-    printf("[%i] - Search customer\n", C_SEARCH);
-    printf("[%i] - Display customer names\n", C_DISP_NAMES);
-    printf("[%i] - Display customer data\n", C_DISP_ALL );
-    printf("[%i] - Exit program\n", C_QUIT);
-    return;
-}
-
-void customer_nameSearch(const Customer *customers, const Currency *currencies, const int rows)
-{
-    char search[MAX_SEARCH_BUFFER];
+    int found = 0;
+    char search[MAX_CUSTOMER_SEARCH_BUFFER];
     read_string(search, sizeof(search));
 
-    int found = 0;
-    for (int i = 0; i < rows; i++)
+    
+    for (int i = 0; i < customers.max; i++)
     {
-        if (compare_caseInsensitive(customers[i].name, search)) 
+        if (compare_caseInsensitive(customers.data[i].name, search) == 0) 
         {
-            customer_displayData(customers[i], currencies);
+            customer_displayData(customers.data[i], currencies);
             found = 1;
             break;
         }
     }
+
     if(!found)
     {
         printf("Name: %s\nNot found\n", search);
@@ -182,43 +110,27 @@ void customer_nameSearch(const Customer *customers, const Currency *currencies, 
     return;
 }
 
-void customer_handleDisplayData(const Customer *customers, const Currency *currencies, const int rows, const int selection)
-{
-    for (int i = 0; i < rows; i++)
-    {
-        switch (selection) 
-        {
-            case C_DISP_NAMES:
-                printf("[%i]\t%s\n", i, customers[i].name); 
-                break;
+// -------- DISPLAY CUSTOMER DATA VALUES --------------------------------------------------------------------------------------
 
-            case C_DISP_ALL:
-                customer_displayData(customers[i], currencies);
-                break;
-            default: break;
-        }
-    }
-    return;
-}
 
-void customer_displayData(const Customer customer, const Currency *currencies)
+void customer_displayData(const Customer customer, const CurrencyArray currencies)
 {
     printf("\nCustomer: %s\n", customer.name);
 
-    for (int i = 0; i < MAX_CURRENCY_TYPES; i++)
+    for (int i = 0; i < currencies.max; i++)
     {   
-        if(!customer.change_values[i])
+        if(!customer.values[i])
         {
             continue;
         }
 
-        printf("Change in cents %s: %i\n", currencies[i].code, customer.change_values[i]);
+        printf("Change in cents %s: %i\n", currencies.data[i].code, customer.values[i]);
 
-        for (int j = 0; j < MAX_COIN_VARIANTS; j++)
+        for (int j = 0; j < currencies.data[i].count; j++)
         {
-            if(customer.coins_ptr[i][j])
+            if(customer.coins[i][j])
             {
-                printf("Cents %i: \t%i\n", currencies[i].coins[j], customer.coins_ptr[i][j]);
+                printf("Cents %i: \t%i\n", currencies.data[i].coins[j], customer.coins[i][j]);
             }
         }
         printf("\n");
@@ -226,20 +138,39 @@ void customer_displayData(const Customer customer, const Currency *currencies)
     return;
 }
 
-// ---- MEMORY ----
-
-void customer_freeMemory(Customer *customer_data, const int table_rows)
+void customer_displayNames(const CustomerArray customers)
 {
-    if (!customer_data) // Empty? -> Return
+    printf("\n---- Customer Names ----\n\n");
+    for (int i = 0; i < customers.max; i++)
+    {
+        if (customers.data[i].name) 
+        {
+            printf("-   %s\n", customers.data[i].name);
+        }
+    }
+    if (!customers.max || !customers.count)
+    {
+        printf("-   No customers\n");
+    }
+
+    return;
+}
+
+// -------- FREE CUSTOMER MEMORY ----------------------------------------------------------------------------------------------
+
+void customer_freeMemory(CustomerArray *customers)
+{
+    if (!customers->max || !customers->data) // Empty? -> Return
     {
         return;
     }
-
-    for (int i = 0; i < table_rows; i++)
+    for (int i = 0; i < customers->max; i++)
     {
-        free(customer_data[i].name);
-    } 
-
-    free(customer_data); 
+        free(customers->data[i].name);
+    }
+    free(customers->data);
+    customers->data = NULL;
+    customers->count = 0; 
+    customers->max = 0;
     return;
 }

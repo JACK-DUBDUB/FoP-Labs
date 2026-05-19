@@ -1,5 +1,5 @@
-#ifndef EX5_FUNC_H
-#define EX5_FUNC_H
+#ifndef EX1_FUNC_H
+#define EX1_FUNC_H
 
 #include <stdbool.h>
 #include "..\LAB_8_LIB.h"
@@ -10,18 +10,13 @@ enum SEARCH_OPTIONS{
 };
 
 // ---- constants ----
-// Array limit
-#define SIZE            10
-
-
-
+#define ARRAY_SIZE            10
 
 typedef struct
 {
     float *data;
     int count;
 } SalaryArray;
-
 
 
 // ---- Functions ----

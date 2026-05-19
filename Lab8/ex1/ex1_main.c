@@ -14,17 +14,17 @@
  *
  * 
  * /// Compile and Run
- * gcc '.\ex5_salaries_main.c' '.\ex5_salaries_func.c' '..\LAB_5_LIB.c' -o ex5 
+ * gcc '.\ex5_salaries_main.c' '.\ex5_salaries_func.c' '..\LAB_8_LIB.c' -o ex5 
  * .\ex5_salaries.exe
  * 
  */
 
-#include "ex5_salaries_func.h"
+#include "ex1_func.h"
 #include "..\LAB_8_LIB.h"
 
 int main()
 {
-    float array[SIZE];
+    float array[ARRAY_SIZE];
     const int salary_count = sizeof(array) / sizeof(float);
 
     SalaryArray salaries = {array, salary_count};
