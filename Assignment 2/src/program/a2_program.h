@@ -1,9 +1,7 @@
-#include "../currency/a2_currency.h"
-#include "../customer/a2_customer.h"
-
 #ifndef A2_PROGRAM_H
 #define A2_PROGRAM_H
-
+#include "../currency/a2_currency.h"
+#include "../customer/a2_customer.h"
 
 enum PROGRAM_PAUSE  {MSG_CONTINUE, MSG_QUIT};
 

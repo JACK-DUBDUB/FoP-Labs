@@ -9,6 +9,7 @@ enum CURRENCY_TYPES {USD_ID, AUD_ID, EUR_ID};
 
 // ======== STRUCT ========
 
+// Currency
 typedef struct 
 {
     char    code[8];                    // Currency code ex: "$USD" + '\0'
@@ -17,6 +18,7 @@ typedef struct
     int     coins[MAX_COIN_VARIANTS];   // C1, C2, C3, C4
 } Currency;
 
+// Currency wrapper
 typedef struct 
 {
     Currency *data;

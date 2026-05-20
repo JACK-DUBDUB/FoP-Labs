@@ -1,7 +1,8 @@
+#ifndef A2_CRUD_H
+#define A2_CRUD_H
+
 #include "../currency/a2_currency.h"
 #include "../customer/a2_customer.h"
-#include <stdio.h>
-
 #define READ_FILE_BUFFER_LIMIT 256
 
 
@@ -15,6 +16,7 @@ int file_readFirstLine(const char *infile, int *first_value);
 
 // Reads by line from file till customer count reached or EOF
 int file_readCustomerData(CustomerArray *customers, const CurrencyArray *currencies, const char *infile);
+
 
 // -------- CUSTOMER LINE PROCESSING  -----------------------------------------------------------------------------------------
 
@@ -38,3 +40,5 @@ int file_write(const CustomerArray customers, const CurrencyArray currencies, co
 
 // Writes to file, writes the non-null customer values in ".csv" format
 void file_writeCustomerData(FILE *f_stream, const CustomerArray customers, const CurrencyArray currencies);
+
+#endif

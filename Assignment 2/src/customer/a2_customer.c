@@ -44,7 +44,7 @@ void customer_filterValues(CustomerArray *customers, const CurrencyArray currenc
         }
     }
 
-    // Feedback for user <- removed as it violates pseudocode
+    // Feedback for user <- removed 20/05/2026
     /*
     if(customers->count != old_count)
         printf("\nTotal customers removed: %i\n\n", old_count - customers->count);

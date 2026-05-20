@@ -1,7 +1,6 @@
-#include "../currency/a2_currency.h"
-
 #ifndef A2_CUSTOMER_H
 #define A2_CUSTOMER_H
+#include "../currency/a2_currency.h"
 
 // ======== CONSTANTS ========
 
@@ -19,6 +18,7 @@
 // Memory freed with customer_freeMemory()
 // Calloc preferred -> change_values need to be zeroed
 
+// Customer
 typedef struct 
 { 
     char *name;                                         
@@ -26,6 +26,7 @@ typedef struct
     int coins[MAX_CURRENCY_TYPES][MAX_COIN_VARIANTS];   
 } Customer;
 
+// Customer wrapper
 typedef struct 
 {
     Customer *data;     // Customer data pointer
@@ -38,6 +39,7 @@ typedef struct
 
 // Iterates through all customers, nulls customer names that have all change values set at 0
 void customer_filterValues(CustomerArray *customers, const CurrencyArray currencies);
+
 
 // -------- INSERT CUSTOMER COINS ---------------------------------------------------------------------------------------------
 

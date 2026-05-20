@@ -62,7 +62,7 @@ int file_readCustomerData(CustomerArray *customers, const CurrencyArray *currenc
     while (fgets(buffer, sizeof(buffer), f_stream) && customers->max > 0) 
     {
         // Skip these lines if they exist
-        if(!line_count || *buffer == '/' || *buffer == '\n') 
+        if(!line_count || *buffer == '/' || *buffer == '\n') // <- skip these lines as they are either comment lines or empty
         {   line_count++;
             continue;
         }

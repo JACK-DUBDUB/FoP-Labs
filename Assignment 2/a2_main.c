@@ -75,16 +75,17 @@ int program_process(char *argument_values[], const int expected_entries)
     if (customers == NULL)
     {
         printf("ERROR - Failed to allocate memory for customers with value: %i\n", expected_entries);
-        return 3;
+        return 3; // Return code 3
     }
 
+    // Create the wrapper for customers
     CustomerArray customer_data = {customers, 0, expected_entries};
     
     if (file_readCustomerData(&customer_data, &currency_data, argument_values[1]))
     {
         customer_freeMemory(&customer_data);
         program_pause(MSG_QUIT);
-        return 4;
+        return 4; // Return code 4
     }
 
     program_pause(MSG_CONTINUE);
@@ -110,7 +111,7 @@ int main(int argument_count, char *argument_values[])
     if(program_checkArgs(argument_count, argument_values))
     {
         program_pause(MSG_QUIT);
-        return 1;
+        return 1; // Return code 1
     }
 
     // Test if file is readable first
@@ -118,7 +119,7 @@ int main(int argument_count, char *argument_values[])
     if (file_readFirstLine(argument_values[1], &expected_entries))
     {
         program_pause(MSG_QUIT);
-        return 2;
+        return 2; // Return code 2
     }
 
     return program_process(argument_values, expected_entries);
