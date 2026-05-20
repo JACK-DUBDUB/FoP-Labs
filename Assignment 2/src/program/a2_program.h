@@ -8,6 +8,15 @@ enum PROGRAM_PAUSE  {MSG_CONTINUE, MSG_QUIT};
 #define DEFAULT_IN_FILE     "data/coins.txt"
 #define DEFAULT_OUT_FILE    "output/change.csv"
 
+// -------- CORE PROGRAM PROCESS ----------------------------------------------------------------------------------------------
+
+// Once main has passed its starting checks, we can proceed with the core program logic. 
+// This is a linear file IO process, it reads from  a file collecting the customer data
+// Then it lets the user search the customer data unitl they choose to quit program
+// The program then writes to file and exits program 
+int program_process(char *argument_values[], const int expected_entries);
+
+
 // -------- CHECK ARGUMENTS ---------------------------------------------------------------------------------------------------
 
 // Checks if user included 2 additional arguments : ass2.exe {filein} {fileout} , else use defaults

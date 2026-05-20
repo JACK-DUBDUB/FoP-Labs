@@ -1,8 +1,9 @@
 #ifndef A2_CRUD_H
 #define A2_CRUD_H
-
 #include "../currency/a2_currency.h"
 #include "../customer/a2_customer.h"
+#include "stdio.h"
+
 #define READ_FILE_BUFFER_LIMIT 256
 
 

@@ -1,7 +1,7 @@
-#include <stdlib.h>
-
 #ifndef PROGRAM_H
 #define PROGRAM_H
+
+#include <stdlib.h>
 
 #define NAME_MAX 64
 #define LINE_BUFFER_MAX 256

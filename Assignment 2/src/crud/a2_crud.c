@@ -62,7 +62,7 @@ int file_readCustomerData(CustomerArray *customers, const CurrencyArray *currenc
     while (fgets(buffer, sizeof(buffer), f_stream) && customers->max > 0) 
     {
         // Skip these lines if they exist
-        if(!line_count || *buffer == '/' || *buffer == '\n') // <- skip these lines as they are either comment lines or empty
+        if(!line_count || *buffer == '/' || *buffer == '\n') // <- skip these lines in the file as they are either comment lines and/or empty
         {   line_count++;
             continue;
         }
@@ -86,7 +86,8 @@ int file_readCustomerData(CustomerArray *customers, const CurrencyArray *currenc
 
 int process_customerLine(CustomerArray *customers, const CurrencyArray *currencies, char *buffer, const int line_count)
 {
-    char *t_name = NULL;
+    // t_ <- indicates temporary 
+    char *t_name = NULL;    
     char *t_change = NULL;
     char *t_code = NULL;
     
@@ -102,14 +103,15 @@ int process_customerLine(CustomerArray *customers, const CurrencyArray *currenci
 
     // Find existing customer position
     int t_pos = compare_existingNames(*customers, t_name);
-    int code = compare_currencyCode(currencies, t_code);
-
-    // Extremely dangerous without memory reallocation -> i'm not paid enough to deal with that!
-    if(t_pos >= customers->max)
+    if(t_pos >= customers->max) // Extremely dangerous without memory reallocation -> i'm not paid enough to deal with that!
     {
         return 1;
     }
 
+    // Currency code Id
+    int code = compare_currencyCode(currencies, t_code);
+
+    // Passed all checks? -> insert customer data
     insert_customerValues(&customers->data[t_pos], t_name, atoi(t_change), code);
 
     // Increment the known customer count if its unique

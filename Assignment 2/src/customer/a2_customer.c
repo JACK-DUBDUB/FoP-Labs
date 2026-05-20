@@ -6,8 +6,6 @@
 void customer_filterValues(CustomerArray *customers, const CurrencyArray currencies)
 {
     printf("\n---- Filtering Customer Data ----\n");
-
-    // int old_count = customers->count;
     for (int i = 0; i < customers->max; i++)
     {
         // Skip
@@ -43,16 +41,6 @@ void customer_filterValues(CustomerArray *customers, const CurrencyArray currenc
             customers->count--;
         }
     }
-
-    // Feedback for user <- removed 20/05/2026
-    /*
-    if(customers->count != old_count)
-        printf("\nTotal customers removed: %i\n\n", old_count - customers->count);
-    else if(!customers->count)
-        printf("\nNo customers to filter!\n\n");
-    else
-        printf("\nAll customers valid!\n\n");
-    */
     return;
 }
 
@@ -90,9 +78,9 @@ void customer_nameSearch(const CustomerArray customers, const CurrencyArray curr
 {
     int found = 0;
     char search[MAX_CUSTOMER_SEARCH_BUFFER];
+    
     read_string(search, sizeof(search));
 
-    
     for (int i = 0; i < customers.max; i++)
     {
         if (compare_caseInsensitive(customers.data[i].name, search) == 0) 

@@ -64,48 +64,6 @@ Charlie, the change for 36 cents in $EUR is 1,1,1,1         // c: 20, 10,  5, 1
 
 #include "include/a2_includes.h"
 
-int program_process(char *argument_values[], const int expected_entries)
-{
-    // Currency data
-    Currency currencies[] = {USD_DATA, AUD_DATA, EUR_DATA}; // <- USEFUL!
-    CurrencyArray currency_data = {currencies, (sizeof(currencies) / sizeof(Currency))}; 
-
-    // Init customer data
-    Customer *customers = calloc(expected_entries, sizeof(Customer));
-    if (customers == NULL)
-    {
-        printf("ERROR - Failed to allocate memory for customers with value: %i\n", expected_entries);
-        return 3; // Return code 3
-    }
-
-    // Create the wrapper for customers
-    CustomerArray customer_data = {customers, 0, expected_entries};
-    
-    if (file_readCustomerData(&customer_data, &currency_data, argument_values[1]))
-    {
-        customer_freeMemory(&customer_data);
-        program_pause(MSG_QUIT);
-        return 4; // Return code 4
-    }
-
-    program_pause(MSG_CONTINUE);
-
-    customer_filterValues(&customer_data, currency_data);
-   
-    customer_insertCoins(&customer_data, currency_data);
-
-    program_handleSearchMenu(customer_data, currency_data);
-
-    file_write(customer_data, currency_data, argument_values[2]);
-
-    customer_freeMemory(&customer_data);
-    program_pause(MSG_QUIT);
-
-    return 0;
-}
-
-
-
 int main(int argument_count, char *argument_values[])
 {
     if(program_checkArgs(argument_count, argument_values))
