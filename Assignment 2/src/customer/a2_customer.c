@@ -1,17 +1,16 @@
-#include "../currency/a2_currency.h"
-#include "../program/a2_program.h"
+#include "../../include/a2_includes.h"
 
 // -------- FILTER CUSTOMER VALUES POST READ ----------------------------------------------------------------------------------
 
+// Yeah this could probably macro'd for each customer instead of a loop -> basically a self contained function for every customer (no OOP here!)
 void customer_filterValues(CustomerArray *customers, const CurrencyArray currencies)
 {
     printf("\n---- Filtering Customer Data ----\n");
 
-    int old_count = customers->count;
-
+    // int old_count = customers->count;
     for (int i = 0; i < customers->max; i++)
     {
-        // Skippo!
+        // Skip
         if (!customers->data[i].name)
         {
             continue;
@@ -39,32 +38,34 @@ void customer_filterValues(CustomerArray *customers, const CurrencyArray currenc
         // Set name to null
         if (!valid_customer)
         {
-            printf("\nRemoved: %s\nReason: missing valid change values\n", customers->data[i].name);
+            printf("\nRemoved: %s\nReason: missing valid change values\n\n", customers->data[i].name);
             customers->data[i].name = NULL;
             customers->count--;
         }
     }
 
-    // Feedback
+    // Feedback for user <- removed as it violates pseudocode
+    /*
     if(customers->count != old_count)
         printf("\nTotal customers removed: %i\n\n", old_count - customers->count);
     else if(!customers->count)
         printf("\nNo customers to filter!\n\n");
     else
         printf("\nAll customers valid!\n\n");
-    
+    */
     return;
 }
 
 // -------- INSERT CUSTOMER COINS ---------------------------------------------------------------------------------------------
 
+// Same with this, could also be macro'd
 void customer_insertCoins(CustomerArray *customers, const CurrencyArray currencies)
 {
     for (int i = 0; i < customers->max; i++)
     {
         for (int j = 0; j < currencies.max; j++)
         {
-            // Skippo!
+            // Skip
             if (!customers->data[i].values[j]) 
             {
                 continue;
@@ -74,11 +75,10 @@ void customer_insertCoins(CustomerArray *customers, const CurrencyArray currenci
 
             for (int k = 0; k < currencies.data[j].count; k++)
             {
-                customers->data[i].coins[j][k] = temp_change / currencies.data[j].coins[k]; // Int division: Customer change / Coin Value 
-                temp_change = temp_change % currencies.data[j].coins[k];    // Int modulus: Customer change % Coin value
+                customers->data[i].coins[j][k] = temp_change / currencies.data[j].coins[k];     // Customer change / Coin Value 
+                temp_change = temp_change % currencies.data[j].coins[k];                        // Customer change % Coin value
             }
         }
-        
     }
     return;
 }

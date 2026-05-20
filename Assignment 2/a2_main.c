@@ -1,7 +1,5 @@
-#include "./program/a2_program.h"
-#include "./crud/a2_crud.h"
-
-/* ASSIGNMENT 2 - FILE I/O CUSTOMER CHANGE & COIN PROCESSING
+/*
+* ASSIGNMENT 2 - FILE I/O CUSTOMER CHANGE & COIN PROCESSING
 * NAME:     JACK DU BOULAY
 * ID:       32712899
 * DATE:     09/05/2026 - 17/05/2026
@@ -55,15 +53,16 @@ Charlie, the change for 36 cents in $EUR is 1,1,1,1         // c: 20, 10,  5, 1
 
 ======== Compile and run ========
 * Compile: 
-*   gcc .\a2_main.c .\program\a2_program.c .\customer\a2_customer.c .\currency\a2_currency.c .\crud\a2_crud.c -o ass2.exe
+*   gcc a2_main.c src/program/a2_program.c src/customer/a2_customer.c src/currency/a2_currency.c src/crud/a2_crud.c -o ass2.exe
 * 
 * Run:
-*   .\ass2.exe .\_data\coins.txt change.csv                         // DEFAULT DATA-IN  +  DEFAULT DATA-OUT
-*   .\ass2.exe .\_data\test_case1.txt change.csv                    // TEST CASE DATA 1 +  DEFAULT DATA-OUT
-*   .\ass2.exe ".\your_data_read.file" "..\your_data_out.file"               
+*   ass2.exe data/coins.txt output/change.csv                         // DEFAULT DATA-IN  +  DEFAULT DATA-OUT
+*   ass2.exe data/test_case1.txt output/change.csv                    // TEST CASE DATA 1 +  DEFAULT DATA-OUT
+*   ass2.exe your_data_read.file your_data_out.file               
 *         
 */
 
+#include "include/a2_includes.h"
 
 int program_process(char *argument_values[], const int expected_entries)
 {
@@ -71,7 +70,7 @@ int program_process(char *argument_values[], const int expected_entries)
     Currency currencies[] = {USD_DATA, AUD_DATA, EUR_DATA}; // <- USEFUL!
     CurrencyArray currency_data = {currencies, (sizeof(currencies) / sizeof(Currency))}; 
 
-    // Customer data
+    // Init customer data
     Customer *customers = calloc(expected_entries, sizeof(Customer));
     if (customers == NULL)
     {
@@ -88,7 +87,7 @@ int program_process(char *argument_values[], const int expected_entries)
         return 4;
     }
 
-    program_pause(MSG_CONTINUE); // Pause to show read errors
+    program_pause(MSG_CONTINUE);
 
     customer_filterValues(&customer_data, currency_data);
    
@@ -96,8 +95,8 @@ int program_process(char *argument_values[], const int expected_entries)
 
     program_handleSearchMenu(customer_data, currency_data);
 
+    
     file_write(customer_data, currency_data, argument_values[2]);
-
 
     customer_freeMemory(&customer_data);
     program_pause(MSG_QUIT);

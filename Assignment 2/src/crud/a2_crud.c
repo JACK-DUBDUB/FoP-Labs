@@ -1,6 +1,4 @@
-#include "a2_crud.h"
-#include "../currency/a2_currency.h"
-#include "../program/a2_program.h"
+#include "../../include/a2_includes.h"
 
 
 // -------- READ FROM FILE ----------------------------------------------------------------------------------------------------
@@ -9,6 +7,7 @@ int file_readFirstLine(const char *infile, int *first_value)
 {
     printf("\nAttempting to read first line value of: %s\n\n", infile);
 
+    // Open file
     FILE *f_stream = fopen(infile, "r");
     char buffer[READ_FILE_BUFFER_LIMIT];
 
@@ -18,6 +17,7 @@ int file_readFirstLine(const char *infile, int *first_value)
         return 1;
     }
 
+    // Reading first line
     if (fgets(buffer, sizeof(buffer), f_stream) != NULL)
     {
         sscanf(buffer, "%i", first_value);
@@ -28,6 +28,7 @@ int file_readFirstLine(const char *infile, int *first_value)
         return 1;
     }
 
+    // Close file
     fclose(f_stream);
     
     if (*first_value < 0)
@@ -57,6 +58,7 @@ int file_readCustomerData(CustomerArray *customers, const CurrencyArray *currenc
     char buffer[READ_FILE_BUFFER_LIMIT];
     int line_count = 0;
 
+    // File reading
     while (fgets(buffer, sizeof(buffer), f_stream) && customers->max > 0) 
     {
         // Skip these lines if they exist
@@ -89,7 +91,14 @@ int process_customerLine(CustomerArray *customers, const CurrencyArray *currenci
     char *t_code = NULL;
     
     // Find the correct token values
-    extract_customerTokens(currencies, buffer, &t_name, &t_change, &t_code);
+    extract_customerTokens(currencies, buffer, &t_name, &t_change, &t_code); // sscanf was too boring!
+
+    // Filter token values
+    if(filter_customerTokens(t_name, t_change, t_code)) 
+    {
+        printf("Line: %i -> Rejected entry\n\n", line_count);
+        return 0; 
+    }
 
     // Find existing customer position
     int t_pos = compare_existingNames(*customers, t_name);
@@ -101,14 +110,6 @@ int process_customerLine(CustomerArray *customers, const CurrencyArray *currenci
         return 1;
     }
 
-    // Filter token values
-    if(filter_customerTokens(t_name, t_change, t_code)) 
-    {
-        printf("Line: %i -> Rejected entry\n\n", line_count);
-        return 0; 
-    }
-
-    // Insert successfully parsed customer data, useful function -> atoi(); = ASCII to int
     insert_customerValues(&customers->data[t_pos], t_name, atoi(t_change), code);
 
     // Increment the known customer count if its unique
@@ -119,8 +120,6 @@ int process_customerLine(CustomerArray *customers, const CurrencyArray *currenci
         
     return 0;
 }
-
-
 
 void extract_customerTokens(const CurrencyArray *currencies, char *buffer, char **t_name, char **t_change, char **t_code)
 {
@@ -189,7 +188,7 @@ int filter_customerTokens(const char *t_name,  const char *t_change, const char 
 
 void insert_customerValues(Customer *customer, const char *name, const int change, const int code)
 {
-    int size = strlen(name) + 1; // null term
+    int size = strlen(name) + 1; // + null term
     customer->name = calloc(size, sizeof(char));        
     strcpy(customer->name, name);
     customer->values[code] += change;                                      
@@ -237,6 +236,8 @@ void file_writeCustomerData(FILE *f_stream, const CustomerArray customers, const
 
             fprintf(f_stream, "%s, the change for %i cents in %s is ", customers.data[i].name, customers.data[i].values[j], currencies.data[j].code);
 
+            // Why not just do coins[j][0], coins[j][1] etc...?
+            // Suppose we included more euro coins, we could iterate through all the coins instead of hard coding 4 specified coins
             for (int k = 0; k < currencies.data[j].count; k++)
             {
                 if(k + 1 != currencies.data[j].count )

@@ -24,7 +24,7 @@ const Currency EUR_DATA =
     .coins = {20, 10, 5, 1}
 };
 
-// could keep adding different currencies if i wanted to
+// Its free real estate
 
 
 

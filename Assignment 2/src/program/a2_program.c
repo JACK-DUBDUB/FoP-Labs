@@ -1,4 +1,4 @@
-#include "../a2_includes.h"
+#include "../../include/a2_includes.h"
 
 
 // -------- CHECK ARGUMENTS ---------------------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ void program_handleSearchMenu(const CustomerArray customers, const CurrencyArray
 
         printf("\n-------- MENU --------\n");
         printf("[1] - Enter name\n");
-        printf("[2] - Quit program\n");
+        printf("[2] - Quit program\n\n");
 
         selection = read_intInRange(PROGRAM_SEARCH, PROGRAM_QUIT);
 
@@ -122,25 +122,21 @@ void program_handleSearchMenu(const CustomerArray customers, const CurrencyArray
 
 int read_intInRange(const int min, const int max)
 {
-    int int_value = min - 1;
+    int int_value;
     do 
     {
         printf("Please enter an integer value: ");
         if (scanf("%i", &int_value) && getchar() == '\n')
         {   
-            if (int_value < min || int_value > max)
+            if (int_value >= min && int_value <= max)
             {
-                printf("User entered an integer out of range (%i - %i)!\n",min, max);
-                int_value = min - 1;
+                 return int_value;
             }
-        } 
-        else 
-        {
-            while(getchar() != '\n');
-            int_value = min - 1;
-            printf("Please enter a valid value!!!\n\n");
+            printf("User entered an integer out of range (%i - %i)!\n",min, max);
         }
-    } while (int_value < min);
+        program_clearInputBuffer();
+        printf("Please enter a valid value!!!\n\n");
+    }while (1);
     return int_value;
 }
 

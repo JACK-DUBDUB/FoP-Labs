@@ -21,9 +21,9 @@
 
 typedef struct 
 { 
-    char *name;
-    int values[MAX_CURRENCY_TYPES];
-    int coins[MAX_CURRENCY_TYPES][MAX_COIN_VARIANTS];
+    char *name;                                         
+    int values[MAX_CURRENCY_TYPES];                     
+    int coins[MAX_CURRENCY_TYPES][MAX_COIN_VARIANTS];   
 } Customer;
 
 typedef struct 

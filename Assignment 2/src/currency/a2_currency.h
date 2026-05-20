@@ -11,7 +11,7 @@ enum CURRENCY_TYPES {USD_ID, AUD_ID, EUR_ID};
 
 typedef struct 
 {
-    char    code[5];                    // Currency code ex: "$USD" + '\0'
+    char    code[8];                    // Currency code ex: "$USD" + '\0'
     int     id;                         // 0 = USD, 1 = AUD, 2 = EUR
     int     count;
     int     coins[MAX_COIN_VARIANTS];   // C1, C2, C3, C4

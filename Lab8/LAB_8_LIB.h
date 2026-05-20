@@ -1,6 +1,6 @@
 
-#ifndef LAB_5_MY_LIBRARY_H
-#define LAB_5_MY_LIBRARY_H
+#ifndef MY_LIBRARY_H
+#define MY_LIBRARY_H
 
 
 #include <stddef.h>
