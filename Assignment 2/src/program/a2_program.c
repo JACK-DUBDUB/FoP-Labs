@@ -11,18 +11,16 @@ int program_checkArgs(int argument_count, char *argument_values[])
         return 1;
     }
 
-    if (argument_count == 1)
+    if (argument_count < 2)
     {
-        printf("\nMissing {Input File} AND {Output File} -> Using defaults\n");
+        printf("\nMissing {Input File} -> Using default \n");
         argument_values[1] = DEFAULT_IN_FILE;
-        argument_values[2] = DEFAULT_OUT_FILE;
-        return 0;
     }
-    if (argument_count == 2)
+
+    if (argument_count < 3)
     {
         printf("\nMissing {Output File} -> Using default\n");
         argument_values[2] = DEFAULT_OUT_FILE;;
-        return 0;
     }
 
     if (argument_count > 3)
@@ -130,12 +128,15 @@ int read_intInRange(const int min, const int max)
         {   
             if (int_value >= min && int_value <= max)
             {
-                 return int_value;
+                 break;
             }
-            printf("User entered an integer out of range (%i - %i)!\n",min, max);
+            printf("User entered an integer out of range (%i - %i)!\n\n",min, max);
         }
-        program_clearInputBuffer();
-        printf("Please enter a valid value!!!\n\n");
+        else
+        {
+            program_clearInputBuffer();
+            printf("Please enter a valid value!!!\n\n");
+        }
     }while (1);
     return int_value;
 }

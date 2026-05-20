@@ -95,7 +95,6 @@ int program_process(char *argument_values[], const int expected_entries)
 
     program_handleSearchMenu(customer_data, currency_data);
 
-    
     file_write(customer_data, currency_data, argument_values[2]);
 
     customer_freeMemory(&customer_data);

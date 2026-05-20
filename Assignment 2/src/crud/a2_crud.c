@@ -188,8 +188,7 @@ int filter_customerTokens(const char *t_name,  const char *t_change, const char 
 
 void insert_customerValues(Customer *customer, const char *name, const int change, const int code)
 {
-    int size = strlen(name) + 1; // + null term
-    customer->name = calloc(size, sizeof(char));        
+    customer->name = calloc(strlen(name) + 1, sizeof(char));        
     strcpy(customer->name, name);
     customer->values[code] += change;                                      
     return;
@@ -213,7 +212,7 @@ int file_write(const CustomerArray customers, const CurrencyArray currencies, co
 
     fclose(f_stream);
 
-    printf("-> Successfully customer values to file: '%s' \n\n", outfile);
+    printf("-> Successfully printed customer values to file: '%s' \n\n", outfile);
     return 0;
 }
 

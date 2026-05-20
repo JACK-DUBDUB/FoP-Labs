@@ -39,9 +39,6 @@ void program_handleSearchMenu(const CustomerArray customers, const CurrencyArray
 // Reads an integer input from stdin
 int read_intInRange(const int min, const int max);
 
-// Filters the integer input
-int filter_intInRange(const int input, const int min, const int max, const int valid);
-
 // Reads a string from stdin, (removes '\n') 
 void read_string(char *buffer, const int size);
 
