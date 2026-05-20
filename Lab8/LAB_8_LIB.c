@@ -68,6 +68,36 @@ void read_string(char *buffer, size_t size)
     return;
 }
 
+int read_float(float *out_value)
+{
+    if (scanf_s("%f", out_value) != 1) {
+        clear_input_buffer();
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int read_int(int *out_value)
+{
+    if (scanf_s("%i", out_value) != 1) {
+        clear_input_buffer();
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int read_char(char *out_value)
+{
+    if (scanf_s("%c", out_value) != 1) {
+        clear_input_buffer();
+        return 1;
+    } else {
+        //clear_input_buffer();
+        return 0;
+    }
+}
 
 void clear_input_buffer()
 {

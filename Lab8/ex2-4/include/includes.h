@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-#include "program.h"
-#include "../LAB_8_LIB.h"
+#include "../src/program.h"
+#include "../../LAB_8_LIB.h"
 
 #endif

@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "../include/includes.h"
 
 int file_write(const EmployeeArray *emparr, const char *fname)
 {
@@ -150,6 +150,7 @@ int strcmp_insensitive(const char *string1, const char *string2)
     return 0;
 }
 
+// Now that i think about it... it should make sure the source code files aren't being overwritten either...
 int program_argCheck(const int argc, char *argv[])
 {
     if (argc == 3 && strcmp_insensitive(argv[1], argv[2]) == 0)
@@ -158,16 +159,15 @@ int program_argCheck(const int argc, char *argv[])
         getchar();
         return 1;
     }
-
+    
     if (argc < 2)
     {
-        argv[1] = "data.txt";
+        argv[1] = FILE_IN;
     }
 
     if (argc < 3)
     {
-        argv[2] = "output.csv";
+        argv[2] = FILE_OUT;
     }
-
     return 0;
 }

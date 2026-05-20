@@ -1,13 +1,13 @@
 #include <stdlib.h>
 
-#ifndef PROGRAM_HEADER
-#define PROGRAM_HEADER
-
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
 #define NAME_MAX 64
 #define LINE_BUFFER_MAX 256
 #define EMPLOYEE_MAX 10
-
+#define FILE_IN "data/data.txt"
+#define FILE_OUT "output/output.csv"
 
 typedef struct
 {
@@ -22,8 +22,6 @@ typedef struct
     int count;
     int max;
 } EmployeeArray;
-
-
 
 int program_argCheck(const int argc, char *argv[]);
 

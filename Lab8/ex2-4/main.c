@@ -15,20 +15,24 @@
  * Quitting program writes to file.
  *
  * /// Compile and Run
- * gcc '.\main.c' '.\program.c' '..\LAB_8_LIB.c' -o ex2 
+ * gcc main.c src/program.c ..\LAB_8_LIB.c -o ex2 
  * .\ex2.exe
  * 
  */
 
-#include "includes.h"
+#include "include/includes.h"
 
 // Continue from Exercise 4 of Lab 9... WAIT WHAT!!?!?
+
 int main (int argc, char *argv[])
 {
     Employee employees[EMPLOYEE_MAX];
     EmployeeArray emparr = {employees, 0, sizeof(employees) / sizeof(Employee)}; 
     
-    program_argCheck(argc, argv);
+    if(program_argCheck(argc, argv))
+    {
+        return 1;
+    }
 
     file_read(&emparr, argv[1]);
 
