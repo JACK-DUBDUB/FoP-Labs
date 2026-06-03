@@ -48,7 +48,7 @@ int program_process(char *argument_values[], const int expected_entries)
 
 int program_checkArgs(int argument_count, char *argument_values[])
 {
-    if (argument_count == 3 && strcmp(argument_values[1], argument_values[2]) == 0)
+    if (argument_count >= 3 && strcmp(argument_values[1], argument_values[2]) == 0)
     {
         printf("\nInput file should not be the same as the output file!\n");
         return 1;
@@ -135,7 +135,7 @@ void program_handleSearchMenu(const CustomerArray customers, const CurrencyArray
     int selection;
     do 
     {
-        program_pause(MSG_CONTINUE); // Pause to show filtered 
+        program_pause(MSG_CONTINUE);
 
         customer_displayNames(customers);
 
@@ -163,7 +163,7 @@ void program_handleSearchMenu(const CustomerArray customers, const CurrencyArray
 
 int read_intInRange(const int min, const int max)
 {
-    int int_value;
+    int int_value = 0;
     do 
     {
         printf("Please enter an integer value: ");

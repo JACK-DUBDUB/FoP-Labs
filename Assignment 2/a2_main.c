@@ -9,9 +9,12 @@
 * CLI program
 
 * Program expects the user to include argument values {program name} {file in} {file out}
+*		- If the user provided both input and output files in commandline
+*				-> check if they are the same 
+*						-> If they are the same, quit program as we do not want to overwrite our input data
 *       - If user does not include a {file in} and/or {file out} 
-*               -> Program displays the "missing" error 
-*               -> Quit program
+*               -> Program displays the "missing" error  and uses defaults files instead
+
 *                   
 * The program reads the {file in} making a single test ofparsing the first row value 
 *       - [1] The first line value, parsing the value as an integer (assumed line count of file)
@@ -37,7 +40,7 @@
 
 * Free customer memory
 
-* Prompt user to hit enter before exit
+* Prompt user to hit enter before exit!
 
 ======== Example Input File Format =========
 3
