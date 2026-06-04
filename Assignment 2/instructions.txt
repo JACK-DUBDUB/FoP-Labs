@@ -1,7 +1,0 @@
-======== Compile and run ========
-Compile: 
-   gcc .\a2_main.c .\program\a2_program.c .\general\a2_general.c .\customer\a2_customer.c .\currency\a2_currency.c .\crud\a2_create.c .\crud\a2_read.c -o ..\bin\ass2.exe
- 
-Run:
-   .\ass2.exe                                                         		// Use default data
-   .\ass2.exe ..\data\in_data\test_case1.txt ..\data\out_data\change.csv 	// Test case data set
