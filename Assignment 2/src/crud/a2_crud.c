@@ -190,8 +190,11 @@ int filter_customerTokens(const char *t_name,  const char *t_change, const char 
 
 void insert_customerValues(Customer *customer, const char *name, const int change, const int code)
 {
-    customer->name = calloc(strlen(name) + 1, sizeof(char));        
-    strcpy(customer->name, name);
+    if (customer->name == NULL)
+    {
+        customer->name = calloc(strlen(name) + 1, sizeof(char));        
+        strcpy(customer->name, name);
+    }
     customer->values[code] += change;                                      
     return;
 }
